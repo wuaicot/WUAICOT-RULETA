@@ -2,16 +2,9 @@
     display: grid;
     grid-template-columns: repeat(14, 1fr);
     grid-template-rows: repeat(5, 1fr);
-    grid-template-areas:
-        "zero num num num num num num num num num num num num 2to1"
-        "zero num num num num num num num num num num num num 2to1"
-        "zero num num num num num num num num num num num num 2to1"
-        "zero 1st12 1st12 1st12 1st12 2nd12 2nd12 2nd12 2nd12 3rd12 3rd12 3rd12 3rd12 zero"
-        "zero 1to18 1to18 even even redA redA blackA blackA odd odd 19to36 19to36 zero";
     border: 3px solid white;
     border-radius: 13px;
     background: transparent;
-    gap: 1px solid white;
     width: 80%;
     height: 30%;
 }
