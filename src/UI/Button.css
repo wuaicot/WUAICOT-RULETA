@@ -1,0 +1,25 @@
+.button {
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.7rem 1.2rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 6.5rem;
+}
+
+.button-border {
+    background: linear-gradient(
+        135deg,
+        rgba(183, 163, 104),
+        rgba(132, 106, 45, 255),
+        rgba(132, 106, 45, 255),
+        rgba(183, 163, 104)
+    );
+    height: calc(1rem + 0.7rem + 1.4rem);
+    width: 7rem;
+    position: relative;
+}

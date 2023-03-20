@@ -1,4 +1,5 @@
 import React from "react";
+import { Header } from "./components/Header";
 import { Board } from "./components/Board";
 import { Chips } from "./components/Chips";
 import "./App.css";
@@ -6,7 +7,7 @@ import "./App.css";
 function App() {
     return (
         <div className="App">
-            <h1>roulette magic</h1>
+            <Header />
             <Board />
             <Chips />
         </div>
