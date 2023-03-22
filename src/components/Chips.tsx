@@ -1,32 +1,11 @@
 import { useContext } from "react";
 import { observer } from "mobx-react";
 import { bet, BetContext } from "../store/betStore";
+import { chipsColors } from "../utils/chipsUtils";
 import "./Chips.css";
 
 export const Chips = observer(() => {
     const { setChipsTaken } = useContext(BetContext);
-    const chipsColors = [
-        {
-            chipFill: "white",
-            chipStroke: "whitesmoke",
-            textFill: "black",
-            value: 5,
-        },
-        { chipFill: "red", chipStroke: "red", textFill: "white", value: 10 },
-        {
-            chipFill: "green",
-            chipStroke: "green",
-            textFill: "white",
-            value: 20,
-        },
-        { chipFill: "blue", chipStroke: "blue", textFill: "white", value: 50 },
-        {
-            chipFill: "black",
-            chipStroke: "black",
-            textFill: "white",
-            value: 100,
-        },
-    ];
 
     const chipHandler = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         setChipsTaken(+(e.target as SVGSVGElement).innerHTML);
