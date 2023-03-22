@@ -9,3 +9,7 @@
 svg {
     cursor: pointer;
 }
+
+svg:hover {
+    scale: 1.2
+}
