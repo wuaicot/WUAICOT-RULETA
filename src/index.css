@@ -7,7 +7,29 @@
 .App {
     height: 100vh;
     width: 100vw;
-    background-color: rgb(10, 98, 10);
+    background-color: rgba(1, 67, 30);
+    background-image: radial-gradient(
+            rgba(1, 67, 30),
+            rgba(1, 109, 41, 0.2) 2px,
+            transparent 40px
+        ),
+        radial-gradient(
+            rgba(1, 67, 30),
+            rgba(1, 109, 41, 0.15) 1px,
+            transparent 30px
+        ),
+        radial-gradient(
+            rgba(1, 67, 30),
+            rgba(1, 109, 41, 0.1) 2px,
+            transparent 40px
+        ),
+        radial-gradient(
+            rgba(1, 67, 30, 0.4),
+            rgba(1, 109, 41, 0.1) 2px,
+            transparent 30px
+        );
+    background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
+    background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
     display: flex;
     flex-direction: column;
     align-items: center;

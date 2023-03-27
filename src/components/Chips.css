@@ -1,6 +1,6 @@
 .chip-container {
-    width: 30%;
-    height: 10%;
+    width: 50%;
+    height: 20%;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -11,5 +11,9 @@ svg {
 }
 
 svg:hover {
-    scale: 1.2
+    scale: 1.2;
+}
+
+.svg-text {
+    font-size: 2rem;
 }

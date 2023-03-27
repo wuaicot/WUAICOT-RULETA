@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { observer } from "mobx-react";
-import { bet, BetContext } from "../store/betStore";
+import { BetContext } from "../store/betStore";
 import { chipsColors } from "../utils/chipsUtils";
 import "./Chips.css";
 
@@ -15,21 +15,28 @@ export const Chips = observer(() => {
         <div className="chip-container">
             {chipsColors.map((chips) => (
                 <svg
-                    width="50"
-                    height="50"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="100"
+                    height="100"
                     id={chips.value.toString()}
                     key={chips.value.toString()}
                     onClick={chipHandler}
                 >
                     <circle
-                        cx="25"
-                        cy="25"
-                        r="20"
+                        cx="50"
+                        cy="50"
+                        r="40"
                         stroke={chips.chipStroke}
                         fill={chips.chipFill}
-                        strokeWidth="5"
+                        strokeWidth="10"
                     />
-                    <text x="18" y="30" stroke={chips.textFill} strokeWidth="1">
+                    <text
+                        x="35"
+                        y="60"
+                        stroke={chips.textFill}
+                        strokeWidth="2"
+                        className="svg-text"
+                    >
                         {chips.value}
                     </text>
                 </svg>
