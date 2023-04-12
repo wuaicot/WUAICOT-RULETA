@@ -8,3 +8,9 @@
     width: 80%;
     height: 30%;
 }
+
+.board-grid > img {
+    position: absolute;
+    width: 2em;
+    height: 2em;
+}

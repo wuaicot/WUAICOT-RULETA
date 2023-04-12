@@ -1,18 +1,60 @@
+import { useDrop } from "react-dnd";
+import { bet } from "../store/betStore";
 import { BoardItem } from "./BoardItem";
-import { matrix } from "../utils/chipsUtils";
+import { Chip } from "./Chip";
+import { matrix } from "../utils/utils";
 import "./Board.css";
 
 export const Board = () => {
+    const [{ isOver }, drop] = useDrop(() => ({
+        accept: "chips",
+        drop: (item: any, monitor) => {
+            const location = monitor.getClientOffset();
+            if (location) {
+                const elem = document.elementFromPoint(location.x, location.y)!;
+                return {
+                    name: elem.id,
+                    location: location,
+                };
+            }
+        },
+        collect: (monitor) => ({
+            isOver: !!monitor.isOver({ shallow: false }),
+        }),
+    }));
+
+    const trimItem = (item: string | number) => {
+        return typeof item === "string"
+            ? item.includes("_")
+                ? item.split("_")[0]
+                : item
+            : item;
+    };
+
     return (
-        <div className="board-grid">
+        <div ref={drop} className="board-grid">
             {matrix.map((row) =>
                 row.map((tableItem) => (
                     <BoardItem
-                        tableItem={tableItem}
-                        key={Math.random()}
+                        tableItem={trimItem(tableItem)}
+                        key={tableItem}
+                        id={tableItem}
                     ></BoardItem>
                 )),
             )}
+            {bet.bets !== null &&
+                bet.bets.map((bet: any) => (
+                    <Chip
+                        id={bet.betChips[0].id}
+                        alt={bet.betChips[0].alt}
+                        url={bet.betChips[0].url}
+                        key={Math.random()}
+                        style={{
+                            top: bet.betLocation.y,
+                            left: bet.betLocation.x,
+                        }}
+                    />
+                ))}
         </div>
     );
 };
