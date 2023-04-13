@@ -1,24 +1,21 @@
-import React, { useState } from "react";
-import { BetContext, bet } from "./store/betStore";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { BetContext, bet } from "./store/betStore";
 import { Header } from "./components/Header";
 import { Board } from "./components/Board";
 import { Chips } from "./components/Chips";
-import { getRandomNumber, calculateWin } from "./mockServer/mockServer";
-import { play } from "./mockServer/mockServer";
+import { useServer } from "./hooks/useServer";
 import "./App.css";
 
 function App() {
-
+    const { error, message } = useServer();
     return (
         <DndProvider backend={HTML5Backend}>
             <div className="App">
                 <BetContext.Provider value={bet}>
                     <Header />
-                    <button className="mock-button" onClick={play}>
-                       play
-                    </button>
+                    <div className="mock-div">{message}</div>
+                    <button className="mock-button">play</button>
                     <Board />
                     <Chips />
                 </BetContext.Provider>
