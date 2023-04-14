@@ -37,6 +37,11 @@ class BetStore {
         this.bets.push(newBetItem);
     }
 
+    setBoardClear() {
+        this.bets.splice(0, this.bets.length);
+        console.log(this.bets);
+    }
+
     // computed and tracking function
     get newBet() {
         return {
@@ -62,6 +67,7 @@ class BetStore {
             setChipsTaken: action.bound,
             setBetLocation: action.bound,
             setAllBets: action.bound,
+            setBoardClear: action.bound,
             newBet: computed,
         });
     }

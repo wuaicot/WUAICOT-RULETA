@@ -3,46 +3,75 @@ import { Timer } from "easytimer.js";
 import { bet } from "../src/store/betStore";
 import { BLACKS, REDS } from "../src/utils/utils";
 
+//initialising websocket server
 const PORT = 8888;
 const wss = new WebSocketServer({
     port: PORT,
 });
 
-let winningNumber: number;
+//initialising timer
 const timer = new Timer();
+
+//types
+interface Winners {
+    id: string;
+    win: number;
+}
+
+interface GameData {
+    gameStage: GameLoop | undefined;
+    winningNumber: number | undefined;
+    winners: Winners[];
+}
+
 enum GameLoop {
-    PLACE_BET = "place_bet",
-    SPIN_WHEEL = "spin_wheel",
-    WINNER = "winner",
-    EMPTY_BOARD = "empty_board",
+    PLACE_BET = "PLACE BETS",
+    NO_MORE_BETS = "NO MORE BETS",
+    SPIN_WHEEL = "SPIN WHEEL",
+    WINNER = "WINNER",
+    EMPTY_BOARD = "EMPTY BOARD",
 }
 let gameStage: GameLoop;
+let winningNumber: number;
+let win = 0;
+
+timer.addEventListener("secondsUpdated", function (e: any) {
+    const currentTime = timer.getTimeValues().seconds;
+    if (currentTime === 1) {
+        gameStage = GameLoop.PLACE_BET;
+    } else if (currentTime === 25) {
+        gameStage = GameLoop.NO_MORE_BETS;
+    } else if (currentTime === 28) {
+        winningNumber = getRandomNumber(0, 36);
+        gameStage = GameLoop.SPIN_WHEEL;
+    } else if (currentTime === 30) {
+        winningNumber !== undefined && calculateWin(winningNumber, bet.bets);
+        gameStage = GameLoop.WINNER;
+    } else if (currentTime === 35) {
+        gameStage = GameLoop.EMPTY_BOARD;
+    }
+    const gameData: GameData = {
+        gameStage: gameStage,
+        winningNumber: winningNumber,
+        winners: [{ id: "szam", win: win }],
+    };
+    // console.log(gameData);
+    wss.clients.forEach((client) => {
+        client.send(JSON.stringify(gameData));
+    });
+    gameData.gameStage = GameLoop.PLACE_BET;
+    gameData.winningNumber = undefined;
+    gameData.winners.splice(0, gameData.winners.length);
+    return;
+});
+
+let clientData: any;
 
 wss.on("connection", (socket: any) => {
-    console.log("timer started");
-    timer.addEventListener("secondsUpdated", function (e: any) {
-        const currentTime = timer.getTimeValues().seconds;
-        if (currentTime === 1) {
-            console.log("PLACE BETS!");
-            gameStage = GameLoop.PLACE_BET;
-        } else if (currentTime === 25) {
-            console.log("NO MORE BETS");
-            winningNumber = getRandomNumber(0, 36);
-            console.log(winningNumber);
-            gameStage = GameLoop.SPIN_WHEEL;
-        } else if (currentTime === 30) {
-            calculateWin(winningNumber, bet.bets);
-            console.log(`Win: ${win}`);
-            gameStage = GameLoop.WINNER;
-        } else if (currentTime === 35) {
-            gameStage = GameLoop.EMPTY_BOARD;
-        }
-        wss.clients.forEach((client) => {
-            client.send(gameStage);
-        });
-        return;
+    socket.on("message", (data: any) => {
+        console.log(JSON.parse(data));
+        clientData = JSON.parse(data);
     });
-
     timer.start();
 });
 
@@ -130,10 +159,8 @@ const calculateLineNumbers = (line: string) => {
     return lineNumbersArray;
 };
 
-let win: number = 0;
-
 const calculateWin = (winningNumber: number, bets: any) => {
-    const userBets = bet.bets;
+    const userBets = clientData;
     for (let i = 0; i < userBets.length; i++) {
         const betType = getBetType(userBets[i].betSpot);
         if (

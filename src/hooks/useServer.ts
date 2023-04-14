@@ -1,27 +1,37 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { bet } from "../store/betStore";
 
 export const useServer = () => {
     const [error, setError] = useState("");
-    const [message, setMessage] = useState("");
+    const [message, setMessage] = useState<any>();
 
     const ws = useRef<WebSocket>();
     const URL = "ws://localhost:8888";
-    const clientOnError = useCallback((event: Event) => {
-        console.log(event);
-        setError(`something went wrong with connection to ${URL}, try again`);
-    }, [error]);
+    const clientOnError = useCallback(
+        (event: Event) => {
+            console.log(event);
+            setError(
+                `something went wrong with connection to ${URL}, try again`,
+            );
+        },
+        [error],
+    );
 
-    const gameData = "I'm sending some data from the game";
+    const clientData = bet.bets;
 
-    const sendGamedata = (gameData: string) => {
-        ws.current!.send(gameData);
+    const sendGameData = (clientData: any) => {
+        ws.current!.send(clientData);
     };
 
-    const clientOnMessage = useCallback((message: any) => {
-        console.log(message);
-        setMessage(message.data);
-        // sendGamedata(gameData);
-    }, [message]);
+    const clientOnMessage = useCallback(
+        (message: any) => {
+            console.log(JSON.parse(message.data));
+            setMessage(JSON.parse(message.data));
+            console.log(clientData);
+            sendGameData(JSON.stringify(clientData));
+        },
+        [message],
+    );
 
     useEffect(() => {
         try {
