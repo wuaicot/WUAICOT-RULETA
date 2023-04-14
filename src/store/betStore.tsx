@@ -39,7 +39,6 @@ class BetStore {
 
     setBoardClear() {
         this.bets.splice(0, this.bets.length);
-        console.log(this.bets);
     }
 
     // computed and tracking function

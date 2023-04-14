@@ -27,7 +27,6 @@ export const useServer = () => {
         (message: any) => {
             console.log(JSON.parse(message.data));
             setMessage(JSON.parse(message.data));
-            console.log(clientData);
             sendGameData(JSON.stringify(clientData));
         },
         [message],

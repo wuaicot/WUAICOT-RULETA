@@ -1,6 +1,5 @@
 import { WebSocketServer } from "ws";
 import { Timer } from "easytimer.js";
-import { bet } from "../src/store/betStore";
 import { BLACKS, REDS } from "../src/utils/utils";
 
 //initialising websocket server
@@ -31,34 +30,46 @@ enum GameLoop {
     WINNER = "WINNER",
     EMPTY_BOARD = "EMPTY BOARD",
 }
-let gameStage: GameLoop;
+let gameStage: GameLoop = GameLoop.PLACE_BET;
 let winningNumber: number;
 let win = 0;
 
-timer.addEventListener("secondsUpdated", function (e: any) {
-    const currentTime = timer.getTimeValues().seconds;
-    if (currentTime === 1) {
-        gameStage = GameLoop.PLACE_BET;
-    } else if (currentTime === 25) {
-        gameStage = GameLoop.NO_MORE_BETS;
-    } else if (currentTime === 28) {
-        winningNumber = getRandomNumber(0, 36);
-        gameStage = GameLoop.SPIN_WHEEL;
-    } else if (currentTime === 30) {
-        winningNumber !== undefined && calculateWin(winningNumber, bet.bets);
-        gameStage = GameLoop.WINNER;
-    } else if (currentTime === 35) {
-        gameStage = GameLoop.EMPTY_BOARD;
-    }
-    const gameData: GameData = {
-        gameStage: gameStage,
-        winningNumber: winningNumber,
-        winners: [{ id: "szam", win: win }],
-    };
-    // console.log(gameData);
+const sendGameData = (gameData: GameData) => {
     wss.clients.forEach((client) => {
         client.send(JSON.stringify(gameData));
     });
+};
+
+timer.addEventListener("secondsUpdated", function (e: any) {
+    const currentTime = timer.getTimeValues().seconds;
+    const gameData: GameData = {
+        gameStage: gameStage,
+        winningNumber: winningNumber,
+        winners: [
+            { id: "szam", win: win },
+            { id: "paul", win: win },
+            { id: "bunia", win: win },
+            { id: "paskudzio", win: win },
+        ],
+    };
+    if (currentTime === 1) {
+        gameStage = GameLoop.PLACE_BET;
+        sendGameData(gameData);
+    } else if (currentTime === 25) {
+        gameStage = GameLoop.NO_MORE_BETS;
+        sendGameData(gameData);
+    } else if (currentTime === 28) {
+        winningNumber = getRandomNumber(0, 36);
+        gameStage = GameLoop.SPIN_WHEEL;
+        sendGameData(gameData);
+    } else if (currentTime === 30) {
+        winningNumber !== undefined && calculateWin(winningNumber, clientData);
+        gameStage = GameLoop.WINNER;
+        sendGameData(gameData);
+    } else if (currentTime === 35) {
+        gameStage = GameLoop.EMPTY_BOARD;
+        sendGameData(gameData);
+    }
     gameData.gameStage = GameLoop.PLACE_BET;
     gameData.winningNumber = undefined;
     gameData.winners.splice(0, gameData.winners.length);
@@ -69,7 +80,6 @@ let clientData: any;
 
 wss.on("connection", (socket: any) => {
     socket.on("message", (data: any) => {
-        console.log(JSON.parse(data));
         clientData = JSON.parse(data);
     });
     timer.start();

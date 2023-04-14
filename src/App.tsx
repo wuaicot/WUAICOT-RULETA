@@ -11,7 +11,15 @@ import "./App.css";
 function App() {
     const { error, message } = useServer();
     const { setBoardClear } = useContext(BetContext);
-    // console.log(message);
+
+    const setPointerEvents = (message: any) => {
+        let className;
+        if (message) {
+            return message.gameStage === "PLACE BETS"
+                ? (className = "App pointers")
+                : "App no-pointers";
+        }
+    };
     const getContent = (message: any) => {
         let content;
         if (message) {
@@ -20,7 +28,10 @@ function App() {
                 message.gameStage === "NO MORE BETS"
             ) {
                 content = message.gameStage;
-            } else if (message.winningNumber && message.gameStage === 'WINNER') {
+            } else if (
+                message.winningNumber &&
+                message.gameStage === "WINNER"
+            ) {
                 content = `Winnig number is: ${message.winningNumber}`;
             } else if (
                 message.winningNumber &&
@@ -50,7 +61,7 @@ function App() {
 
     return (
         <DndProvider backend={HTML5Backend}>
-            <div className="App">
+            <div className={setPointerEvents(message)}>
                 <BetContext.Provider value={bet}>
                     <Header />
                     {message && (

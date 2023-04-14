@@ -8,3 +8,7 @@
     background: black;
     color: white;
 }
+
+.no-pointers {
+    pointer-events: none;
+}
