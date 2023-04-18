@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { ReactNode, useContext, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { BetContext, bet } from "./store/betStore";
@@ -9,14 +9,22 @@ import { useServer } from "./hooks/useServer";
 import "./App.css";
 
 function App() {
-    const { error, message } = useServer();
+    const { error, message, connect } = useServer();
     const { setBoardClear } = useContext(BetContext);
 
+    useEffect(() => {
+        if (message) {
+            if (message.winners) {
+                console.log(message.winners);
+            }
+        }
+    }, [message]);
+
     const setPointerEvents = (message: any) => {
-        let className;
+        if (!message) return "App";
         if (message) {
             return message.gameStage === "PLACE BETS"
-                ? (className = "App pointers")
+                ? "App"
                 : "App no-pointers";
         }
     };
@@ -45,14 +53,14 @@ function App() {
     };
 
     const getWinners = (message: any) => {
-        let content;
+        const content: any = [];
         if (message) {
             message.winners.map((winner: any) => {
-                content = (
-                    <li>
+                content.push(
+                    <div>
                         <div className="mock-div">User id: {winner.id}</div>
                         <div className="mock-div">Win: {winner.win}</div>
-                    </li>
+                    </div>,
                 );
             });
         }
@@ -63,13 +71,18 @@ function App() {
         <DndProvider backend={HTML5Backend}>
             <div className={setPointerEvents(message)}>
                 <BetContext.Provider value={bet}>
-                    <Header />
+                    <Header connect={connect} />
                     {message && (
                         <div className="mock-div">{getContent(message)}</div>
                     )}
-                    {message && <ul>{getWinners(message)}</ul>}
+                    {message && (
+                        <ul>
+                            {getWinners(message).map((cont: any) => (
+                                <li>{cont}</li>
+                            ))}
+                        </ul>
+                    )}
                     {error && <div className="mock-div">{error}</div>}
-                    <button className="mock-button">play</button>
                     <Board />
                     <Chips />
                 </BetContext.Provider>

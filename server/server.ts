@@ -12,7 +12,7 @@ const wss = new WebSocketServer({
 const timer = new Timer();
 
 //types
-interface Winners {
+interface Winner {
     id: string;
     win: number;
 }
@@ -20,7 +20,12 @@ interface Winners {
 interface GameData {
     gameStage: GameLoop | undefined;
     winningNumber: number | undefined;
-    winners: Winners[];
+    winners: Winner[];
+}
+
+interface ClientData {
+    playerId: string;
+    bets: any[];
 }
 
 enum GameLoop {
@@ -32,7 +37,10 @@ enum GameLoop {
 }
 let gameStage: GameLoop = GameLoop.PLACE_BET;
 let winningNumber: number;
+const winners: Winner[] = [];
 let win = 0;
+let clientData: ClientData = { playerId: "", bets: [] };
+const usersData: ClientData[] = [];
 
 const sendGameData = (gameData: GameData) => {
     wss.clients.forEach((client) => {
@@ -45,12 +53,7 @@ timer.addEventListener("secondsUpdated", function (e: any) {
     const gameData: GameData = {
         gameStage: gameStage,
         winningNumber: winningNumber,
-        winners: [
-            { id: "szam", win: win },
-            { id: "paul", win: win },
-            { id: "bunia", win: win },
-            { id: "paskudzio", win: win },
-        ],
+        winners: winners,
     };
     if (currentTime === 1) {
         gameStage = GameLoop.PLACE_BET;
@@ -60,27 +63,64 @@ timer.addEventListener("secondsUpdated", function (e: any) {
         sendGameData(gameData);
     } else if (currentTime === 28) {
         winningNumber = getRandomNumber(0, 36);
+        isUserDataUnique();
+        console.log(uniqueData);
         gameStage = GameLoop.SPIN_WHEEL;
         sendGameData(gameData);
     } else if (currentTime === 30) {
-        winningNumber !== undefined && calculateWin(winningNumber, clientData);
+        for (let i = 0; i < uniqueData.length; i++) {
+            for (let j = 0; j < winners.length; j++) {
+                if (uniqueData[i].playerId === winners[j].id) {
+                    winners[j].win = calculateWin(
+                        winningNumber,
+                        uniqueData[i].bets,
+                    );
+                }
+            }
+        }
         gameStage = GameLoop.WINNER;
         sendGameData(gameData);
     } else if (currentTime === 35) {
         gameStage = GameLoop.EMPTY_BOARD;
         sendGameData(gameData);
     }
-    gameData.gameStage = GameLoop.PLACE_BET;
-    gameData.winningNumber = undefined;
-    gameData.winners.splice(0, gameData.winners.length);
     return;
 });
 
-let clientData: any;
+const isIdUnique = (winners: Winner[], id: string) => {
+    return winners.map(
+        (winner) => JSON.stringify(winner.id) !== JSON.stringify(id),
+    );
+};
+const uniqueData: any[] = [];
+const isUserDataUnique = () => {
+    const reverse = usersData.reverse();
+    for (let i = 0; i < reverse.length; i++) {
+        if (
+            uniqueData.length === 0 ||
+            !uniqueData
+                .map(
+                    (data) =>
+                        JSON.stringify(data.playerId) !==
+                        JSON.stringify(reverse[i].playerId),
+                )
+                .includes(false)
+        ) {
+            uniqueData.push(reverse[i]);
+        }
+    }
+};
 
 wss.on("connection", (socket: any) => {
     socket.on("message", (data: any) => {
         clientData = JSON.parse(data);
+        usersData.push(clientData);
+        if (
+            winners.length === 0 ||
+            !isIdUnique(winners, clientData.playerId).includes(false)
+        ) {
+            winners.push({ id: clientData.playerId, win: win });
+        }
     });
     timer.start();
 });
@@ -170,7 +210,7 @@ const calculateLineNumbers = (line: string) => {
 };
 
 const calculateWin = (winningNumber: number, bets: any) => {
-    const userBets = clientData;
+    const userBets = bets;
     for (let i = 0; i < userBets.length; i++) {
         const betType = getBetType(userBets[i].betSpot);
         if (
