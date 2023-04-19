@@ -5,7 +5,7 @@ import "@babylonjs/inspector";
 import { useEffect } from "react";
 
 export const RouletteMesh = (props: any) => {
-    const { spin, renderingGroupId } = props;
+    const { spin } = props;
     const modelAssetTasks: Task[] = [
         {
             taskType: TaskType.Mesh,

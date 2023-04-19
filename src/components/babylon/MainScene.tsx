@@ -1,21 +1,52 @@
 import { Engine, Scene, Skybox } from "react-babylonjs";
 import { Vector3 } from "@babylonjs/core";
-import { Suspense } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { RouletteAnimate } from "./RouletteAnimate";
 import { Ground } from "./Ground";
 
 interface MainSceneProps {
+    winningNumber: number | null;
     children?: React.ReactNode;
 }
 
 export const MainScene = (props: MainSceneProps) => {
-    const { children } = props;
+    const { children, winningNumber } = props;
     const SkyboxScene = [
         {
             name: "greenery",
             texture: "/assets/grass.png",
         },
     ];
+    const [rpm, setRpm] = useState(1);
+    const accelerate = () => {
+        const rpmAccInterval = setInterval(() => {
+            setRpm((prevValue) => (prevValue += 30));
+        }, 500);
+
+        const timeoutId = setTimeout(() => {
+            clearInterval(rpmAccInterval);
+        }, 3000);
+    };
+
+    const deccelerate = () => {
+        const rpmDecInterval = setInterval(() => {
+            setRpm((prevValue) => (prevValue -= 30));
+        }, 300);
+
+        const timeoutIdDec = setTimeout(() => {
+            clearInterval(rpmDecInterval);
+        }, 2000);
+    };
+
+    console.log(rpm);
+    useEffect(() => {
+        setTimeout(() => {
+            accelerate();
+        }, 5000);
+        setTimeout(() => {
+            deccelerate();
+        }, 9000);
+    }, []);
 
     return (
         <Engine antialias adaptToDeviceRatio canvasId="babylon-canvas">
@@ -54,7 +85,7 @@ export const MainScene = (props: MainSceneProps) => {
                         shadowCastChildren
                     >
                         <Suspense fallback={null}>
-                            <RouletteAnimate rpm={1} />
+                            <RouletteAnimate rpm={rpm} />
                         </Suspense>
                     </shadowGenerator>
                 </directionalLight>
