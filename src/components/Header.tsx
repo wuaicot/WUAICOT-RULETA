@@ -12,6 +12,8 @@ export const Header = ({ connect }: any) => {
     const logInHandler = () => {
         setLoggedIn(true);
         const id = uuidv4();
+        //console for getting to know which user it is
+        console.log(id);
         setPlayerId(id);
         connect();
     };

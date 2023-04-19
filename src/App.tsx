@@ -5,6 +5,7 @@ import { BetContext, bet } from "./store/betStore";
 import { Header } from "./components/Header";
 import { Board } from "./components/Board";
 import { Chips } from "./components/Chips";
+import { BabylonApp } from "./components/babylon/BabylonApp";
 import { useServer } from "./hooks/useServer";
 import "./App.css";
 
@@ -72,7 +73,8 @@ function App() {
             <div className={setPointerEvents(message)}>
                 <BetContext.Provider value={bet}>
                     <Header connect={connect} />
-                    {message && (
+                    {/* //there will be another component for game data from server */}
+                    {/* {message && (
                         <div className="mock-div">{getContent(message)}</div>
                     )}
                     {message && (
@@ -82,7 +84,8 @@ function App() {
                             ))}
                         </ul>
                     )}
-                    {error && <div className="mock-div">{error}</div>}
+                    {error && <div className="mock-div">{error}</div>} */}
+                    <BabylonApp />
                     <Board />
                     <Chips />
                 </BetContext.Provider>

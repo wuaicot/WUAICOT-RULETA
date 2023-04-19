@@ -20,14 +20,6 @@
     background: transparent;
 }
 
-.board-svg {
-    position: absolute;
-}
-
-.board-svg-text {
-    font-size: 0.8rem;
-}
-
 #\31\54\4F\31\38 {
     grid-column: 2 / span 2;
 }
@@ -51,10 +43,4 @@
 
 #\30 {
     grid-row: span 3;
-}
-
-.invisible {
-    background: yellow;
-    width: 30px;
-    height: 30px;
 }

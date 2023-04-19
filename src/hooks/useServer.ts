@@ -6,6 +6,7 @@ export const useServer = () => {
     const [error, setError] = useState("");
     const [message, setMessage] = useState<any>();
     const timer = new Timer();
+    //for progress bar purposes
     timer.addEventListener("secondsUpdated", function (e: any) {
         const currentTime = timer.getTimeValues().seconds;
     });
