@@ -1,31 +1,11 @@
-import { useState, useEffect } from "react";
+import { Task, TaskType, useAssetManager } from "react-babylonjs";
+import { Vector3, MeshAssetTask } from "@babylonjs/core";
 import "@babylonjs/loaders/glTF";
-import {
-    useBeforeRender,
-    useScene,
-    Task,
-    TaskType,
-    useAssetManager,
-} from "react-babylonjs";
 import "@babylonjs/inspector";
-import { Vector3, Color3, MeshAssetTask } from "@babylonjs/core";
+import { useEffect } from "react";
 
-interface RouletteMeshProps {
-    rpm: number;
-}
-
-export const RouletteMesh = (props: RouletteMeshProps) => {
-    const { rpm } = props;
-    // const [Y, setY] = useState(0);
-    // const scene = useScene();
-    // const deltaTime = scene!.getEngine().getDeltaTime();
-    //scene!.debugLayer.show();
-    // useBeforeRender(() => {
-    //     setY(
-    //         (savedY) => savedY + (rpm / 60) * Math.PI * 2 * (deltaTime / 1000),
-    //     );
-    // }, rpm);
-
+export const RouletteMesh = (props: any) => {
+    const { spin, renderingGroupId } = props;
     const modelAssetTasks: Task[] = [
         {
             taskType: TaskType.Mesh,
@@ -38,12 +18,12 @@ export const RouletteMesh = (props: RouletteMeshProps) => {
     const assetManagerResult = useAssetManager(modelAssetTasks);
 
     useEffect(() => {
-        console.log("Loaded Tasks", assetManagerResult);
+        //console.log("Loaded Tasks", assetManagerResult);
         const rouletteTask = assetManagerResult.taskNameMap[
             "roulette"
         ] as MeshAssetTask;
         rouletteTask.loadedMeshes[0].position = new Vector3(0, -40, -3);
-        rouletteTask.loadedMeshes[0].rotation = new Vector3(20, 0, 0);
-    }, []);
+        rouletteTask.loadedMeshes[0].rotation = new Vector3(20, 0, spin);
+    }, [spin]);
     return null;
 };

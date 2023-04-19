@@ -1,4 +1,4 @@
-import { TextureAssetTask } from "@babylonjs/core";
+import { TextureAssetTask, Vector3 } from "@babylonjs/core";
 import { Task, TaskType, useAssetManager } from "react-babylonjs";
 import "@babylonjs/core/Loading/loadingScreen";
 
@@ -19,7 +19,13 @@ export const Ground = () => {
         useDefaultLoadingScreen: true,
     });
     return (
-        <ground name="ground" width={13} height={13} receiveShadows>
+        <ground
+            name="ground"
+            width={120}
+            height={120}
+            position={new Vector3(0, -50, 0)}
+            receiveShadows
+        >
             <standardMaterial name="bump-table">
                 <texture
                     url={
@@ -48,8 +54,8 @@ export const Ground = () => {
                             }
                             assignTo="emissiveTexture"
                         />
-                    </standardMaterial>
-                </texture>
+                    </standardMaterial> 
+                 </texture>
             </standardMaterial>
         </ground>
     );

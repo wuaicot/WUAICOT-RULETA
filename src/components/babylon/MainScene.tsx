@@ -1,7 +1,7 @@
 import { Engine, Scene, Skybox } from "react-babylonjs";
 import { Vector3 } from "@babylonjs/core";
 import { Suspense } from "react";
-import { RouletteMesh } from "./RouletteMesh";
+import { RouletteAnimate } from "./RouletteAnimate";
 import { Ground } from "./Ground";
 
 interface MainSceneProps {
@@ -16,6 +16,7 @@ export const MainScene = (props: MainSceneProps) => {
             texture: "/assets/grass.png",
         },
     ];
+
     return (
         <Engine antialias adaptToDeviceRatio canvasId="babylon-canvas">
             <Scene>
@@ -31,9 +32,9 @@ export const MainScene = (props: MainSceneProps) => {
                     setTarget={[Vector3.Zero()]}
                 />
 
-                {/* <Suspense fallback={null}>
+                <Suspense fallback={null}>
                     <Ground />
-                </Suspense> */}
+                </Suspense>
                 <directionalLight
                     name="shadow-light"
                     intensity={0.8}
@@ -53,7 +54,7 @@ export const MainScene = (props: MainSceneProps) => {
                         shadowCastChildren
                     >
                         <Suspense fallback={null}>
-                            <RouletteMesh rpm={1} />
+                            <RouletteAnimate rpm={1} />
                         </Suspense>
                     </shadowGenerator>
                 </directionalLight>
