@@ -1,8 +1,9 @@
 import { useScene, useBeforeRender } from "react-babylonjs";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/inspector";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { RouletteMesh } from "./RouletteMesh";
+import { Barrier } from "./Barrier";
 
 interface RouletteAnimateProps {
     rpm: number;
@@ -10,7 +11,6 @@ interface RouletteAnimateProps {
 
 export const RouletteAnimate = (props: RouletteAnimateProps) => {
     const { rpm } = props;
-    //console.log(rpm);
     const [Z, setZ] = useState(0);
 
     const scene = useScene();
@@ -27,5 +27,10 @@ export const RouletteAnimate = (props: RouletteAnimateProps) => {
         undefined,
         [rpm],
     );
-    return <RouletteMesh spin={Z} renderingGroupId={2} />;
+    return (
+        <>
+            <RouletteMesh spin={Z} />
+            <Barrier spin={Z} />
+        </>
+    );
 };

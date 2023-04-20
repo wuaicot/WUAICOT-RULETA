@@ -30,22 +30,21 @@ export const MainScene = (props: MainSceneProps) => {
 
     const deccelerate = () => {
         const rpmDecInterval = setInterval(() => {
-            setRpm((prevValue) => (prevValue -= 30));
-        }, 300);
+            setRpm((prevValue) => (prevValue -= 20));
+        }, 550);
 
         const timeoutIdDec = setTimeout(() => {
             clearInterval(rpmDecInterval);
-        }, 2000);
+        }, 5000);
     };
 
-    console.log(rpm);
     useEffect(() => {
         setTimeout(() => {
             accelerate();
         }, 5000);
         setTimeout(() => {
             deccelerate();
-        }, 9000);
+        }, 10000);
     }, []);
 
     return (
@@ -53,30 +52,27 @@ export const MainScene = (props: MainSceneProps) => {
             <Scene>
                 <hemisphericLight
                     name="light1"
-                    intensity={0.3}
-                    direction={new Vector3(0, 1, 0)}
+                    intensity={0.2}
+                    direction={Vector3.Up()}
                 />
                 {/* <Skybox rootUrl={SkyboxScene[0].texture} /> */}
                 <freeCamera
                     name="camera1"
-                    position={new Vector3(0, 25, 0)}
+                    position={new Vector3(0, 20, 0)}
                     setTarget={[Vector3.Zero()]}
                 />
 
-                <Suspense fallback={null}>
-                    <Ground />
-                </Suspense>
                 <directionalLight
                     name="shadow-light"
                     intensity={0.8}
                     direction={
                         new Vector3(
-                            (-5 * Math.PI) / 4,
-                            (-5 * Math.PI) / 4,
+                            (-10 * Math.PI) / 4,
+                            (-10 * Math.PI) / 4,
                             -Math.PI,
                         )
                     }
-                    position={new Vector3(2, 4, 8)}
+                    position={new Vector3(0, 5, 16)}
                 >
                     <shadowGenerator
                         mapSize={1024}
@@ -89,6 +85,9 @@ export const MainScene = (props: MainSceneProps) => {
                         </Suspense>
                     </shadowGenerator>
                 </directionalLight>
+                <Suspense fallback={null}>
+                    <Ground />
+                </Suspense>
             </Scene>
         </Engine>
     );

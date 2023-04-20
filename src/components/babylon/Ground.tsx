@@ -21,12 +21,13 @@ export const Ground = () => {
     return (
         <ground
             name="ground"
-            width={120}
-            height={120}
-            position={new Vector3(0, -50, 0)}
+            width={200}
+            height={200}
+            position={new Vector3(0, -36, 0)}
+            rotation={new Vector3(-19.5, 0, 0)}
             receiveShadows
         >
-            <standardMaterial name="bump-table">
+            {/* <standardMaterial name="bump-table">
                 <texture
                     url={
                         "https://www.babylonjs-playground.com/textures/floor_bump.PNG"
@@ -39,24 +40,8 @@ export const Ground = () => {
                         ).texture
                     }
                     assignTo="bumpTexture"
-                >
-                    <standardMaterial name="lava-table">
-                        <texture
-                            url={
-                                "https://www.babylonjs-playground.com/textures/lava/lavatile.jpg"
-                            }
-                            fromInstance={
-                                (
-                                    assetManagerResult.taskNameMap[
-                                        "lava-table"
-                                    ] as TextureAssetTask
-                                ).texture
-                            }
-                            assignTo="emissiveTexture"
-                        />
-                    </standardMaterial> 
-                 </texture>
-            </standardMaterial>
+                ></texture>
+            </standardMaterial> */}
         </ground>
     );
 };
