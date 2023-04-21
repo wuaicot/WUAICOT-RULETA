@@ -55,6 +55,7 @@ timer.addEventListener("secondsUpdated", function (e: any) {
         winningNumber: winningNumber,
         winners: winners,
     };
+    sendGameData(gameData);
     if (currentTime === 1) {
         gameStage = GameLoop.PLACE_BET;
         sendGameData(gameData);
@@ -64,10 +65,9 @@ timer.addEventListener("secondsUpdated", function (e: any) {
     } else if (currentTime === 28) {
         winningNumber = getRandomNumber(0, 36);
         isUserDataUnique();
-        console.log(uniqueData);
         gameStage = GameLoop.SPIN_WHEEL;
         sendGameData(gameData);
-    } else if (currentTime === 30) {
+    } else if (currentTime === 40) {
         for (let i = 0; i < uniqueData.length; i++) {
             for (let j = 0; j < winners.length; j++) {
                 if (uniqueData[i].playerId === winners[j].id) {
@@ -80,7 +80,7 @@ timer.addEventListener("secondsUpdated", function (e: any) {
         }
         gameStage = GameLoop.WINNER;
         sendGameData(gameData);
-    } else if (currentTime === 35) {
+    } else if (currentTime === 50) {
         gameStage = GameLoop.EMPTY_BOARD;
         sendGameData(gameData);
     }
@@ -210,6 +210,7 @@ const calculateLineNumbers = (line: string) => {
 };
 
 const calculateWin = (winningNumber: number, bets: any) => {
+    win = 0;
     const userBets = bets;
     for (let i = 0; i < userBets.length; i++) {
         const betType = getBetType(userBets[i].betSpot);

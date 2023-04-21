@@ -1,25 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { MainScene } from "./MainScene";
 import "./BabylonApp.css";
 
 interface BabylonAppProps {
     children?: React.ReactNode;
+    message: any
 }
 export const BabylonApp = (props: BabylonAppProps) => {
+    const { message } = props;
     const { children } = props;
     const [winningNumber, setWinningNumber] = useState<number | null>(null);
-    useEffect(() => {
-        const winInterval = setInterval(() => {
-            setWinningNumber(Math.random());
-        }, 10000);
-        return () => {
-            clearInterval(winInterval);
-        };
-    });
 
     return (
         <div className="babylon-container">
-            <MainScene winningNumber={winningNumber}>{children}</MainScene>
+            <MainScene message={message}>{children}</MainScene>
         </div>
     );
 };

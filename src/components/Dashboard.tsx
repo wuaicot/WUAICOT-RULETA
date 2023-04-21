@@ -7,7 +7,7 @@ export const Dashboard = (props: any) => {
     
     return (
         <div className="dashboard">
-            <BabylonApp />
+            <BabylonApp message={message} />
             <GameLoopTable message={message} />
         </div>
     );

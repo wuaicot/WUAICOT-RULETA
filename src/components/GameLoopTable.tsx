@@ -13,6 +13,8 @@ export const GameLoopTable = (props: any) => {
         if (message) {
             if (message.gameStage === "PLACE BETS") {
                 setStarted(true);
+            } else if (message.gameStage !== "PLACE BETS") {
+                setStarted(false);
             }
         }
     }, [message]);
@@ -55,12 +57,6 @@ export const GameLoopTable = (props: any) => {
         }
         return content;
     };
-
-    useEffect(() => {
-        if (message) {
-            console.log(message);
-        }
-    }, [message]);
 
     return (
         <div className="table-container">

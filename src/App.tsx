@@ -12,14 +12,6 @@ import "./App.css";
 function App() {
     const { error, message, connect } = useServer();
 
-    useEffect(() => {
-        if (message) {
-            if (message.winners) {
-                console.log(message.winners);
-            }
-        }
-    }, [message]);
-
     const setPointerEvents = (message: any) => {
         if (!message) return "App";
         if (message) {
@@ -33,10 +25,14 @@ function App() {
         <DndProvider backend={HTML5Backend}>
             <div className={setPointerEvents(message)}>
                 <BetContext.Provider value={bet}>
+                  
                     <Header connect={connect} />
                     {error && <div className="mock-div">{error}</div>}
+                
                     <Dashboard message={message} />
+                 
                     <Board />
+                
                     <Chips />
                 </BetContext.Provider>
             </div>

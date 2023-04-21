@@ -5,12 +5,12 @@ import { RouletteAnimate } from "./RouletteAnimate";
 import { Ground } from "./Ground";
 
 interface MainSceneProps {
-    winningNumber: number | null;
+    message: any;
     children?: React.ReactNode;
 }
 
 export const MainScene = (props: MainSceneProps) => {
-    const { children, winningNumber } = props;
+    const { children, message } = props;
 
     const RADIUS = 23;
     const assetCorrection = -1.5;
@@ -51,14 +51,18 @@ export const MainScene = (props: MainSceneProps) => {
         }, 5000);
     };
 
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         accelerate();
-    //     }, 5000);
-    //     setTimeout(() => {
-    //         deccelerate();
-    //     }, 10000);
-    // }, []);
+    useEffect(() => {
+        if (message) {
+            if (message.gameStage === "NO MORE BETS") {
+                setTimeout(() => {
+                    accelerate();
+                }, 3000);
+                setTimeout(() => {
+                    deccelerate();
+                }, 6000);
+            }
+        }
+    }, [message]);
 
     return (
         <Engine antialias adaptToDeviceRatio canvasId="babylon-canvas">
