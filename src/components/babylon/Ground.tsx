@@ -6,13 +6,8 @@ export const Ground = () => {
     const textureAssets: Task[] = [
         {
             taskType: TaskType.Texture,
-            url: "https://www.babylonjs-playground.com/textures/floor_bump.PNG",
-            name: "bump-table",
-        },
-        {
-            taskType: TaskType.Texture,
-            url: "https://www.babylonjs-playground.com/textures/lava/lavatile.jpg",
-            name: "lava-table",
+            url: "/assets/grass.png",
+            name: "table",
         },
     ];
     const assetManagerResult = useAssetManager(textureAssets, {
@@ -27,21 +22,21 @@ export const Ground = () => {
             rotation={new Vector3(-19.5, 0, 0)}
             receiveShadows
         >
-            {/* <standardMaterial name="bump-table">
+            <standardMaterial name="table">
                 <texture
-                    url={
-                        "https://www.babylonjs-playground.com/textures/floor_bump.PNG"
-                    }
+                    url={"/assets/grass.png"}
                     fromInstance={
                         (
                             assetManagerResult.taskNameMap[
-                                "bump-table"
+                                "table"
                             ] as TextureAssetTask
                         ).texture
                     }
-                    assignTo="bumpTexture"
+                    assignTo="diffuseTexture"
+                    uScale={40}
+                    vScale={40}
                 ></texture>
-            </standardMaterial> */}
+            </standardMaterial>
         </ground>
     );
 };

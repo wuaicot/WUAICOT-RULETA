@@ -23,6 +23,7 @@
     "react": "^18.2.0",
     "react-babylonjs": "^3.1.15",
     "react-dom": "^18.2.0",
+    "react-progress-bar-timer": "^0.3.4",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
     "uuid": "^9.0.0",

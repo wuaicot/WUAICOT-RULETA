@@ -1,0 +1,20 @@
+.table-container {
+    border: 0.125em solid rgb(255, 173, 0);
+    border-radius: 8px;
+    box-shadow: 0 0 0.5em 0 rgb(255, 173, 0);
+    color: var(--color-accent);
+    text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.5), 0 0 0.45em rgb(255, 173, 0);
+    padding: 0.7em 1.25em;
+}
+
+.game-stage {
+    font-size: 2em;
+    text-align: center;
+    padding-bottom: 0.5em;
+}
+
+.winners-list {
+    list-style: none;
+    font-size: 1.5em;
+    padding-top: 0.5em;
+}

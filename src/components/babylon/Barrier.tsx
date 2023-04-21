@@ -3,7 +3,7 @@ import { BallMesh } from './BallMesh';
 import { BabylonMeshProps } from "../../types";
 
 export const Barrier = (props: BabylonMeshProps) => {
-    const { spin } = props;
+    const { spin, pos } = props;
 
     return (
         <sphere
@@ -12,8 +12,8 @@ export const Barrier = (props: BabylonMeshProps) => {
             segments={32}
             position={new Vector3(0, -29, -3)}
             rotation={new Vector3(19.5, 0, spin)}
-        ><BallMesh />
-            <standardMaterial name="barrier" alpha={0.4} />
+        ><BallMesh pos={pos} />
+            <standardMaterial name="barrier" alpha={0} />
         </sphere>
     );
 };

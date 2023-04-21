@@ -4,8 +4,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 70px;
-    width: 80vw;
+    height: 100px;
+    width: 80svw;
 }
 
 .logo {
@@ -25,36 +25,4 @@
     letter-spacing: 2px;
     font-size: 1.5rem;
     text-align: center;
-}
-
-.login-button,
-.main-heading {
-    background: black;
-    color: rgb(154, 120, 41);
-}
-
-.button-border:has(.login-button),
-.logo {
-    background: linear-gradient(
-        135deg,
-        rgba(183, 163, 104),
-        rgba(132, 106, 45, 255),
-        rgba(132, 106, 45, 255),
-        rgba(183, 163, 104)
-    );
-}
-
-.logout-button {
-    background: rgb(154, 120, 41);
-    color: black;
-}
-
-.button-border:has(.logout-button) {
-    background: linear-gradient(
-        135deg,
-        rgb(25, 24, 21),
-        rgb(56, 46, 23),
-        rgb(137, 98, 5),
-        rgb(25, 24, 21)
-    );
 }

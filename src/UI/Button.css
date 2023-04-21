@@ -1,25 +1,57 @@
 .button {
-    border: none;
-    font-size: 1rem;
+    border: 0.125em solid rgb(255, 173, 0);
+    border-radius: 8px;
+    box-shadow: inset 0 0 0.7em 0 rgb(255, 173, 0), 0 0 0.7em 0 rgb(255, 173, 0);
+    background-color: transparent;
+    color: rgb(255, 173, 0);
+    text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.5), 0 0 0.45em rgb(255, 173, 0);
+    font-size: 1em;
     font-weight: bold;
     cursor: pointer;
-    padding: 0.7rem 1.2rem;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    padding: 0.7em 1.2em;
     min-width: 6.5rem;
+    position: relative;
+    transition: background-color 100ms linear;
 }
 
-.button-border {
-    background: linear-gradient(
-        135deg,
-        rgba(183, 163, 104),
-        rgba(132, 106, 45, 255),
-        rgba(132, 106, 45, 255),
-        rgba(183, 163, 104)
-    );
-    height: calc(1rem + 0.7rem + 1.4rem);
-    width: 7rem;
-    position: relative;
+.button::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgb(255, 173, 0);
+    transform: perspective(1em) rotateX(40deg) scale(1, 0.35);
+    filter: blur(1em);
+    opacity: 0.7;
+}
+
+.button::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: 0 0 2em 0.5em rgb(255, 173, 0);
+    opacity: 0;
+    transition: opacity 100ms linear;
+}
+
+.button:hover::after,
+.button:focus::after {
+    opacity: 1;
+}
+
+.button:hover::before,
+.button:focus::before {
+    opacity: 0.9;
+}
+
+.button:hover,
+.button:focus {
+    background-color: rgb(255, 173, 0);
+    color: rgba(51, 49, 22);
 }

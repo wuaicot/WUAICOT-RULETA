@@ -11,16 +11,22 @@ interface MainSceneProps {
 
 export const MainScene = (props: MainSceneProps) => {
     const { children, winningNumber } = props;
-    const SkyboxScene = [
-        {
-            name: "greenery",
-            texture: "/assets/grass.png",
-        },
+
+    const RADIUS = 23;
+    const assetCorrection = -1.5;
+    const initialBallPos: [number, number, number] = [
+        RADIUS,
+        assetCorrection,
+        0,
     ];
     const [rpm, setRpm] = useState(1);
+    const [acc, setAcc] = useState(false);
+    const [pos, setPos] = useState(initialBallPos);
+
     const accelerate = () => {
+        setAcc(true);
         const rpmAccInterval = setInterval(() => {
-            setRpm((prevValue) => (prevValue += 30));
+            setRpm((prevValue) => (prevValue += 10));
         }, 500);
 
         const timeoutId = setTimeout(() => {
@@ -30,22 +36,29 @@ export const MainScene = (props: MainSceneProps) => {
 
     const deccelerate = () => {
         const rpmDecInterval = setInterval(() => {
-            setRpm((prevValue) => (prevValue -= 20));
+            setRpm((prevValue) => (prevValue -= 6.5));
+            setPos((prevValue) => [
+                prevValue[0] - 0.6,
+                prevValue[1],
+                prevValue[2],
+            ]);
         }, 550);
 
         const timeoutIdDec = setTimeout(() => {
+            setPos((prevValue) => [prevValue[0], 2.5, prevValue[2]]);
+            setAcc(false);
             clearInterval(rpmDecInterval);
         }, 5000);
     };
 
-    useEffect(() => {
-        setTimeout(() => {
-            accelerate();
-        }, 5000);
-        setTimeout(() => {
-            deccelerate();
-        }, 10000);
-    }, []);
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         accelerate();
+    //     }, 5000);
+    //     setTimeout(() => {
+    //         deccelerate();
+    //     }, 10000);
+    // }, []);
 
     return (
         <Engine antialias adaptToDeviceRatio canvasId="babylon-canvas">
@@ -55,10 +68,9 @@ export const MainScene = (props: MainSceneProps) => {
                     intensity={0.2}
                     direction={Vector3.Up()}
                 />
-                {/* <Skybox rootUrl={SkyboxScene[0].texture} /> */}
                 <freeCamera
                     name="camera1"
-                    position={new Vector3(0, 20, 0)}
+                    position={new Vector3(0, 18, 0)}
                     setTarget={[Vector3.Zero()]}
                 />
 
@@ -81,7 +93,7 @@ export const MainScene = (props: MainSceneProps) => {
                         shadowCastChildren
                     >
                         <Suspense fallback={null}>
-                            <RouletteAnimate rpm={rpm} />
+                            <RouletteAnimate rpm={rpm} acc={acc} pos={pos} />
                         </Suspense>
                     </shadowGenerator>
                 </directionalLight>

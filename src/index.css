@@ -4,27 +4,33 @@
     padding: 0;
 }
 
+:root {
+    --color-bg: rgba(31, 37, 10);
+    --color-accent: rgb(255, 173, 0);
+    --border-radius: 0.125em;
+}
+
 .App {
     height: 100vh;
     width: 100vw;
-    background-color: rgba(1, 67, 30);
+    background-color: var(--color-bg);
     background-image: radial-gradient(
             rgba(1, 67, 30),
             rgba(1, 109, 41, 0.2) 2px,
             transparent 40px
         ),
         radial-gradient(
-            rgba(1, 67, 30),
+            rgba(51, 49, 22),
             rgba(1, 109, 41, 0.15) 1px,
             transparent 30px
         ),
         radial-gradient(
-            rgba(1, 67, 30),
+            rgba(51, 49, 22),
             rgba(1, 109, 41, 0.1) 2px,
             transparent 40px
         ),
         radial-gradient(
-            rgba(1, 67, 30, 0.4),
+            rgba(51, 49, 22, 0.4),
             rgba(1, 109, 41, 0.1) 2px,
             transparent 30px
         );

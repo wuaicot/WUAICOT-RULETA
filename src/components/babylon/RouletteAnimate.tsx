@@ -7,10 +7,12 @@ import { Barrier } from "./Barrier";
 
 interface RouletteAnimateProps {
     rpm: number;
+    acc: boolean;
+    pos: [number, number, number]
 }
 
 export const RouletteAnimate = (props: RouletteAnimateProps) => {
-    const { rpm } = props;
+    const { rpm, acc, pos } = props;
     const [Z, setZ] = useState(0);
 
     const scene = useScene();
@@ -30,7 +32,11 @@ export const RouletteAnimate = (props: RouletteAnimateProps) => {
     return (
         <>
             <RouletteMesh spin={Z} />
-            <Barrier spin={Z} />
+            {!acc ? (
+                <Barrier spin={Z} pos={pos} />
+            ) : (
+                <Barrier spin={-Z} pos={pos} />
+            )}
         </>
     );
 };

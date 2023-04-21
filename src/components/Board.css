@@ -13,4 +13,5 @@
     position: absolute;
     width: 2em;
     height: 2em;
+    transform: translate(-50%, -50%);
 }

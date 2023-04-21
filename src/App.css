@@ -1,14 +1,3 @@
-.mock-div {
-    font-size: 3rem;
-    color: white;
-}
-
-.mock-button {
-    padding: 2rem;
-    background: black;
-    color: white;
-}
-
 .no-pointers {
     pointer-events: none;
 }

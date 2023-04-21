@@ -24,9 +24,9 @@ export const Header = ({ connect }: any) => {
     };
     return (
         <nav className="header">
-            <div className="logo">
+            <Button className="logo">
                 <h1 className="main-heading">Magic roulette</h1>
-            </div>
+            </Button>
             {!loggedIn && (
                 <Button className="login-button" onClick={logInHandler}>
                     Log In
