@@ -1,24 +1,33 @@
+export const assetsURL = {
+    orange: "./assets/chip_orange.png",
+    purple: "./assets/chip_purple.png",
+    blue: "./assets/chip_blue.png",
+    black: "./assets/chip_black.png",
+    grass: "./assets/grass.png",
+    roulette: "./assets/Roulette",
+};
+
 export const chipsColors = [
     {
-        url: "https://lh3.googleusercontent.com/pw/AMWts8ASXUiqHvG3E8NdRBAYxYdDswN0kQGHjMZfQfIIhj1t5BIgOVSCcHpbxhdHuQD8cUyUHeoFnpM8MemLHVVKRGI33yvlhnUjHo4v4oLfjni7rD37wn8=w2400",
+        url: assetsURL.orange,
         alt: "chip orange value 10",
         value: 10,
         id: "10",
     },
     {
-        url: "https://lh3.googleusercontent.com/pw/AMWts8Ccw-q_hKOh4VgBWMEsOeyr1mQ0G96e5rM2lIkUPYrkle_8_eoc9y7RXkWnmvsw-wczv1oMPjwfhYapYJACqrGljAJNL9pqPcaG3G9Opk0Scv2gLgU=w2400",
+        url: assetsURL.purple,
         alt: "chip purple value 20",
         value: 20,
         id: "20",
     },
     {
-        url: "https://lh3.googleusercontent.com/pw/AMWts8Bxd7ZT6We2M_gIlFGhLyxjjOINfh2ZKfZisQB2ZOsqclSiPeX5_D8sc6UAwWbzJC2lWBTSPPhkdWXUn2ButGVO1_GUKJyxawecuSv1v6GTIkY-pxA=w2400",
+        url: assetsURL.blue,
         alt: "chip blue value 50",
         value: 50,
         id: "50",
     },
     {
-        url: "https://lh3.googleusercontent.com/pw/AMWts8BpUs0XElqZZoZ-sN23zOyUsqjHJti8J4sujpzhbA48O_KcW51j6DyP_yA4zFQXXZm8V2aUPfrcz4Z0lFl5YuBU6QrBSm_Gza_jBj4yD__h1rZZmy4=w2400",
+        url: assetsURL.black,
         value: 100,
         alt: "chip black value 100",
         id: "100",

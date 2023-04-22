@@ -4,13 +4,14 @@ import "@babylonjs/loaders/glTF";
 import "@babylonjs/inspector";
 import { useEffect } from "react";
 import { BabylonMeshProps } from "../../types";
+import { assetsURL } from "../../utils/utils";
 
 export const RouletteMesh = (props: BabylonMeshProps) => {
     const { spin } = props;
     const modelAssetTasks: Task[] = [
         {
             taskType: TaskType.Mesh,
-            rootUrl: "/assets/Roulette/",
+            rootUrl: `${assetsURL.roulette}/`,
             sceneFilename: "model.gltf",
             name: "roulette",
         },

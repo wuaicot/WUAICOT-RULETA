@@ -1,12 +1,13 @@
 import { TextureAssetTask, Vector3 } from "@babylonjs/core";
 import { Task, TaskType, useAssetManager } from "react-babylonjs";
 import "@babylonjs/core/Loading/loadingScreen";
+import { assetsURL } from "../../utils/utils";
 
 export const Ground = () => {
     const textureAssets: Task[] = [
         {
             taskType: TaskType.Texture,
-            url: "/assets/grass.png",
+            url: assetsURL.grass,
             name: "table",
         },
     ];
@@ -24,7 +25,7 @@ export const Ground = () => {
         >
             <standardMaterial name="table">
                 <texture
-                    url={"/assets/grass.png"}
+                    url={assetsURL.grass}
                     fromInstance={
                         (
                             assetManagerResult.taskNameMap[
