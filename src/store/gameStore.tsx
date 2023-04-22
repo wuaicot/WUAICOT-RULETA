@@ -1,6 +1,7 @@
 import { createContext } from "react";
 import { observable, action, computed, makeObservable } from "mobx";
 import { chipsColors } from "../utils/utils";
+import { GameData } from "../types";
 
 function chipsToSpawn(betAmount: number) {
     return chipsColors.filter((chip) => chip.value === betAmount);
@@ -13,13 +14,14 @@ interface Bet {
     betLocation: { x: number; y: number };
 }
 
-class BetStore {
+class GameStore {
     //observables
     playerId = "";
     boardItemOccupied = "";
     chipsTaken = 0;
     betLocation = { x: 0, y: 0 };
     bets: Bet[] = [];
+    msg: GameData | null;
 
     //actions
 
@@ -46,6 +48,11 @@ class BetStore {
         this.bets.splice(0, this.bets.length);
     }
 
+    setMsg(newMessage: GameData | null) {
+        this.msg = newMessage;
+        console.log(this.msg);
+    }
+
     // computed and tracking function
     get newBet() {
         return {
@@ -68,25 +75,29 @@ class BetStore {
         initialBoard: string,
         initialChips: number,
         initialLocation: { x: number; y: number },
+        initialMessage: null,
     ) {
         this.playerId = initialId;
         this.boardItemOccupied = initialBoard;
         this.chipsTaken = initialChips;
         this.betLocation = initialLocation;
+        this.msg = initialMessage;
         makeObservable(this, {
             playerId: observable,
             boardItemOccupied: observable,
             chipsTaken: observable,
+            msg: observable,
             setPlayerId: action.bound,
             setBoardItemOccupied: action.bound,
             setChipsTaken: action.bound,
             setBetLocation: action.bound,
             setAllBets: action.bound,
+            setMsg: action.bound,
             setBoardClear: action.bound,
             newBet: computed,
             gameData: computed,
         });
     }
 }
-export const bet = new BetStore("", "", 0, { x: 0, y: 0 });
-export const BetContext = createContext<BetStore>(bet);
+export const gameStore = new GameStore("", "", 0, { x: 0, y: 0 }, null);
+export const GameContext = createContext<GameStore>(gameStore);

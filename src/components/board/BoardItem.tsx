@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { REDS, BLACKS } from "../utils/utils";
+import { REDS, BLACKS } from "../../utils/utils";
 import "./BoardItem.css";
 
 interface BoardItemProps {

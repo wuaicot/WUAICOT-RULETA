@@ -1,17 +1,12 @@
-import { Engine, Scene, Skybox } from "react-babylonjs";
+import { Engine, Scene } from "react-babylonjs";
 import { Vector3 } from "@babylonjs/core";
 import { Suspense, useState, useEffect } from "react";
 import { RouletteAnimate } from "./RouletteAnimate";
 import { Ground } from "./Ground";
+import { gameStore } from "../../store/gameStore";
 
-interface MainSceneProps {
-    message: any;
-    children?: React.ReactNode;
-}
-
-export const MainScene = (props: MainSceneProps) => {
-    const { children, message } = props;
-
+export const MainScene = () => {
+    const message = gameStore.msg;
     const RADIUS = 23;
     const assetCorrection = -1.5;
     const initialBallPos: [number, number, number] = [
@@ -54,10 +49,10 @@ export const MainScene = (props: MainSceneProps) => {
     useEffect(() => {
         if (message) {
             if (message.gameStage === "NO MORE BETS") {
-                setTimeout(() => {
+                const timeoutAccId = setTimeout(() => {
                     accelerate();
                 }, 3000);
-                setTimeout(() => {
+                const timeoutDecId = setTimeout(() => {
                     deccelerate();
                 }, 6000);
             }

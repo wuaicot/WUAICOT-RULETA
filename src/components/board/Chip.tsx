@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useDrag } from "react-dnd";
-import { bet, BetContext } from "../store/betStore";
+import { gameStore, GameContext } from "../../store/gameStore";
 
 interface ChipProps {
     id: string;
@@ -17,10 +17,9 @@ interface DropResultType {
     location: { x: number; y: number };
 }
 let dropResult: DropResultType | null;
-let scale = 1;
 export const Chip = (props: ChipProps) => {
     const { setChipsTaken, setBoardItemOccupied, setBetLocation, setAllBets } =
-        useContext(BetContext);
+        useContext(GameContext);
     const { url, alt, id, style } = props;
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "chips",
@@ -31,7 +30,7 @@ export const Chip = (props: ChipProps) => {
                 setChipsTaken(+item.id);
                 setBoardItemOccupied(dropResult.name);
                 setBetLocation(dropResult.location);
-                setAllBets(bet.newBet);
+                setAllBets(gameStore.newBet);
             }
         },
         collect: (monitor) => ({

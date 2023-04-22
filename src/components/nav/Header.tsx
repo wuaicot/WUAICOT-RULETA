@@ -1,13 +1,17 @@
 import { useState, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { BetContext } from "../store/betStore";
-import { Button } from "../UI/Button";
+import { GameContext } from "../../store/gameStore";
+import { Button } from "../../UI/Button";
 import "./Header.css";
 
-export const Header = ({ connect }: any) => {
-    const [loggedIn, setLoggedIn] = useState(false);
+interface HeaderProps {
+    connect: () => void;
+}
 
-    const { setPlayerId } = useContext(BetContext);
+export const Header = (props: HeaderProps) => {
+    const { connect } = props;
+    const [loggedIn, setLoggedIn] = useState(false);
+    const { setPlayerId } = useContext(GameContext);
 
     const logInHandler = () => {
         setLoggedIn(true);
@@ -22,6 +26,7 @@ export const Header = ({ connect }: any) => {
         setLoggedIn(false);
         setPlayerId("");
     };
+
     return (
         <nav className="header">
             <Button className="logo">

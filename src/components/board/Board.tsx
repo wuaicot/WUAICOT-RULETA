@@ -1,8 +1,8 @@
 import { useDrop } from "react-dnd";
-import { bet } from "../store/betStore";
+import { gameStore } from "../../store/gameStore";
 import { BoardItem } from "./BoardItem";
 import { Chip } from "./Chip";
-import { matrix } from "../utils/utils";
+import { matrix } from "../../utils/utils";
 import "./Board.css";
 
 export const Board = () => {
@@ -42,8 +42,8 @@ export const Board = () => {
                     ></BoardItem>
                 )),
             )}
-            {bet.bets !== null &&
-                bet.bets.map((bet: any) => (
+            {gameStore.bets !== null &&
+                gameStore.bets.map((bet: any) => (
                     <Chip
                         id={bet.betChips[0].id}
                         alt={bet.betChips[0].alt}

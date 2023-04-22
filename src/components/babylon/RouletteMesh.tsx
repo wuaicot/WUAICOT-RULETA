@@ -16,10 +16,11 @@ export const RouletteMesh = (props: BabylonMeshProps) => {
         },
     ];
 
-    const assetManagerResult = useAssetManager(modelAssetTasks);
+    const assetManagerResult = useAssetManager(modelAssetTasks, {
+        useDefaultLoadingScreen: true,
+    });
 
     useEffect(() => {
-        //console.log("Loaded Tasks", assetManagerResult);
         const rouletteTask = assetManagerResult.taskNameMap[
             "roulette"
         ] as MeshAssetTask;

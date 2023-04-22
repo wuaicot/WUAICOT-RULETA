@@ -1,19 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import ProgressTimer from "react-progress-bar-timer";
-import { BetContext, bet } from "../store/betStore";
+import { GameContext, gameStore } from "../../store/gameStore";
 import "./GameLoopTable.css";
 
-export const GameLoopTable = (props: any) => {
-    const { setBoardClear } = useContext(BetContext);
+export const GameLoopTable = () => {
+    const { setBoardClear } = useContext(GameContext);
     const [started, setStarted] = useState(false);
-
-    const { message } = props;
+    const message = gameStore.msg;
 
     useEffect(() => {
         if (message) {
             if (message.gameStage === "PLACE BETS") {
                 setStarted(true);
-            } else if (message.gameStage !== "PLACE BETS") {
+            } else {
                 setStarted(false);
             }
         }
@@ -75,7 +74,9 @@ export const GameLoopTable = (props: any) => {
             {message && (
                 <ul className="winners-list">
                     {getWinners(message).map((cont: any) => (
-                        <li className="winner-item">{cont}</li>
+                        <li className="winner-item" key={Math.random()}>
+                            {cont}
+                        </li>
                     ))}
                 </ul>
             )}

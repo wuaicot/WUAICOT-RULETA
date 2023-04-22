@@ -1,16 +1,17 @@
-import { useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { BetContext, bet } from "./store/betStore";
-import { Header } from "./components/Header";
-import { Board } from "./components/Board";
-import { Chips } from "./components/Chips";
-import { Dashboard } from "./components/Dashboard";
+import { gameStore, GameContext } from "./store/gameStore";
+import { Loader } from "./components/difStates/Loader";
+import { Error } from "./components/difStates/Error";
+import { Header } from "./components/nav/Header";
+import { Dashboard } from "./components/nav/Dashboard";
+import { Board } from "./components/board/Board";
+import { Chips } from "./components/board/Chips";
 import { useServer } from "./hooks/useServer";
 import "./App.css";
 
 function App() {
-    const { error, message, connect } = useServer();
+    const { error, loading, connect } = useServer();
 
     const setPointerEvents = (message: any) => {
         if (!message) return "App";
@@ -18,23 +19,22 @@ function App() {
             return message.gameStage === "PLACE BETS"
                 ? "App"
                 : "App no-pointers";
+        } else if (error || loading) {
+            return "App no-pointers";
         }
     };
 
     return (
         <DndProvider backend={HTML5Backend}>
-            <div className={setPointerEvents(message)}>
-                <BetContext.Provider value={bet}>
-                  
+            <div className={setPointerEvents(gameStore.msg)}>
+                <GameContext.Provider value={gameStore}>
+                    {loading && <Loader loading={loading} />}
+                    {error && <Error error={error} />}
                     <Header connect={connect} />
-                    {error && <div className="mock-div">{error}</div>}
-                
-                    <Dashboard message={message} />
-                 
+                    <Dashboard />
                     <Board />
-                
                     <Chips />
-                </BetContext.Provider>
+                </GameContext.Provider>
             </div>
         </DndProvider>
     );

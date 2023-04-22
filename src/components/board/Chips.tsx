@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { observer } from "mobx-react";
-import { chipsColors } from "../utils/utils";
+import { chipsColors } from "../../utils/utils";
 import { Chip } from "./Chip";
 import "./Chips.css";
 

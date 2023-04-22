@@ -1,15 +1,16 @@
-import { useState, useRef, useCallback } from "react";
-import { bet } from "../store/betStore";
+import { useState, useRef, useCallback, useContext } from "react";
+import { gameStore, GameContext } from "../store/gameStore";
 
 export const useServer = () => {
     const [error, setError] = useState("");
     const [message, setMessage] = useState<any>();
+    const [loading, setLoading] = useState(false);
+    const { setMsg } = useContext(GameContext);
 
     const ws = useRef<WebSocket>();
     const URL = "ws://localhost:8888";
     const clientOnError = useCallback(
         (event: Event) => {
-            console.log(event);
             setError(
                 `something went wrong with connection to ${URL}, try again`,
             );
@@ -24,12 +25,14 @@ export const useServer = () => {
     const clientOnMessage = useCallback(
         (message: any) => {
             setMessage(JSON.parse(message.data));
-            sendGameData(JSON.stringify(bet.gameData));
+            setMsg(JSON.parse(message.data));
+            sendGameData(JSON.stringify(gameStore.gameData));
         },
         [message],
     );
 
     const connect = useCallback(() => {
+        setLoading(true);
         try {
             ws.current = new WebSocket(URL);
             ws.current.addEventListener("error", clientOnError);
@@ -37,7 +40,8 @@ export const useServer = () => {
         } catch (e) {
             setError((e as Error).message);
         }
+        setLoading(false);
     }, []);
 
-    return { error, message, connect };
+    return { error, message, loading, connect };
 };

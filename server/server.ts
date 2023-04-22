@@ -58,15 +58,12 @@ timer.addEventListener("secondsUpdated", function (e: any) {
     sendGameData(gameData);
     if (currentTime === 1) {
         gameStage = GameLoop.PLACE_BET;
-        sendGameData(gameData);
     } else if (currentTime === 25) {
         gameStage = GameLoop.NO_MORE_BETS;
-        sendGameData(gameData);
     } else if (currentTime === 28) {
         winningNumber = getRandomNumber(0, 36);
         isUserDataUnique();
         gameStage = GameLoop.SPIN_WHEEL;
-        sendGameData(gameData);
     } else if (currentTime === 40) {
         for (let i = 0; i < uniqueData.length; i++) {
             for (let j = 0; j < winners.length; j++) {
@@ -79,10 +76,8 @@ timer.addEventListener("secondsUpdated", function (e: any) {
             }
         }
         gameStage = GameLoop.WINNER;
-        sendGameData(gameData);
     } else if (currentTime === 50) {
         gameStage = GameLoop.EMPTY_BOARD;
-        sendGameData(gameData);
     }
     return;
 });
