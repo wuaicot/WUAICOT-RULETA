@@ -3,12 +3,13 @@ import { gameStore } from "../../store/gameStore";
 import { BoardItem } from "./BoardItem";
 import { Chip } from "./Chip";
 import { matrix } from "../../utils/utils";
+import { Bet } from "../../types";
 import "./Board.css";
 
 export const Board = () => {
     const [{ isOver }, drop] = useDrop(() => ({
         accept: "chips",
-        drop: (item: any, monitor) => {
+        drop: (item: string | number, monitor) => {
             const location = monitor.getClientOffset();
             if (location) {
                 const elem = document.elementFromPoint(location.x, location.y)!;
@@ -43,7 +44,7 @@ export const Board = () => {
                 )),
             )}
             {gameStore.bets !== null &&
-                gameStore.bets.map((bet: any) => (
+                gameStore.bets.map((bet: Bet) => (
                     <Chip
                         id={bet.betChips[0].id}
                         alt={bet.betChips[0].alt}

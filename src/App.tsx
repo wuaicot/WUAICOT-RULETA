@@ -8,15 +8,16 @@ import { Dashboard } from "./components/nav/Dashboard";
 import { Board } from "./components/board/Board";
 import { Chips } from "./components/board/Chips";
 import { useServer } from "./hooks/useServer";
+import { GameLoop, GameData } from "./types";
 import "./App.css";
 
 function App() {
     const { error, loading, connect } = useServer();
 
-    const setPointerEvents = (message: any) => {
+    const setPointerEvents = (message: GameData | null) => {
         if (!message) return "App";
         if (message) {
-            return message.gameStage === "PLACE BETS"
+            return message.gameStage === GameLoop.PLACE_BET
                 ? "App"
                 : "App no-pointers";
         } else if (error || loading) {

@@ -21,3 +21,10 @@ export interface Winner {
     id: string;
     win: number;
 }
+
+export interface Bet {
+    betAmount: number;
+    betSpot: string;
+    betChips: any;
+    betLocation: { x: number; y: number };
+}

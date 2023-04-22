@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import ProgressTimer from "react-progress-bar-timer";
 import { GameContext, gameStore } from "../../store/gameStore";
+import { GameLoop, GameData } from "../../types";
 import "./GameLoopTable.css";
 
 export const GameLoopTable = () => {
@@ -10,7 +11,7 @@ export const GameLoopTable = () => {
 
     useEffect(() => {
         if (message) {
-            if (message.gameStage === "PLACE BETS") {
+            if (message.gameStage === GameLoop.PLACE_BET) {
                 setStarted(true);
             } else {
                 setStarted(false);
@@ -18,22 +19,22 @@ export const GameLoopTable = () => {
         }
     }, [message]);
 
-    const getContent = (message: any) => {
+    const getContent = (message: GameData) => {
         let content;
         if (message) {
             if (
-                message.gameStage === "PLACE BETS" ||
-                message.gameStage === "NO MORE BETS"
+                message.gameStage === GameLoop.PLACE_BET ||
+                message.gameStage === GameLoop.NO_MORE_BETS
             ) {
                 content = message.gameStage;
             } else if (
                 message.winningNumber &&
-                message.gameStage === "WINNER"
+                message.gameStage === GameLoop.WINNER
             ) {
                 content = `Winnig number is: ${message.winningNumber}`;
             } else if (
                 message.winningNumber &&
-                message.gameStage === "EMPTY BOARD"
+                message.gameStage === GameLoop.EMPTY_BOARD
             ) {
                 setBoardClear();
                 content = "GET READY FOR NEXT ROUND";
@@ -42,8 +43,8 @@ export const GameLoopTable = () => {
         }
     };
 
-    const getWinners = (message: any) => {
-        const content: any = [];
+    const getWinners = (message: GameData) => {
+        const content: React.ReactNode[] = [];
         if (message) {
             message.winners.map((winner: any) => {
                 content.push(
@@ -73,7 +74,7 @@ export const GameLoopTable = () => {
             )}
             {message && (
                 <ul className="winners-list">
-                    {getWinners(message).map((cont: any) => (
+                    {getWinners(message).map((cont: React.ReactNode) => (
                         <li className="winner-item" key={Math.random()}>
                             {cont}
                         </li>

@@ -1,6 +1,10 @@
 import "./Error.css";
 
-export const Error = (props: any) => {
+interface ErrorProps {
+    error: string;
+}
+
+export const Error = (props: ErrorProps) => {
     const { error } = props;
     return (
         <div className="error-container">

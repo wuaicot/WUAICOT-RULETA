@@ -2,11 +2,7 @@ import { useState } from "react";
 import { MainScene } from "./MainScene";
 import "./BabylonApp.css";
 
-interface BabylonAppProps {
-    children?: React.ReactNode;
-}
-export const BabylonApp = (props: BabylonAppProps) => {
-    const { children } = props;
+export const BabylonApp = () => {
     const [winningNumber, setWinningNumber] = useState<number | null>(null);
 
     return (

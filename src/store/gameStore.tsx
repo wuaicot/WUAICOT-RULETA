@@ -1,17 +1,10 @@
 import { createContext } from "react";
 import { observable, action, computed, makeObservable } from "mobx";
 import { chipsColors } from "../utils/utils";
-import { GameData } from "../types";
+import { GameData, Bet } from "../types";
 
 function chipsToSpawn(betAmount: number) {
     return chipsColors.filter((chip) => chip.value === betAmount);
-}
-
-interface Bet {
-    betAmount: number;
-    betSpot: string;
-    betChips: any;
-    betLocation: { x: number; y: number };
 }
 
 class GameStore {
