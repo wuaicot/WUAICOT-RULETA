@@ -1,6 +1,7 @@
 import { WebSocketServer } from "ws";
 import { Timer } from "easytimer.js";
 import { BLACKS, REDS } from "../src/utils/utils";
+import { GameLoop, GameData, Winner } from "../src/types";
 
 //initialising websocket server
 const PORT = 8888;
@@ -12,29 +13,11 @@ const wss = new WebSocketServer({
 const timer = new Timer();
 
 //types
-interface Winner {
-    id: string;
-    win: number;
-}
-
-interface GameData {
-    gameStage: GameLoop | undefined;
-    winningNumber: number | undefined;
-    winners: Winner[];
-}
-
 interface ClientData {
     playerId: string;
     bets: any[];
 }
 
-enum GameLoop {
-    PLACE_BET = "PLACE BETS",
-    NO_MORE_BETS = "NO MORE BETS",
-    SPIN_WHEEL = "SPIN WHEEL",
-    WINNER = "WINNER",
-    EMPTY_BOARD = "EMPTY BOARD",
-}
 let gameStage: GameLoop = GameLoop.PLACE_BET;
 let winningNumber: number;
 const winners: Winner[] = [];
@@ -46,6 +29,25 @@ const sendGameData = (gameData: GameData) => {
     wss.clients.forEach((client) => {
         client.send(JSON.stringify(gameData));
     });
+};
+
+const uniqueData: any[] = [];
+const isUserDataUnique = () => {
+    const reverse = usersData.reverse();
+    for (let i = 0; i < reverse.length; i++) {
+        if (
+            uniqueData.length === 0 ||
+            !uniqueData
+                .map(
+                    (data) =>
+                        JSON.stringify(data.playerId) !==
+                        JSON.stringify(reverse[i].playerId),
+                )
+                .includes(false)
+        ) {
+            uniqueData.push(reverse[i]);
+        }
+    }
 };
 
 timer.addEventListener("secondsUpdated", function (e: any) {
@@ -78,6 +80,8 @@ timer.addEventListener("secondsUpdated", function (e: any) {
         gameStage = GameLoop.WINNER;
     } else if (currentTime === 50) {
         gameStage = GameLoop.EMPTY_BOARD;
+        winners.map((winner) => (winner.win = 0));
+        uniqueData.splice(0, uniqueData.length);
     }
     return;
 });
@@ -87,24 +91,25 @@ const isIdUnique = (winners: Winner[], id: string) => {
         (winner) => JSON.stringify(winner.id) !== JSON.stringify(id),
     );
 };
-const uniqueData: any[] = [];
-const isUserDataUnique = () => {
-    const reverse = usersData.reverse();
-    for (let i = 0; i < reverse.length; i++) {
-        if (
-            uniqueData.length === 0 ||
-            !uniqueData
-                .map(
-                    (data) =>
-                        JSON.stringify(data.playerId) !==
-                        JSON.stringify(reverse[i].playerId),
-                )
-                .includes(false)
-        ) {
-            uniqueData.push(reverse[i]);
-        }
-    }
-};
+// const uniqueData: any[] = [];
+// const isUserDataUnique = () => {
+//     const reverse = usersData.reverse();
+//     console.log(usersData);
+//     for (let i = 0; i < reverse.length; i++) {
+//         if (
+//             uniqueData.length === 0 ||
+//             !uniqueData
+//                 .map(
+//                     (data) =>
+//                         JSON.stringify(data.playerId) !==
+//                         JSON.stringify(reverse[i].playerId),
+//                 )
+//                 .includes(false)
+//         ) {
+//             uniqueData.push(reverse[i]);
+//         }
+//     }
+// };
 
 wss.on("connection", (socket: any) => {
     socket.on("message", (data: any) => {
