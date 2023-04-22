@@ -2,6 +2,7 @@ import { WebSocketServer } from "ws";
 import { Timer } from "easytimer.js";
 import { BLACKS, REDS } from "../src/utils/utils";
 import { GameLoop, GameData, Winner } from "../src/types";
+import { SocketAddress } from "net";
 
 //initialising websocket server
 const PORT = 8888;
@@ -91,29 +92,11 @@ const isIdUnique = (winners: Winner[], id: string) => {
         (winner) => JSON.stringify(winner.id) !== JSON.stringify(id),
     );
 };
-// const uniqueData: any[] = [];
-// const isUserDataUnique = () => {
-//     const reverse = usersData.reverse();
-//     console.log(usersData);
-//     for (let i = 0; i < reverse.length; i++) {
-//         if (
-//             uniqueData.length === 0 ||
-//             !uniqueData
-//                 .map(
-//                     (data) =>
-//                         JSON.stringify(data.playerId) !==
-//                         JSON.stringify(reverse[i].playerId),
-//                 )
-//                 .includes(false)
-//         ) {
-//             uniqueData.push(reverse[i]);
-//         }
-//     }
-// };
 
-wss.on("connection", (socket: any) => {
+wss.on("connection", (socket: any, req: any) => {
     socket.on("message", (data: any) => {
         clientData = JSON.parse(data);
+        socket.id = clientData.playerId;
         usersData.push(clientData);
         if (
             winners.length === 0 ||
@@ -121,6 +104,11 @@ wss.on("connection", (socket: any) => {
         ) {
             winners.push({ id: clientData.playerId, win: win });
         }
+    });
+    socket.on("close", (reason: any) => {
+        console.log("closing " + socket.id);
+        const indexToRemove = winners.findIndex((data) => data.id == socket.id);
+        winners.splice(indexToRemove, 1);
     });
     timer.start();
 });

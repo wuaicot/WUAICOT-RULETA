@@ -12,7 +12,7 @@ import { GameLoop, GameData } from "./types";
 import "./App.css";
 
 function App() {
-    const { error, loading, connect } = useServer();
+    const { error, loading, connect, disconnect } = useServer();
 
     const setPointerEvents = (message: GameData | null) => {
         if (!message) return "App";
@@ -31,7 +31,7 @@ function App() {
                 <GameContext.Provider value={gameStore}>
                     {loading && <Loader loading={loading} />}
                     {error && <Error error={error} />}
-                    <Header connect={connect} />
+                    <Header connect={connect} disconnect={disconnect} />
                     <Dashboard />
                     <Board />
                     <Chips />

@@ -6,10 +6,11 @@ import "./Header.css";
 
 interface HeaderProps {
     connect: () => void;
+    disconnect: () => void;
 }
 
 export const Header = (props: HeaderProps) => {
-    const { connect } = props;
+    const { connect, disconnect } = props;
     const [loggedIn, setLoggedIn] = useState(false);
     const { setPlayerId } = useContext(GameContext);
 
@@ -25,6 +26,7 @@ export const Header = (props: HeaderProps) => {
     const logOutHandler = () => {
         setLoggedIn(false);
         setPlayerId("");
+        disconnect();
     };
 
     return (

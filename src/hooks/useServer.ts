@@ -31,6 +31,10 @@ export const useServer = () => {
         [message],
     );
 
+    const disconnect = () => {
+        ws.current?.close();
+    };
+
     const connect = useCallback(() => {
         setLoading(true);
         try {
@@ -43,5 +47,5 @@ export const useServer = () => {
         setLoading(false);
     }, []);
 
-    return { error, message, loading, connect };
+    return { error, message, loading, connect, disconnect };
 };
