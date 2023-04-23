@@ -2,7 +2,7 @@ import { WebSocketServer } from "ws";
 import { Timer } from "easytimer.js";
 import { BLACKS, REDS } from "../src/utils/utils";
 import { GameLoop, GameData, Winner } from "../src/types";
-import { SocketAddress } from "net";
+
 
 //initialising websocket server
 const PORT = 8888;
