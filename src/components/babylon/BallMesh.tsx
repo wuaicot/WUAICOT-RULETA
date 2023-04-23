@@ -9,7 +9,7 @@ export const BallMesh = (props: any) => {
             name="ball"
             diameter={1}
             segments={32}
-            position={new Vector3(-23, 0, 0)}
+            position={new Vector3(x, y, z)}
         />
     );
 };

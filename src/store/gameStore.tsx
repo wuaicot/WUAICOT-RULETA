@@ -1,10 +1,15 @@
 import { createContext } from "react";
 import { observable, action, computed, makeObservable } from "mobx";
-import { chipsColors } from "../utils/utils";
+import { chipsColors, rouletteNumbers } from "../utils/utils";
 import { GameData, Bet } from "../types";
 
 function chipsToSpawn(betAmount: number) {
     return chipsColors.filter((chip) => chip.value === betAmount);
+}
+const indexSpin = (2 * Math.PI) / rouletteNumbers.length;
+function calculateWinSpin(winningNumber: number) {
+    const winningNumberIndex = rouletteNumbers.indexOf(winningNumber);
+    return winningNumberIndex * indexSpin;
 }
 
 class GameStore {
@@ -43,7 +48,6 @@ class GameStore {
 
     setMsg(newMessage: GameData | null) {
         this.msg = newMessage;
-        console.log(this.msg);
     }
 
     // computed and tracking function
@@ -60,6 +64,12 @@ class GameStore {
         return {
             playerId: this.playerId,
             bets: this.bets,
+        };
+    }
+
+    get winSpin() {
+        return {
+            winSpin: calculateWinSpin(this.msg!.winningNumber!),
         };
     }
 
@@ -89,6 +99,7 @@ class GameStore {
             setBoardClear: action.bound,
             newBet: computed,
             gameData: computed,
+            winSpin: computed,
         });
     }
 }

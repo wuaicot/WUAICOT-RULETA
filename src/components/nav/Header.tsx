@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { GameContext } from "../../store/gameStore";
 import { Button } from "../../UI/Button";
+import { Audio } from "./Audio";
 import "./Header.css";
 
 interface HeaderProps {
@@ -34,16 +35,19 @@ export const Header = (props: HeaderProps) => {
             <Button className="logo">
                 <h1 className="main-heading">Magic roulette</h1>
             </Button>
-            {!loggedIn && (
-                <Button className="login-button" onClick={logInHandler}>
-                    Log In
-                </Button>
-            )}
-            {loggedIn && (
-                <Button className="logout-button" onClick={logOutHandler}>
-                    Log Out
-                </Button>
-            )}
+            <div className="audio-login-container">
+                {!loggedIn && (
+                    <Button className="login-button" onClick={logInHandler}>
+                        Log In
+                    </Button>
+                )}
+                {loggedIn && (
+                    <Button className="logout-button" onClick={logOutHandler}>
+                        Log Out
+                    </Button>
+                )}
+                <Audio />
+            </div>
         </nav>
     );
 };

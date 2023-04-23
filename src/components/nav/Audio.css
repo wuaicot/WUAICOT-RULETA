@@ -1,0 +1,10 @@
+.sound-icon {
+    border-radius: 50%;
+    height: calc(1rem + 0.7rem + 1.4rem);
+    width: calc(1rem + 0.7rem + 1.4rem);
+}
+
+img {
+    height: calc(1rem + 0.7rem + 1.4rem);
+    width: calc(1rem + 0.7rem + 1.4rem);
+}
