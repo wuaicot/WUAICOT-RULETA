@@ -1,4 +1,5 @@
 import { WebSocketServer } from "ws";
+
 import { Timer } from "easytimer.js";
 import { BLACKS, REDS } from "./utils";
 import { GameLoop, GameData, Winner } from "./types";
@@ -50,7 +51,7 @@ const isUserDataUnique = () => {
     }
 };
 
-timer.addEventListener("secondsUpdated", function (e: any) {
+timer.addEventListener("secondsUpdated", function () {
     const currentTime = timer.getTimeValues().seconds;
     const gameData: GameData = {
         gameStage: gameStage,
@@ -93,7 +94,7 @@ const isIdUnique = (winners: Winner[], id: string) => {
     );
 };
 
-wss.on("connection", (socket: any, req: any) => {
+wss.on("connection", (socket: any) => {
     socket.on("message", (data: any) => {
         clientData = JSON.parse(data);
         socket.id = clientData.playerId;
@@ -105,7 +106,7 @@ wss.on("connection", (socket: any, req: any) => {
             winners.push({ id: clientData.playerId, win: win });
         }
     });
-    socket.on("close", (reason: any) => {
+    socket.on("close", () => {
         console.log("closing " + socket.id);
         const indexToRemove = winners.findIndex((data) => data.id == socket.id);
         winners.splice(indexToRemove, 1);
