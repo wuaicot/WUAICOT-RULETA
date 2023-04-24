@@ -48,12 +48,16 @@ export const GameLoopTable = () => {
         }
     };
 
+    const isWinnerItemMine = (winner: string, playerId: string) => {
+       return winner === playerId ? "winner-item-mine" : 'winner-item'
+    }
+
     const getWinners = (message: GameData) => {
         const content: React.ReactNode[] = [];
         if (message) {
             message.winners.map((winner: Winner) => {
                 content.push(
-                    <div className="winner-item-item">
+                    <div className={isWinnerItemMine(winner.id, gameStore.playerId)}>
                         <p className="user-id">User id: {winner.id}</p>
                         <p className="win">Win: {winner.win}</p>
                     </div>,
@@ -65,28 +69,31 @@ export const GameLoopTable = () => {
 
     return (
         <div className="table-container">
-            {message && <h2 className="game-stage">{getContent(message)}</h2>}
             {message && (
-                <div className="bar-container">
-                    <ProgressTimer
-                        started={started}
-                        label=""
-                        duration={25}
-                        barRounded={false}
-                        color={"rgb(255, 173, 0)"}
-                        variant="empty"
-                        direction="left"
-                    />
-                </div>
-            )}
-            {message && (
-                <ul className="winners-list">
-                    {getWinners(message).map((cont: React.ReactNode) => (
-                        <li className="winner-item" key={Math.random()}>
-                            {cont}
-                        </li>
-                    ))}
-                </ul>
+                <>
+                    <h2 className="game-stage">{getContent(message)}</h2>
+                    <div className="bar-container">
+                        <ProgressTimer
+                            started={started}
+                            label=""
+                            duration={25}
+                            barRounded={false}
+                            color={"rgb(255, 173, 0)"}
+                            variant="empty"
+                            direction="left"
+                        />
+                    </div>
+                    <ul className="winners-list">
+                        {getWinners(message).map((cont: React.ReactNode) => (
+                            <li
+                                className="winner-item-wrapper"
+                                key={Math.random()}
+                            >
+                                {cont}
+                            </li>
+                        ))}
+                    </ul>
+                </>
             )}
         </div>
     );

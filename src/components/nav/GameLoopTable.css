@@ -30,3 +30,7 @@
 .winner-item {
     font-size: 0.7em;
 }
+
+.winner-item-mine {
+    color: red;
+}
