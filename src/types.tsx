@@ -5,6 +5,7 @@ export interface BabylonMeshProps {
 
 export interface GameData {
     gameStage: GameLoop | undefined;
+    gameTimer: number;
     winningNumber: number | undefined;
     winners: Winner[];
 }

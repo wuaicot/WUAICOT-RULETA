@@ -3,7 +3,6 @@ import { Timer } from "easytimer.js";
 import { BLACKS, REDS } from "../src/utils/utils";
 import { GameLoop, GameData, Winner } from "../src/types";
 
-
 //initialising websocket server
 const PORT = 8888;
 const wss = new WebSocketServer({
@@ -32,7 +31,7 @@ const sendGameData = (gameData: GameData) => {
     });
 };
 
-const uniqueData: any[] = [];
+const uniqueData: ClientData[] = [];
 const isUserDataUnique = () => {
     const reverse = usersData.reverse();
     for (let i = 0; i < reverse.length; i++) {
@@ -55,6 +54,7 @@ timer.addEventListener("secondsUpdated", function (e: any) {
     const currentTime = timer.getTimeValues().seconds;
     const gameData: GameData = {
         gameStage: gameStage,
+        gameTimer: currentTime,
         winningNumber: winningNumber,
         winners: winners,
     };

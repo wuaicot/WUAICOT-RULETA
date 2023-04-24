@@ -7,14 +7,17 @@ import "./GameLoopTable.css";
 export const GameLoopTable = () => {
     const { setBoardClear } = useContext(GameContext);
     const [started, setStarted] = useState(false);
+    const [gameTime, setGameTime] = useState(25);
     const message = gameStore.msg;
 
     useEffect(() => {
         if (message) {
-            if (message.gameStage === GameLoop.PLACE_BET) {
+            if (message.gameTimer <= 25) {
                 setStarted(true);
+                setGameTime(25 - message.gameTimer);
             } else {
                 setStarted(false);
+                return;
             }
         }
     }, [message]);
@@ -49,15 +52,20 @@ export const GameLoopTable = () => {
     };
 
     const isWinnerItemMine = (winner: string, playerId: string) => {
-       return winner === playerId ? "winner-item-mine" : 'winner-item'
-    }
+        return winner === playerId ? "winner-item-mine" : "winner-item";
+    };
 
     const getWinners = (message: GameData) => {
         const content: React.ReactNode[] = [];
         if (message) {
             message.winners.map((winner: Winner) => {
                 content.push(
-                    <div className={isWinnerItemMine(winner.id, gameStore.playerId)}>
+                    <div
+                        className={isWinnerItemMine(
+                            winner.id,
+                            gameStore.playerId,
+                        )}
+                    >
                         <p className="user-id">User id: {winner.id}</p>
                         <p className="win">Win: {winner.win}</p>
                     </div>,
@@ -76,7 +84,7 @@ export const GameLoopTable = () => {
                         <ProgressTimer
                             started={started}
                             label=""
-                            duration={25}
+                            duration={gameTime}
                             barRounded={false}
                             color={"rgb(255, 173, 0)"}
                             variant="empty"
