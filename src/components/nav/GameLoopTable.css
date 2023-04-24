@@ -5,10 +5,17 @@
     color: var(--color-accent);
     text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.5), 0 0 0.45em rgb(255, 173, 0);
     padding: 0.7em 1.25em;
+    overflow-y: hidden;
+}
+
+.bar-container {
+    height: 1em;
+    overflow: hidden;
+    border-radius: 8px;
 }
 
 .game-stage {
-    font-size: 2em;
+    font-size: 1.5em;
     text-align: center;
     padding-bottom: 0.5em;
 }
@@ -17,4 +24,8 @@
     list-style: none;
     font-size: 1.5em;
     padding-top: 0.5em;
+}
+
+.winner-item {
+    font-size: 0.7em;
 }

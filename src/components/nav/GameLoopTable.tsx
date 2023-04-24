@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import ProgressTimer from "react-progress-bar-timer";
 import { GameContext, gameStore } from "../../store/gameStore";
-import { GameLoop, GameData } from "../../types";
+import { GameLoop, GameData, Winner } from "../../types";
 import "./GameLoopTable.css";
 
 export const GameLoopTable = () => {
@@ -29,6 +29,11 @@ export const GameLoopTable = () => {
                 content = message.gameStage;
             } else if (
                 message.winningNumber &&
+                message.gameStage === GameLoop.SPIN_WHEEL
+            ) {
+                content = `Get ready for some magic`;
+            } else if (
+                message.winningNumber &&
                 message.gameStage === GameLoop.WINNER
             ) {
                 content = `Winnig number is: ${message.winningNumber}`;
@@ -37,7 +42,7 @@ export const GameLoopTable = () => {
                 message.gameStage === GameLoop.EMPTY_BOARD
             ) {
                 setBoardClear();
-                content = "GET READY FOR NEXT ROUND";
+                content = "Get ready for next round";
             }
             return content;
         }
@@ -46,7 +51,7 @@ export const GameLoopTable = () => {
     const getWinners = (message: GameData) => {
         const content: React.ReactNode[] = [];
         if (message) {
-            message.winners.map((winner: any) => {
+            message.winners.map((winner: Winner) => {
                 content.push(
                     <div className="winner-item-item">
                         <p className="user-id">User id: {winner.id}</p>
@@ -62,15 +67,17 @@ export const GameLoopTable = () => {
         <div className="table-container">
             {message && <h2 className="game-stage">{getContent(message)}</h2>}
             {message && (
-                <ProgressTimer
-                    started={started}
-                    label=""
-                    duration={25}
-                    barRounded={true}
-                    color={"rgb(255, 173, 0)"}
-                    variant="empty"
-                    direction="left"
-                />
+                <div className="bar-container">
+                    <ProgressTimer
+                        started={started}
+                        label=""
+                        duration={25}
+                        barRounded={false}
+                        color={"rgb(255, 173, 0)"}
+                        variant="empty"
+                        direction="left"
+                    />
+                </div>
             )}
             {message && (
                 <ul className="winners-list">
