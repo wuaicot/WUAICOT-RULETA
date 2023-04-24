@@ -1,6 +1,5 @@
 import { Vector3 } from "@babylonjs/core";
 import { BallMesh } from "./BallMesh";
-import { BabylonMeshProps } from "../../types";
 
 interface BarrierProps {
     spin: number;

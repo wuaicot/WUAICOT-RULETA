@@ -7,6 +7,7 @@ import { Bet } from "../../types";
 import "./Board.css";
 
 export const Board = () => {
+    // eslint-disable-next-line
     const [{ isOver }, drop] = useDrop(() => ({
         accept: "chips",
         drop: (item: string | number, monitor) => {

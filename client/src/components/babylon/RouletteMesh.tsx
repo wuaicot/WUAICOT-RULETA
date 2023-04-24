@@ -27,6 +27,7 @@ export const RouletteMesh = (props: BabylonMeshProps) => {
         ] as MeshAssetTask;
         rouletteTask.loadedMeshes[0].position = new Vector3(0, -30, -3);
         rouletteTask.loadedMeshes[0].rotation = new Vector3(19.5, 0, spin);
+        // eslint-disable-next-line
     }, [spin]);
     return null;
 };

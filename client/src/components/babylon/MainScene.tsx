@@ -26,7 +26,7 @@ export const MainScene = () => {
             setRpm((prevValue) => (prevValue += 10));
         }, 500);
 
-        const timeoutId = setTimeout(() => {
+        setTimeout(() => {
             clearInterval(rpmAccInterval);
         }, 3000);
     };
@@ -41,7 +41,7 @@ export const MainScene = () => {
             ]);
         }, 550);
 
-        const timeoutIdDec = setTimeout(() => {
+        setTimeout(() => {
             setWinSpin(-gameStore.winSpin.winSpin);
             setAcc(false);
             clearInterval(rpmDecInterval);
@@ -54,14 +54,15 @@ export const MainScene = () => {
                 setPos(initialBallPos);
             }
             if (message.gameStage === GameLoop.NO_MORE_BETS) {
-                const timeoutAccId = setTimeout(() => {
+                setTimeout(() => {
                     accelerate();
                 }, 3000);
-                const timeoutDecId = setTimeout(() => {
+                setTimeout(() => {
                     deccelerate();
                 }, 6000);
             }
         }
+        // eslint-disable-next-line
     }, [message]);
 
     return (

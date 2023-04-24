@@ -15,7 +15,7 @@ export const useServer = () => {
                 `something went wrong with connection to ${URL}, try again`,
             );
         },
-        [error],
+        []
     );
 
     const sendGameData = (clientData: any) => {
@@ -28,6 +28,7 @@ export const useServer = () => {
             setMsg(JSON.parse(message.data));
             sendGameData(JSON.stringify(gameStore.gameData));
         },
+        // eslint-disable-next-line
         [message],
     );
 
@@ -45,6 +46,7 @@ export const useServer = () => {
             setError((e as Error).message);
         }
         setLoading(false);
+        // eslint-disable-next-line
     }, []);
 
     return { error, message, loading, connect, disconnect };
