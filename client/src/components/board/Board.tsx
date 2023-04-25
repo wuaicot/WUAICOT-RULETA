@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useDrop } from "react-dnd";
 import { gameStore } from "../../store/gameStore";
 import { BoardItem } from "./BoardItem";
@@ -25,13 +26,13 @@ export const Board = () => {
         }),
     }));
 
-    const trimItem = (item: string | number) => {
+    const trimItem = useCallback((item: string | number) => {
         return typeof item === "string"
             ? item.includes("_")
                 ? item.split("_")[0]
                 : item
             : item;
-    };
+    }, []);
 
     return (
         <div ref={drop} className="board-grid">

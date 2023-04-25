@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { observer } from "mobx-react";
 import { REDS, BLACKS } from "../../utils/utils";
 import "./BoardItem.css";
@@ -11,7 +12,7 @@ interface BoardItemProps {
 export const BoardItem = observer((props: BoardItemProps) => {
     const { tableItem, id } = props;
 
-    const getClassName = () => {
+    const getClassName = useCallback(() => {
         if (typeof tableItem === "number") {
             return REDS.includes(tableItem)
                 ? "item red"
@@ -26,7 +27,7 @@ export const BoardItem = observer((props: BoardItemProps) => {
                 ? "item black"
                 : "item plain";
         }
-    };
+    }, []);
 
     return (
         <div className={getClassName()} id={id.toString()}>

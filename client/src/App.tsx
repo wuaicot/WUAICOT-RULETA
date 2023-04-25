@@ -10,11 +10,12 @@ import { Chips } from "./components/board/Chips";
 import { useServer } from "./hooks/useServer";
 import { GameLoop, GameData } from "./types";
 import "./App.css";
+import { useCallback } from "react";
 
 function App() {
     const { error, loading, connect, disconnect } = useServer();
 
-    const setPointerEvents = (message: GameData | null) => {
+    const setPointerEvents = useCallback((message: GameData | null) => {
         if (!message) return "App";
         if (message) {
             return message.gameStage === GameLoop.PLACE_BET
@@ -23,7 +24,7 @@ function App() {
         } else if (error || loading) {
             return "App no-pointers";
         }
-    };
+    }, []);
 
     return (
         <DndProvider backend={HTML5Backend}>

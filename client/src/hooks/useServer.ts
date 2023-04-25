@@ -3,7 +3,7 @@ import { gameStore, GameContext } from "../store/gameStore";
 
 export const useServer = () => {
     const [error, setError] = useState("");
-    const [message, setMessage] = useState<any>();
+    const [message, setMessage] = useState<unknown>();
     const [loading, setLoading] = useState(false);
     const { setMsg } = useContext(GameContext);
 
@@ -14,9 +14,9 @@ export const useServer = () => {
         setError(`something went wrong with connection to ${URL}, try again`);
     }, []);
 
-    const sendGameData = (clientData: any) => {
+    const sendGameData = useCallback((clientData: string) => {
         ws.current!.send(clientData);
-    };
+    }, []);
 
     const clientOnMessage = useCallback(
         (message: any) => {
@@ -28,9 +28,9 @@ export const useServer = () => {
         [message],
     );
 
-    const disconnect = () => {
+    const disconnect = useCallback(() => {
         ws.current?.close();
-    };
+    }, []);
 
     const connect = useCallback(() => {
         setLoading(true);

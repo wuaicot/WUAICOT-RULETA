@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import ProgressTimer from "react-progress-bar-timer";
 import { GameContext, gameStore } from "../../store/gameStore";
 import { GameLoop, GameData, Winner } from "../../types";
@@ -22,7 +22,7 @@ export const GameLoopTable = () => {
         }
     }, [message]);
 
-    const getContent = (message: GameData) => {
+    const getContent = useCallback((message: GameData) => {
         let content;
         if (message) {
             if (
@@ -49,13 +49,13 @@ export const GameLoopTable = () => {
             }
             return content;
         }
-    };
+    }, []);
 
-    const isWinnerItemMine = (winner: string, playerId: string) => {
+    const isWinnerItemMine = useCallback((winner: string, playerId: string) => {
         return winner === playerId ? "winner-item-mine" : "winner-item";
-    };
+    }, []);
 
-    const getWinners = (message: GameData) => {
+    const getWinners = useCallback((message: GameData) => {
         const content: React.ReactNode[] = [];
         // eslint-disable-next-line
         if (message) {
@@ -74,7 +74,7 @@ export const GameLoopTable = () => {
             });
         }
         return content;
-    };
+    }, []);
 
     return (
         <div className="table-container">

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { assetsURL } from "../../utils/utils";
 import "./Audio.css";
 
@@ -7,9 +7,9 @@ export const Audio = () => {
     const url = assetsURL.soundtrack;
     const audioRef = useRef() as any;
 
-    const soundToggle = () => {
+    const soundToggle = useCallback(() => {
         setPlay((prev) => !prev);
-    };
+    }, []);
 
     useEffect(() => {
         if (audioRef) {

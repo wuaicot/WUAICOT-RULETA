@@ -29,3 +29,8 @@ export interface Bet {
     betChips: any;
     betLocation: { x: number; y: number };
 }
+
+export interface ClientData {
+    playerId: string;
+    bets: Bet[];
+}

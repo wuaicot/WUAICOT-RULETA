@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { GameContext } from "../../store/gameStore";
 import { Button } from "../../UI/Button";
@@ -15,20 +15,18 @@ export const Header = (props: HeaderProps) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const { setPlayerId } = useContext(GameContext);
 
-    const logInHandler = () => {
+    const logInHandler = useCallback(() => {
         setLoggedIn(true);
         const id = uuidv4();
-        //console for getting to know which user it is
-        console.log(id);
         setPlayerId(id);
         connect();
-    };
+    }, []);
 
-    const logOutHandler = () => {
+    const logOutHandler = useCallback(() => {
         setLoggedIn(false);
         setPlayerId("");
         disconnect();
-    };
+    }, []);
 
     return (
         <nav className="header">
