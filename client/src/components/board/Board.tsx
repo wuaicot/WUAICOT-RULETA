@@ -3,7 +3,7 @@ import { gameStore } from "../../store/gameStore";
 import { BoardItem } from "./BoardItem";
 import { Chip } from "./Chip";
 import { matrix } from "../../utils/utils";
-import { Bet } from "../../types";
+import { Bet } from "../../../../common/types";
 import "./Board.css";
 
 export const Board = () => {

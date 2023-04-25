@@ -1,0 +1,21 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "server for roulette game",
+  "main": "server.ts",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "k-stopczynska",
+  "license": "ISC",
+  "dependencies": {
+    "@types/ws": "^8.5.4",
+    "easytimer.js": "^4.5.4",
+    "ts-node": "^10.9.1",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "typescript": "^5.0.4"
+  }
+}

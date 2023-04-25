@@ -1,125 +1,53 @@
-import { WebSocketServer } from "ws";
+import { BLACKS, REDS } from "../common/utils";
+import { Winner, ClientData, Bet } from "../common/types";
 
-import { Timer } from "easytimer.js";
-import { BLACKS, REDS } from "./utils";
-import { GameLoop, GameData, Winner } from "./types";
-
-//initialising websocket server
-const PORT = 8888;
-const wss = new WebSocketServer({
-    port: PORT,
-});
-
-//initialising timer
-const timer = new Timer();
-
-//types
-interface ClientData {
-    playerId: string;
-    bets: any[];
-}
-
-let gameStage: GameLoop = GameLoop.PLACE_BET;
-let winningNumber: number;
-const winners: Winner[] = [];
-let win = 0;
-let clientData: ClientData = { playerId: "", bets: [] };
-const usersData: ClientData[] = [];
-
-const sendGameData = (gameData: GameData) => {
-    wss.clients.forEach((client) => {
-        client.send(JSON.stringify(gameData));
-    });
+export const isIdUnique = (array: Winner[] | ClientData[], id: string) => {
+    return array.map(
+        (item) => JSON.stringify(item.playerId) !== JSON.stringify(id),
+    );
 };
 
-const uniqueData: ClientData[] = [];
-const isUserDataUnique = () => {
+export const isUserDataUnique = (
+    uniqueData: ClientData[],
+    usersData: ClientData[],
+) => {
     const reverse = usersData.reverse();
     for (let i = 0; i < reverse.length; i++) {
         if (
             uniqueData.length === 0 ||
-            !uniqueData
-                .map(
-                    (data) =>
-                        JSON.stringify(data.playerId) !==
-                        JSON.stringify(reverse[i].playerId),
-                )
-                .includes(false)
+            !isIdUnique(uniqueData, reverse[i].playerId).includes(false)
         ) {
             uniqueData.push(reverse[i]);
         }
     }
 };
 
-timer.addEventListener("secondsUpdated", function () {
-    const currentTime = timer.getTimeValues().seconds;
-    const gameData: GameData = {
-        gameStage: gameStage,
-        gameTimer: currentTime,
-        winningNumber: winningNumber,
-        winners: winners,
-    };
-    sendGameData(gameData);
-    if (currentTime === 1) {
-        gameStage = GameLoop.PLACE_BET;
-    } else if (currentTime === 25) {
-        gameStage = GameLoop.NO_MORE_BETS;
-    } else if (currentTime === 28) {
-        winningNumber = getRandomNumber(0, 36);
-        isUserDataUnique();
-        gameStage = GameLoop.SPIN_WHEEL;
-    } else if (currentTime === 40) {
-        for (let i = 0; i < uniqueData.length; i++) {
-            for (let j = 0; j < winners.length; j++) {
-                if (uniqueData[i].playerId === winners[j].id) {
-                    winners[j].win = calculateWin(
-                        winningNumber,
-                        uniqueData[i].bets,
-                    );
-                }
-            }
-        }
-        gameStage = GameLoop.WINNER;
-    } else if (currentTime === 50) {
-        gameStage = GameLoop.EMPTY_BOARD;
-        winners.map((winner) => (winner.win = 0));
-        uniqueData.splice(0, uniqueData.length);
-    }
-    return;
-});
-
-const isIdUnique = (winners: Winner[], id: string) => {
-    return winners.map(
-        (winner) => JSON.stringify(winner.id) !== JSON.stringify(id),
-    );
+export const resetBoard = (winners: Winner[], uniqueData: ClientData[]) => {
+    winners.map((winner) => (winner.win = 0));
+    uniqueData.splice(0, uniqueData.length);
 };
 
-wss.on("connection", (socket: any) => {
-    socket.on("message", (data: any) => {
-        clientData = JSON.parse(data);
-        socket.id = clientData.playerId;
-        usersData.push(clientData);
-        if (
-            winners.length === 0 ||
-            !isIdUnique(winners, clientData.playerId).includes(false)
-        ) {
-            winners.push({ id: clientData.playerId, win: win });
-        }
-    });
-    socket.on("close", () => {
-        console.log("closing " + socket.id);
-        const indexToRemove = winners.findIndex((data) => data.id == socket.id);
-        winners.splice(indexToRemove, 1);
-    });
-    timer.start();
-});
-
-console.log(`${new Date()}: server is listening on port  ${PORT}`);
-
-const getRandomNumber = (min: number, max: number) => {
+export const getRandomNumber = (min: number, max: number) => {
     const minValue = Math.ceil(min);
     const maxValue = Math.floor(max);
     return Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
+};
+
+export const calculateWinners = (
+    winners: Winner[],
+    uniqueData: ClientData[],
+    winningNumber: number,
+) => {
+    for (let i = 0; i < uniqueData.length; i++) {
+        for (let j = 0; j < winners.length; j++) {
+            if (uniqueData[i].playerId === winners[j].playerId) {
+                winners[j].win = calculateWin(
+                    winningNumber,
+                    uniqueData[i].bets,
+                );
+            }
+        }
+    }
 };
 
 enum BetTypes {
@@ -198,8 +126,8 @@ const calculateLineNumbers = (line: string) => {
     return lineNumbersArray;
 };
 
-const calculateWin = (winningNumber: number, bets: any) => {
-    win = 0;
+const calculateWin = (winningNumber: number, bets: Bet[]) => {
+    let win = 0;
     const userBets = bets;
     for (let i = 0; i < userBets.length; i++) {
         const betType = getBetType(userBets[i].betSpot);

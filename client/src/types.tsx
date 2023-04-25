@@ -19,7 +19,7 @@ export enum GameLoop {
 }
 
 export interface Winner {
-    id: string;
+    playerId: string;
     win: number;
 }
 

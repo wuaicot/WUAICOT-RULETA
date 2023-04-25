@@ -14,6 +14,18 @@ export enum GameLoop {
 }
 
 export interface Winner {
-    id: string;
+    playerId: string;
     win: number;
+}
+
+export interface Bet {
+    betAmount: number;
+    betSpot: string;
+    betChips: any;
+    betLocation: { x: number; y: number };
+}
+
+export interface ClientData {
+    playerId: string;
+    bets: Bet[];
 }

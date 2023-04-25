@@ -63,11 +63,11 @@ export const GameLoopTable = () => {
                 content.push(
                     <div
                         className={isWinnerItemMine(
-                            winner.id,
+                            winner.playerId,
                             gameStore.playerId,
                         )}
                     >
-                        <p className="user-id">User id: {winner.id}</p>
+                        <p className="user-id">User id: {winner.playerId}</p>
                         <p className="win">Win: {winner.win}</p>
                     </div>,
                 );
