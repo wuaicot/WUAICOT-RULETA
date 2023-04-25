@@ -3,7 +3,7 @@ import { gameStore, GameContext } from "../store/gameStore";
 
 export const useServer = () => {
     const [error, setError] = useState("");
-    const [message, setMessage] = useState<unknown>();
+    const [message, setMessage] = useState<MessageEvent>();
     const [loading, setLoading] = useState(false);
     const { setMsg } = useContext(GameContext);
 
@@ -19,7 +19,8 @@ export const useServer = () => {
     }, []);
 
     const clientOnMessage = useCallback(
-        (message: any) => {
+        (message: MessageEvent) => {
+            console.log(typeof message);
             setMessage(JSON.parse(message.data));
             setMsg(JSON.parse(message.data));
             sendGameData(JSON.stringify(gameStore.gameData));
