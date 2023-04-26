@@ -3,13 +3,14 @@ import { observable, action, computed, makeObservable } from "mobx";
 import { chipsColors, rouletteNumbers } from "../utils/utils";
 import { GameData, Bet } from "../../../common/types";
 
-function chipsToSpawn(betAmount: number) {
+export function chipsToSpawn(betAmount: number) {
     return chipsColors.filter((chip) => chip.value === betAmount);
 }
-const indexSpin = (2 * Math.PI) / rouletteNumbers.length;
-function calculateWinSpin(winningNumber: number) {
+
+export const indexSpin = (2 * Math.PI) / rouletteNumbers.length;
+export function calculateWinSpin(winningNumber: number) {
     const winningNumberIndex = rouletteNumbers.indexOf(winningNumber);
-    return winningNumberIndex * indexSpin;
+    return +(winningNumberIndex * indexSpin).toFixed(2);
 }
 
 class GameStore {

@@ -20,7 +20,6 @@ export const useServer = () => {
 
     const clientOnMessage = useCallback(
         (message: MessageEvent) => {
-            console.log(typeof message);
             setMessage(JSON.parse(message.data));
             setMsg(JSON.parse(message.data));
             sendGameData(JSON.stringify(gameStore.gameData));

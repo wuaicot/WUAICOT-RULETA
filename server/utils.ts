@@ -113,7 +113,7 @@ const getBetType = (betSpot: number | string) => {
     }
 };
 
-const calculateLineNumbers = (line: string) => {
+export const calculateLineNumbers = (line: string) => {
     const lineNumbersArray = [];
     let currentNumber = line.includes("first")
         ? 1
@@ -126,7 +126,7 @@ const calculateLineNumbers = (line: string) => {
     return lineNumbersArray;
 };
 
-const calculateWin = (winningNumber: number, bets: Bet[]) => {
+export const calculateWin = (winningNumber: number, bets: Bet[]) => {
     let win = 0;
     const userBets = bets;
     for (let i = 0; i < userBets.length; i++) {
@@ -158,17 +158,17 @@ const calculateWin = (winningNumber: number, bets: Bet[]) => {
             betType === BetTypes.FIRST_LINE &&
             calculateLineNumbers(BetTypes.FIRST_LINE).includes(winningNumber)
         ) {
-            win += userBets[i].betAmount * 2;
+            win += userBets[i].betAmount * 3;
         } else if (
             betType === BetTypes.SECOND_LINE &&
             calculateLineNumbers(BetTypes.SECOND_LINE).includes(winningNumber)
         ) {
-            win += userBets[i].betAmount * 2;
+            win += userBets[i].betAmount * 3;
         } else if (
             betType === BetTypes.THIRD_LINE &&
             calculateLineNumbers(BetTypes.THIRD_LINE).includes(winningNumber)
         ) {
-            win += userBets[i].betAmount * 2;
+            win += userBets[i].betAmount * 3;
         } else if (betType === BetTypes.ODD && winningNumber % 2 !== 0) {
             win += userBets[i].betAmount * 2;
         } else if (betType === BetTypes.EVEN && winningNumber % 2 === 0) {

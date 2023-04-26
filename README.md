@@ -3,14 +3,14 @@
 ## Table of contents
 
 -   [Overview](#overview)
--   [The challenge](#the-challenge)
+-   [The game](#the-game)
 -   [Links](#links)
 -   [Built with](#built-with)
--   [Author](#author)
 
 ## Overview
 
 This is a multiplayer European Roulette game with some 3D animations.
+Response from server can get couple seconds.
 
 ### The game
 
@@ -26,6 +26,7 @@ Users should be able to:
 ### Links
 
 -   Repository URL: https://github.com/k-stopczynska/roulette
+-   Live Demo URL: https://m-r.surge.sh/
 
 ### Built with
 
@@ -37,6 +38,7 @@ Users should be able to:
 -   react-dnd
 -   WebSockets
 
-# to play on your local machine type: `git clone [repository URL]` and then:
+### Play locally on your machine:
 
-`npm start` for running front-end and in server directory: `ts-node server.ts` for running backend
+type: `git clone [repository URL]` and then:
+`npm start` for running front-end and in server directory install nodemon and: `ts-node server.ts` for running backend

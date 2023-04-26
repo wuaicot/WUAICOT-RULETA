@@ -1,6 +1,6 @@
 import { Engine, Scene } from "react-babylonjs";
 import { Vector3 } from "@babylonjs/core";
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useCallback } from "react";
 import { RouletteAnimate } from "./RouletteAnimate";
 import { Ground } from "./Ground";
 import { gameStore } from "../../store/gameStore";
@@ -20,7 +20,7 @@ export const MainScene = () => {
     const [acc, setAcc] = useState(false);
     const [pos, setPos] = useState(initialBallPos);
 
-    const accelerate = () => {
+    const accelerate = useCallback(() => {
         setAcc(true);
         const rpmAccInterval = setInterval(() => {
             setRpm((prevValue) => (prevValue += 10));
@@ -29,13 +29,13 @@ export const MainScene = () => {
         setTimeout(() => {
             clearInterval(rpmAccInterval);
         }, 3000);
-    };
+    }, []);
 
-    const deccelerate = () => {
+    const deccelerate = useCallback(() => {
         const rpmDecInterval = setInterval(() => {
             setRpm((prevValue) => (prevValue -= 6.5));
             setPos((prevValue) => [
-                prevValue[0] - 0.6,
+                prevValue[0] - 0.5,
                 prevValue[1],
                 prevValue[2],
             ]);
@@ -46,7 +46,7 @@ export const MainScene = () => {
             setAcc(false);
             clearInterval(rpmDecInterval);
         }, 5000);
-    };
+    }, []);
 
     useEffect(() => {
         if (message) {

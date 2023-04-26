@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { GameContext } from "../../store/gameStore";
 import { Button } from "../../UI/Button";
 import { Audio } from "./Audio";
+import { assetsURL } from '../../utils/utils';
 import "./Header.css";
 
 interface HeaderProps {
@@ -44,7 +45,7 @@ export const Header = (props: HeaderProps) => {
                         Log Out
                     </Button>
                 )}
-                <Audio />
+                <Audio url={assetsURL.soundtrack} loop={true} />
             </div>
         </nav>
     );
