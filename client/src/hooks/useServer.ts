@@ -8,11 +8,16 @@ export const useServer = () => {
     const { setMsg } = useContext(GameContext);
 
     const ws = useRef<WebSocket>();
-    //const URL = "wss://dour-ambitious-tarragon.glitch.me/";
-    const URL = "ws://localhost:8888";
-    const clientOnError = useCallback((event: Event) => {
-        setError(`something went wrong with connection to ${URL}, try again`);
-    }, []);
+    const URL = "wss://dour-ambitious-tarragon.glitch.me/";
+    //const URL = "ws://localhost:8888";
+    const clientOnError = useCallback(
+        (event: Event) => {
+            setError(
+                `something went wrong with connection to ${URL}, try again`,
+            );
+        },
+        [error],
+    );
 
     const sendGameData = useCallback((clientData: string) => {
         ws.current!.send(clientData);
@@ -35,7 +40,7 @@ export const useServer = () => {
     const connect = useCallback(() => {
         setLoading(true);
         try {
-            ws.current = new WebSocket(URL);
+            ws.current = new WebSocket(URL, "Google");
             ws.current.addEventListener("error", clientOnError);
             ws.current.addEventListener("message", clientOnMessage);
         } catch (e) {

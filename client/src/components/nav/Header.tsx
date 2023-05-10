@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { GameContext } from "../../store/gameStore";
 import { Button } from "../../UI/Button";
 import { Audio } from "./Audio";
-import { assetsURL } from '../../utils/utils';
+import { assetsURL } from "../../utils/utils";
 import "./Header.css";
 
 interface HeaderProps {
@@ -31,9 +31,15 @@ export const Header = (props: HeaderProps) => {
 
     return (
         <nav className="header">
-            <Button className="logo">
-                <h1 className="main-heading">Magic roulette</h1>
-            </Button>
+            <a
+                href="https://www.roulettesites.org/rules/"
+                rel="noreferrer"
+                target="blank"
+            >
+                <Button className="logo">
+                    <h1 className="main-heading">Magic roulette</h1>
+                </Button>
+            </a>
             <div className="audio-login-container">
                 {!loggedIn && (
                     <Button className="login-button" onClick={logInHandler}>

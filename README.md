@@ -38,7 +38,14 @@ Users should be able to:
 -   react-dnd
 -   WebSockets
 
+### Continued development
+
+-   changing 'ws' server for socket.io (more customizable and would prevent rerenders)
+-   improve drop event with highlighting board cells
+-   change the assets for more realistic, adjust animation on ball
+-   mobile view
+
 ### Play locally on your machine:
 
 type: `git clone [repository URL]` and then:
-`npm start` for running front-end and in server directory install nodemon and: `ts-node server.ts` for running backend
+`npm install` to install dependencies and `npm start` for running front-end and in server directory install nodemon and: `ts-node server.ts` for running backend

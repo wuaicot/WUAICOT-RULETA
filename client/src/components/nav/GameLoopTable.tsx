@@ -57,7 +57,6 @@ export const GameLoopTable = () => {
 
     const getWinners = useCallback((message: GameData) => {
         const content: React.ReactNode[] = [];
-        // eslint-disable-next-line
         if (message) {
             message.winners.map((winner: Winner) => {
                 content.push(
