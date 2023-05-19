@@ -1,54 +1,42 @@
-import { useState, useRef, useCallback, useContext } from "react";
-import { gameStore, GameContext } from "../store/gameStore";
+import { useState, useCallback, useContext } from 'react';
+import io from 'socket.io-client';
+import { gameStore, GameContext } from '../store/gameStore';
+import { SOCKET_URL } from '../config/default';
+import { EVENTS } from '../utils/utils';
 
 export const useServer = () => {
-    const [error, setError] = useState("");
-    const [message, setMessage] = useState<MessageEvent>();
-    const [loading, setLoading] = useState(false);
-    const { setMsg } = useContext(GameContext);
+	const [error, setError] = useState('');
+	const [message, setMessage] = useState<MessageEvent>();
+	const { setMsg } = useContext(GameContext);
 
-    const ws = useRef<WebSocket>();
-    const URL = "wss://dour-ambitious-tarragon.glitch.me/";
-    //const URL = "ws://localhost:8888";
-    const clientOnError = useCallback(
-        (event: Event) => {
-            setError(
-                `something went wrong with connection to ${URL}, try again`,
-            );
-        },
-        [error],
-    );
+	const socket = io(SOCKET_URL);
 
-    const sendGameData = useCallback((clientData: string) => {
-        ws.current!.send(clientData);
-    }, []);
+	const connect = useCallback(() => {
+		try {
+			socket.emit(
+				EVENTS.CLIENT.JOIN_GAME,
+				JSON.stringify(gameStore.gameData),
+			);
+			socket.on(EVENTS.SERVER.JOINED_GAME, (value) => {
+				console.log(JSON.parse(value));
+			});
 
-    const clientOnMessage = useCallback(
-        (message: MessageEvent) => {
-            setMessage(JSON.parse(message.data));
-            setMsg(JSON.parse(message.data));
-            sendGameData(JSON.stringify(gameStore.gameData));
-        },
-        // eslint-disable-next-line
-        [message],
-    );
+			socket.on(EVENTS.SERVER.STAGE_CHANGE, (value) => {
+				setMessage(JSON.parse(value));
+				setMsg(JSON.parse(value));
+				socket.emit(
+					EVENTS.CLIENT.CLIENT_DATA,
+					JSON.stringify(gameStore.gameData),
+				);
+			});
+		} catch (e) {
+			setError((e as Error).message);
+		}
+	}, []);
 
-    const disconnect = useCallback(() => {
-        ws.current?.close();
-    }, []);
+	const disconnect = useCallback(() => {
+		socket.emit(EVENTS.CLIENT.CLOSE);
+	}, []);
 
-    const connect = useCallback(() => {
-        setLoading(true);
-        try {
-            ws.current = new WebSocket(URL, "Google");
-            ws.current.addEventListener("error", clientOnError);
-            ws.current.addEventListener("message", clientOnMessage);
-        } catch (e) {
-            setError((e as Error).message);
-        }
-        setLoading(false);
-        // eslint-disable-next-line
-    }, []);
-
-    return { error, message, loading, connect, disconnect };
+	return { error, message, connect, disconnect };
 };
