@@ -5,6 +5,7 @@ export const assetsURL = {
 	black: './assets/chip_black.png',
 	grass: './assets/grass.png',
 	roulette: './assets/Roulette',
+	roulette_new: './assets/roulette_new',
 	soundtrack: './assets/My-Dark-Passenger.mp3',
 	soundIcon: './assets/icons8-audio-64.png',
 };
