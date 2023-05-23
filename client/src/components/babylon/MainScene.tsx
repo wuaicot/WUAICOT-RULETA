@@ -23,7 +23,12 @@ export const MainScene = () => {
 	const accelerate = useCallback(() => {
 		setAcc(true);
 		const rpmAccInterval = setInterval(() => {
-			setRpm((prevValue) => (prevValue += 10));
+            setRpm((prevValue) => (prevValue += 10));
+            	setPos((prevValue) => [
+					prevValue[0] + 0.40,
+					prevValue[1],
+					prevValue[2] - .16,
+				]);
 		}, 500);
 
 		setTimeout(() => {
@@ -35,9 +40,9 @@ export const MainScene = () => {
 		const rpmDecInterval = setInterval(() => {
 			setRpm((prevValue) => (prevValue -= 6.5));
 			setPos((prevValue) => [
-				prevValue[0] - 0.5,
+				prevValue[0] - 0.26,
 				prevValue[1],
-				prevValue[2],
+				prevValue[2] + .10,
 			]);
 		}, 550);
 
