@@ -1,42 +1,52 @@
-import { useState, useCallback, useContext } from 'react';
-import io from 'socket.io-client';
+import { useState, useCallback, useContext, useRef } from 'react';
 import { gameStore, GameContext } from '../store/gameStore';
-import { SOCKET_URL } from '../config/default';
-import { EVENTS } from '../utils/utils';
 
 export const useServer = () => {
 	const [error, setError] = useState('');
-	const [message, setMessage] = useState<MessageEvent>();
+	const [message, setMessage] = useState<any>();
+	const [loading, setLoading] = useState(false);
 	const { setMsg } = useContext(GameContext);
 
-	const socket = io(SOCKET_URL);
+	const sendGameData = (clientData: any) => {
+		ws.current!.send(clientData);
+	};
+
+	const ws = useRef<WebSocket>();
+	const URL = 'wss://dour-ambitious-tarragon.glitch.me/';
+
+	const clientOnError = useCallback(
+		(event: Event) => {
+			setError(
+				`something went wrong with connection to ${URL}, try again`,
+			);
+		},
+		[error],
+	);
+
+	const clientOnMessage = useCallback(
+		(message: any) => {
+			setMessage(JSON.parse(message.data));
+			setMsg(JSON.parse(message.data));
+			sendGameData(JSON.stringify(gameStore.gameData));
+		},
+		[message],
+	);
 
 	const connect = useCallback(() => {
+		setLoading(true);
 		try {
-			socket.emit(
-				EVENTS.CLIENT.JOIN_GAME,
-				JSON.stringify(gameStore.gameData),
-			);
-			socket.on(EVENTS.SERVER.JOINED_GAME, (value) => {
-				console.log(JSON.parse(value));
-			});
-
-			socket.on(EVENTS.SERVER.STAGE_CHANGE, (value) => {
-				setMessage(JSON.parse(value));
-				setMsg(JSON.parse(value));
-				socket.emit(
-					EVENTS.CLIENT.CLIENT_DATA,
-					JSON.stringify(gameStore.gameData),
-				);
-			});
+			ws.current = new WebSocket(URL);
+			ws.current.addEventListener('error', clientOnError);
+			ws.current.addEventListener('message', clientOnMessage);
 		} catch (e) {
 			setError((e as Error).message);
 		}
+		setLoading(false);
 	}, []);
 
-	const disconnect = useCallback(() => {
-		socket.emit(EVENTS.CLIENT.CLOSE);
-	}, []);
+    const disconnect = () => {
+		ws.current?.close();
+	};
 
 	return { error, message, connect, disconnect };
 };

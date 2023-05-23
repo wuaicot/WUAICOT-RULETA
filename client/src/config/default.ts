@@ -1,1 +1,1 @@
-export const SOCKET_URL = 'http://localhost:8888';
+export const SOCKET_URL = 'https://verdant-cherry-saltasaurus.glitch.me/';

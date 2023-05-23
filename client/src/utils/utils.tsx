@@ -1,8 +1,9 @@
 export const assetsURL = {
-	orange: './assets/chip_orange.png',
-	purple: './assets/chip_purple.png',
-	blue: './assets/chip_blue.png',
-	black: './assets/chip_black.png',
+	orange: './assets/chip-10.png',
+	green: './assets/chip-25.png',
+	blue: './assets/chip-50.png',
+	yellow: './assets/chip-100.png',
+	red: './assets/chip-500.png',
 	grass: './assets/grass.png',
 	roulette: './assets/Roulette',
 	roulette_new: './assets/roulette_new',
@@ -18,10 +19,10 @@ export const chipsColors = [
 		id: '10',
 	},
 	{
-		url: assetsURL.purple,
-		alt: 'chip purple value 20',
-		value: 20,
-		id: '20',
+		url: assetsURL.green,
+		alt: 'chip green value 25',
+		value: 25,
+		id: '25',
 	},
 	{
 		url: assetsURL.blue,
@@ -30,10 +31,16 @@ export const chipsColors = [
 		id: '50',
 	},
 	{
-		url: assetsURL.black,
+		url: assetsURL.yellow,
 		value: 100,
-		alt: 'chip black value 100',
+		alt: 'chip yellow value 100',
 		id: '100',
+	},
+	{
+		url: assetsURL.red,
+		value: 500,
+		alt: 'chip red value 500',
+		id: '500',
 	},
 ];
 
