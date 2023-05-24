@@ -26,7 +26,7 @@ Users should be able to:
 ### Links
 
 -   Repository URL: https://github.com/k-stopczynska/roulette
--   Live Demo URL: https://m-r.surge.sh/
+-   Live Demo URL: https://magic-roulette.surge.sh/
 
 ### Built with
 

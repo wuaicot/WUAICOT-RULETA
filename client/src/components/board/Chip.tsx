@@ -16,7 +16,9 @@ interface DropResultType {
     name: string;
     location: { x: number; y: number };
 }
+
 let dropResult: DropResultType | null;
+
 export const Chip = (props: ChipProps) => {
     const { setChipsTaken, setBoardItemOccupied, setBetLocation, setAllBets } =
         useContext(GameContext);
