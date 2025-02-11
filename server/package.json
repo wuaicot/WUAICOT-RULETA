@@ -1,7 +1,7 @@
 {
     "name": "server",
     "version": "1.0.0",
-    "description": "server for roulette game",
+    "description": "servidor para el juego wuaicot-ruleta",
     "main": "server.ts",
     "scripts": {
         "test": "jest"

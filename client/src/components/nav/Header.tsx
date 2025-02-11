@@ -36,7 +36,7 @@ export const Header = (props: HeaderProps) => {
 				rel='noreferrer'
 				target='blank'
 			>
-				<Button className='logo'>Magic roulette</Button>
+				<Button className='logo  '>Wuaicot Ruleta</Button>
 			</a>
 			<div className='audio-login-container'>
 				{!loggedIn && (
