@@ -1,2 +1,5 @@
 //para iniciar servidor:
    ts-node server.ts
+
+
+   .
