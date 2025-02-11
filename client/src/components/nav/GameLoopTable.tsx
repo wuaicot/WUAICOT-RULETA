@@ -49,7 +49,7 @@ export const GameLoopTable = () => {
             }
             return content;
         }
-    }, []);
+    }, [setBoardClear]);
 
     const isWinnerItemMine = useCallback((winner: string, playerId: string) => {
         return winner === playerId ? "winner-item-mine" : "winner-item";
@@ -58,7 +58,7 @@ export const GameLoopTable = () => {
     const getWinners = useCallback((message: GameData) => {
         const content: React.ReactNode[] = [];
         if (message) {
-            message.winners.map((winner: Winner) => {
+            message.winners.map((winner: Winner) => (
                 content.push(
                     <div
                         className={isWinnerItemMine(
@@ -69,11 +69,11 @@ export const GameLoopTable = () => {
                         <p className="user-id">User id: {winner.playerId}</p>
                         <p className="win">Win: {winner.win}</p>
                     </div>,
-                );
-            });
+                )
+            ));
         }
         return content;
-    }, []);
+    }, [isWinnerItemMine]);
 
     return (
         <div className="table-container">

@@ -21,13 +21,13 @@ export const Header = (props: HeaderProps) => {
 		const id = uuidv4();
 		setPlayerId(id);
 		connect();
-	}, []);
+	}, [connect, setPlayerId]);
 
 	const logOutHandler = useCallback(() => {
 		setLoggedIn(false);
 		setPlayerId('');
 		disconnect();
-	}, []);
+	}, [disconnect, setPlayerId]);
 
 	return (
 		<nav className='header'>
