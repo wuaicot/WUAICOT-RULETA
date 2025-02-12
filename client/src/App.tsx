@@ -1,7 +1,7 @@
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { gameStore, GameContext } from './store/gameStore';
-import { Loader } from './components/difStates/Loader';
+//import { Loader } from './components/difStates/Loader';
 import { Error } from './components/difStates/Error';
 import { Header } from './components/nav/Header';
 import { Dashboard } from './components/nav/Dashboard';
@@ -24,6 +24,7 @@ function App() {
 		} else if (error) {
 			return 'App no-pointers';
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
