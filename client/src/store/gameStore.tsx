@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 import { observable, action, computed, makeObservable } from 'mobx';
 import { chipsColors, rouletteNumbers } from '../utils/utils';
-import { GameData, Bet } from '../../../common/types';
+import { GameData, Bet } from '../common/types';
 
 export function chipsToSpawn(betAmount: number) {
 	return chipsColors.filter((chip) => chip.value === betAmount);
