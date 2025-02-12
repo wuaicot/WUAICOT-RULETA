@@ -6,7 +6,7 @@
     "scripts": {
         "test": "jest"
     },
-    "author": "k-stopczynska",
+    "author": "wuaicot",
     "license": "ISC",
     "dependencies": {
         "@types/config": "^3.3.0",
