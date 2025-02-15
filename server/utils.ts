@@ -1,5 +1,5 @@
-import { BLACKS, REDS } from '../common/utils';
-import { Winner, ClientData, Bet } from '../common/types';
+import { BLACKS, REDS } from '../client/src/common/utils';
+import { Winner, ClientData, Bet } from '../client/src/common/types';
 
 export const isIdUnique = (array: Winner[] | ClientData[], id: string) => {
 	return array.map(
