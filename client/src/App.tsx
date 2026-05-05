@@ -14,21 +14,17 @@ import { useCallback } from 'react';
 function App() {
 	const { error, connect, disconnect } = useServer();
 
-	const setPointerEvents = useCallback((message: GameData | null) => {
+	const setPointerEvents = useCallback(() => {
+		const message = gameStore.msg;
 		if (!message) return 'App';
-		if (message) {
-			return message.gameStage === GameLoop.PLACE_BET
-				? 'App'
-				: 'App no-pointers';
-		} else if (error) {
-			return 'App no-pointers';
-		}
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		return message.gameStage === GameLoop.PLACE_BET
+			? 'App'
+			: 'App no-pointers';
 	}, []);
 
 	return (
 		<DndProvider backend={HTML5Backend}>
-			<div className={setPointerEvents(gameStore.msg)}>
+			<div className={setPointerEvents()}>
 				<GameContext.Provider value={gameStore}>
 					
 					{error && <Error error={error} />}

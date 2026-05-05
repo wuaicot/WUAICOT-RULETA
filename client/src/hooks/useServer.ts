@@ -1,52 +1,63 @@
-import { useState, useCallback, useContext, useRef } from 'react';
+import { useState, useCallback, useContext, useEffect, useRef } from 'react';
+import { io, Socket } from 'socket.io-client';
 import { gameStore, GameContext } from '../store/gameStore';
+import { SOCKET_URL } from '../config/default';
 
 export const useServer = () => {
 	const [error, setError] = useState('');
-	const [message, setMessage] = useState<any>();
-	const [loading, setLoading] = useState(false);
 	const { setMsg } = useContext(GameContext);
-
-	const sendGameData = (clientData: any) => {
-		ws.current!.send(clientData);
-	};
-
-	const ws = useRef<WebSocket>();
-	const URL = 'wss://dour-ambitious-tarragon.glitch.me/';
-
-	const clientOnError = useCallback(
-		(event: Event) => {
-			setError(
-				`something went wrong with connection to ${URL}, try again`,
-			);
-		},
-		[error],
-	);
-
-	const clientOnMessage = useCallback(
-		(message: any) => {
-			setMessage(JSON.parse(message.data));
-			setMsg(JSON.parse(message.data));
-			sendGameData(JSON.stringify(gameStore.gameData));
-		},
-		[message],
-	);
+	const socketRef = useRef<Socket | null>(null);
 
 	const connect = useCallback(() => {
-		setLoading(true);
-		try {
-			ws.current = new WebSocket(URL);
-			ws.current.addEventListener('error', clientOnError);
-			ws.current.addEventListener('message', clientOnMessage);
-		} catch (e) {
-			setError((e as Error).message);
+		if (socketRef.current?.connected) return;
+
+		const socket = io(SOCKET_URL, {
+			transports: ['websocket'],
+			reconnectionAttempts: 5,
+		});
+
+		socketRef.current = socket;
+
+		socket.on('connect', () => {
+			console.log('Connected to FastAPI server');
+			setError('');
+			// Initial join
+			socket.emit('join_game', JSON.stringify(gameStore.gameData));
+		});
+
+		socket.on('connect_error', (err) => {
+			setError(`Connection error: ${err.message}`);
+		});
+
+		socket.on('stage_change', (data: string) => {
+			try {
+				const parsedData = JSON.parse(data);
+				setMsg(parsedData);
+				// Send back current bets/player data to keep server updated
+				socket.emit('client_data', JSON.stringify(gameStore.gameData));
+			} catch (e) {
+				console.error('Error parsing game data:', e);
+			}
+		});
+
+		socket.on('disconnect', () => {
+			console.log('Disconnected from server');
+		});
+
+	}, [setMsg]);
+
+	const disconnect = useCallback(() => {
+		if (socketRef.current) {
+			socketRef.current.disconnect();
+			socketRef.current = null;
 		}
-		setLoading(false);
 	}, []);
 
-    const disconnect = () => {
-		ws.current?.close();
-	};
+	useEffect(() => {
+		return () => {
+			disconnect();
+		};
+	}, [disconnect]);
 
-	return { error, message, connect, disconnect };
+	return { error, connect, disconnect };
 };
