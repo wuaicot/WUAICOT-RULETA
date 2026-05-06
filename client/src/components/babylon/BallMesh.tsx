@@ -1,4 +1,4 @@
-import { Vector3 } from "@babylonjs/core";
+import { Vector3, Color3 } from "@babylonjs/core";
 
 export const BallMesh = (props: any) => {
     const { pos } = props;
@@ -10,6 +10,8 @@ export const BallMesh = (props: any) => {
             diameter={1}
             segments={32}
             position={new Vector3(x, y, z)}
-        />
+        >
+            <standardMaterial name="ball-material" diffuseColor={new Color3(1, 1, 1)} />
+        </sphere>
     );
 };

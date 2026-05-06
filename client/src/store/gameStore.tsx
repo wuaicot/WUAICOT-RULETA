@@ -69,8 +69,9 @@ class GameStore {
 	}
 
 	get winSpin() {
+		const winningNumber = this.msg?.winningNumber;
 		return {
-			winSpin: calculateWinSpin(this.msg!.winningNumber!),
+			winSpin: winningNumber !== undefined ? calculateWinSpin(winningNumber) : 0,
 		};
 	}
 

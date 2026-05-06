@@ -1,0 +1,46 @@
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid white;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.red {
+    background: red;
+}
+
+.black {
+    background: black;
+}
+
+.plain {
+    background: transparent;
+}
+
+#\31\54\4F\31\38 {
+    grid-column: 2 / span 2;
+}
+
+#\31\53\54\31\32 {
+    grid-column: 2 / span 4;
+}
+
+#BLACK,
+#RED,
+#ODD,
+#EVEN,
+#\31\39\54\4F\33\36 {
+    grid-column: span 2;
+}
+
+#\32\4E\44\31\32,
+#\33\52\44\31\32 {
+    grid-column: span 4;
+}
+
+#\30 {
+    grid-row: span 3;
+}

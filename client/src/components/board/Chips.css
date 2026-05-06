@@ -1,22 +1,31 @@
-.chip-container {
-	border: 0.125em solid rgb(255, 173, 0);
-	border-radius: 8px;
-	box-shadow: 0 0 0.5em 0 rgb(255, 173, 0);
-	width: 50%;
-	max-height: 20%;
-	display: flex;
-	align-items: center;
-	justify-content: space-around;
-	margin-bottom: 1em;
-	padding: 1em 0;
+.chips-container {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 15px;
+  background: var(--panel-bg);
+  padding: 15px 30px;
+  border-radius: 50px;
+  border: 1px solid var(--neon-yellow);
+  box-shadow: var(--border-glow);
 }
 
-img {
-	max-width: 5em;
-	max-height: 5em;
-	cursor: pointer;
+.chip-item {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 0 5px rgba(255, 173, 0, 0.3));
 }
 
-img:hover {
-	scale: 1.2;
+.chip-item:hover {
+  transform: translateY(-10px) scale(1.1);
+  filter: drop-shadow(0 0 15px var(--neon-yellow));
+}
+
+.chip-item.active {
+  transform: translateY(-15px) scale(1.2);
+  filter: drop-shadow(0 0 20px var(--neon-yellow));
 }

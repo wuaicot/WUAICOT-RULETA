@@ -1,13 +1,15 @@
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { useDrop } from 'react-dnd';
-import { gameStore } from '../../store/gameStore';
+import { observer } from 'mobx-react';
+import { GameContext, gameStore } from '../../store/gameStore';
 import { BoardItem } from './BoardItem';
 import { Chip } from './Chip';
 import { matrix } from '../../utils/utils';
 import { Bet } from '../../common/types';
 import './Board.css';
 
-export const Board = () => {
+export const Board = observer(() => {
+    const store = useContext(GameContext);
 	// eslint-disable-next-line
 	const [{ isOver }, drop] = useDrop(() => ({
 		accept: 'chips',
@@ -60,4 +62,4 @@ export const Board = () => {
 				))}
 		</div>
 	);
-};
+});

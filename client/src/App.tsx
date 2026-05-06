@@ -7,7 +7,7 @@ import { Dashboard } from './components/nav/Dashboard';
 import { Board } from './components/board/Board';
 import { Chips } from './components/board/Chips';
 import { useServer } from './hooks/useServer';
-import { GameLoop, GameData } from './common/types';
+import { GameLoop } from './common/types';
 import './App.css';
 import { useCallback } from 'react';
 

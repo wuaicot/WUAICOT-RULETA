@@ -1,43 +1,30 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+:root {
+  --neon-yellow: #fcfc00;
+  --dark-bg: #121212;
+  --panel-bg: rgba(18, 18, 18, 0.8);
+  --border-glow: 0 0 10px #fcfc00, 0 0 5px #fcfc00 inset;
+  --text-shadow: 0 0 5px #fcfc00;
 }
 
-:root {
-    --color-bg: rgba(31, 37, 10);
-    --color-accent: rgb(255, 173, 0);
-    --border-radius: 0.125em;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--dark-bg);
+  color: white;
+  overflow: hidden;
 }
 
 .App {
-    height: 100vh;
-    width: 100vw;
-    background-color: var(--color-bg);
-    background-image: radial-gradient(
-            rgba(1, 67, 30),
-            rgba(1, 109, 41, 0.2) 2px,
-            transparent 40px
-        ),
-        radial-gradient(
-            rgba(51, 49, 22),
-            rgba(1, 109, 41, 0.15) 1px,
-            transparent 30px
-        ),
-        radial-gradient(
-            rgba(51, 49, 22),
-            rgba(1, 109, 41, 0.1) 2px,
-            transparent 40px
-        ),
-        radial-gradient(
-            rgba(51, 49, 22, 0.4),
-            rgba(1, 109, 41, 0.1) 2px,
-            transparent 30px
-        );
-    background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
-    background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-image: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+}
+
+.App.no-pointers {
+  pointer-events: none;
 }

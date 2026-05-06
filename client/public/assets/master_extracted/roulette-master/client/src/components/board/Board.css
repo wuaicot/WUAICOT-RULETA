@@ -1,0 +1,17 @@
+.board-grid {
+    display: grid;
+    grid-template-columns: repeat(14, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    border: 3px solid white;
+    border-radius: 13px;
+    background: transparent;
+    width: 80%;
+    height: 30%;
+}
+
+.board-grid > img {
+    position: absolute;
+    width: 2em;
+    height: 2em;
+    transform: translate(-50%, -50%);
+}

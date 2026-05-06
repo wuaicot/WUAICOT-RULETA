@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState, useCallback } from "react";
 import ProgressTimer from "react-progress-bar-timer";
+import { observer } from "mobx-react";
 import { GameContext, gameStore } from "../../store/gameStore";
 import { GameLoop, GameData, Winner } from "../../common/types";
 import "./GameLoopTable.css";
 
-export const GameLoopTable = () => {
-    const { setBoardClear } = useContext(GameContext);
+export const GameLoopTable = observer(() => {
+    const { setBoardClear, msg: message } = useContext(GameContext);
     const [started, setStarted] = useState(false);
     const [gameTime, setGameTime] = useState(25);
-    const message = gameStore.msg;
 
     useEffect(() => {
         if (message) {
@@ -17,7 +17,6 @@ export const GameLoopTable = () => {
                 setGameTime(25 - message.gameTimer);
             } else {
                 setStarted(false);
-                return;
             }
         }
     }, [message]);
@@ -66,6 +65,7 @@ export const GameLoopTable = () => {
                             winner.playerId,
                             gameStore.playerId,
                         )}
+                        key={winner.playerId}
                     >
                         <p className="user-id">User id: {winner.playerId}</p>
                         <p className="win">Win: {winner.win}</p>
@@ -75,7 +75,7 @@ export const GameLoopTable = () => {
         }
         return content;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [isWinnerItemMine]);
 
     return (
         <div className="table-container">
@@ -94,10 +94,10 @@ export const GameLoopTable = () => {
                         />
                     </div>
                     <ul className="winners-list">
-                        {getWinners(message).map((cont: React.ReactNode) => (
+                        {getWinners(message).map((cont: React.ReactNode, index: number) => (
                             <li
                                 className="winner-item-wrapper"
-                                key={Math.random()}
+                                key={index}
                             >
                                 {cont}
                             </li>
@@ -107,4 +107,4 @@ export const GameLoopTable = () => {
             )}
         </div>
     );
-};
+});

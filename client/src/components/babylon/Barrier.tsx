@@ -19,7 +19,7 @@ export const Barrier = (props: BarrierProps) => {
 			rotation={new Vector3(-5.5, 0,  -spin - winSpin + 11)}
 		>
 			<BallMesh pos={pos} />
-			<standardMaterial name='barrier' alpha={0} />
+			<standardMaterial name='barrier-material' alpha={0} transparencyMode={3} />
 		</sphere>
 	);
 };
