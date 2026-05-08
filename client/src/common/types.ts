@@ -23,6 +23,7 @@ export interface Bet {
   betSpot: string;
   betChips: any;
   betLocation: { x: number; y: number };
+  id?: string;
 }
 
 export interface ClientData {

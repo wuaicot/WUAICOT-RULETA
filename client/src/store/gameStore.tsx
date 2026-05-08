@@ -39,12 +39,23 @@ class GameStore {
 		this.betLocation = location;
 	}
 
-	setAllBets(newBetItem: Bet) {
+	placeBet(betAmount: number, betSpot: string, location: { x: number; y: number }) {
+		this.chipsTaken = betAmount;
+		this.boardItemOccupied = betSpot;
+		this.betLocation = location;
+		
+		const newBetItem: Bet = {
+			betAmount: betAmount,
+			betSpot: betSpot,
+			betChips: chipsToSpawn(betAmount),
+			betLocation: location,
+			id: Math.random().toString(36).substr(2, 9)
+		};
 		this.bets.push(newBetItem);
 	}
 
 	setBoardClear() {
-		this.bets.splice(0, this.bets.length);
+		this.bets.length = 0;
 	}
 
 	setMsg(newMessage: GameData | null) {
@@ -91,12 +102,13 @@ class GameStore {
 			playerId: observable,
 			boardItemOccupied: observable,
 			chipsTaken: observable,
+			bets: observable,
 			msg: observable,
 			setPlayerId: action.bound,
 			setBoardItemOccupied: action.bound,
 			setChipsTaken: action.bound,
 			setBetLocation: action.bound,
-			setAllBets: action.bound,
+			placeBet: action.bound,
 			setMsg: action.bound,
 			setBoardClear: action.bound,
 			newBet: computed,

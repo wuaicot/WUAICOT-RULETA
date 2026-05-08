@@ -19,7 +19,7 @@ export const useServer = () => {
 		socketRef.current = socket;
 
 		socket.on('connect', () => {
-			console.log('Connected to FastAPI server');
+			console.log('Connected to server');
 			setError('');
 			// Initial join
 			socket.emit('join_game', JSON.stringify(gameStore.gameData));

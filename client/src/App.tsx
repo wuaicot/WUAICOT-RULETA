@@ -1,5 +1,6 @@
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { observer } from 'mobx-react';
 import { gameStore, GameContext } from './store/gameStore';
 import { Error } from './components/difStates/Error';
 import { Header } from './components/nav/Header';
@@ -11,7 +12,7 @@ import { GameLoop } from './common/types';
 import './App.css';
 import { useCallback } from 'react';
 
-function App() {
+const App = observer(() => {
 	const { error, connect, disconnect } = useServer();
 
 	const setPointerEvents = useCallback(() => {
@@ -36,6 +37,6 @@ function App() {
 			</div>
 		</DndProvider>
 	);
-}
+});
 
 export default App;
