@@ -1,6 +1,7 @@
-import { WebSocketServer } from "ws";
+import { createServer } from "http";
+import { Server } from "socket.io";
 import { Timer } from "easytimer.js";
-import { GameLoop, GameData, Winner, ClientData } from "../../WUAICOT-RULETA/client/src/common/types";
+import { GameLoop, GameData, Winner, ClientData } from "../client/src/common/types";
 import {
     isIdUnique,
     isUserDataUnique,
@@ -9,10 +10,13 @@ import {
     calculateWinners,
 } from "./utils";
 
-//initialising websocket server
+//initialising http server and socket.io
 const PORT = 8888;
-const wss = new WebSocketServer({
-    port: PORT,
+const httpServer = createServer();
+const io = new Server(httpServer, {
+    cors: {
+        origin: "*",
+    },
 });
 
 //initialising timer
@@ -22,14 +26,11 @@ let gameStage: GameLoop = GameLoop.PLACE_BET;
 let winningNumber: number;
 const winners: Winner[] = [];
 let win = 0;
-let clientData: ClientData = { playerId: "", bets: [] };
 const usersData: ClientData[] = [];
 const uniqueData: ClientData[] = [];
 
 const sendGameData = (gameData: GameData) => {
-    wss.clients.forEach((client) => {
-        client.send(JSON.stringify(gameData));
-    });
+    io.emit("stage_change", JSON.stringify(gameData));
 };
 
 timer.addEventListener("secondsUpdated", function () {
@@ -58,32 +59,57 @@ timer.addEventListener("secondsUpdated", function () {
             gameStage = GameLoop.WINNER;
             break;
         case 50:
-            resetBoard(winners, uniqueData);
+            resetBoard(winners, uniqueData, usersData);
             gameStage = GameLoop.EMPTY_BOARD;
     }
     return;
 });
 
-wss.on("connection", (socket: any) => {
-    socket.on("message", (data: string) => {
-        clientData = JSON.parse(data);
-        socket.id = clientData.playerId;
-        usersData.push(clientData);
-        if (
-            winners.length === 0 ||
-            !isIdUnique(winners, clientData.playerId).includes(false)
-        ) {
-            winners.push({ playerId: clientData.playerId, win: win });
+let timerStarted = false;
+
+io.on("connection", (socket) => {
+    console.log("Client connected: " + socket.id);
+
+    const handleClientData = (data: string) => {
+        try {
+            const clientData: ClientData = JSON.parse(data);
+            // Store the player ID on the socket for easy access on disconnect
+            (socket as any).playerId = clientData.playerId;
+            usersData.push(clientData);
+            
+            if (
+                winners.length === 0 ||
+                isIdUnique(winners, clientData.playerId)
+            ) {
+                winners.push({ playerId: clientData.playerId, win: win });
+            }
+        } catch (e) {
+            console.error("Error parsing client data:", e);
+        }
+    };
+
+    socket.on("join_game", handleClientData);
+    socket.on("client_data", handleClientData);
+
+    socket.on("disconnect", () => {
+        const playerId = (socket as any).playerId;
+        console.log("closing " + (playerId || socket.id));
+        if (playerId) {
+            const indexToRemove = winners.findIndex(
+                (data) => data.playerId === playerId,
+            );
+            if (indexToRemove !== -1) {
+                winners.splice(indexToRemove, 1);
+            }
         }
     });
-    socket.on("close", () => {
-        console.log("closing " + socket.id);
-        const indexToRemove = winners.findIndex(
-            (data) => data.playerId === socket.id,
-        );
-        winners.splice(indexToRemove, 1);
-    });
-    timer.start();
+
+    if (!timerStarted) {
+        timer.start();
+        timerStarted = true;
+    }
 });
 
-console.log(`${new Date()}: server is listening on port  ${PORT}`);
+httpServer.listen(PORT, () => {
+    console.log(`${new Date()}: server is listening on port  ${PORT}`);
+});

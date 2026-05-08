@@ -14,18 +14,10 @@ const mockUsersData = [
 
 describe("should properly assess if user's id is unique", () => {
     test("should return false if id is not unique", () => {
-        expect(isIdUnique(mockUsersData, "powpow")).toStrictEqual([
-            false,
-            true,
-            true,
-        ]);
+        expect(isIdUnique(mockUsersData, "powpow")).toBe(false);
     });
     test("should return true if id is unique", () => {
-        expect(isIdUnique(mockUsersData, "rico")).toStrictEqual([
-            true,
-            true,
-            true,
-        ]);
+        expect(isIdUnique(mockUsersData, "rico")).toBe(true);
     });
 });
 

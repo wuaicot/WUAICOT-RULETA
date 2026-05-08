@@ -1,30 +1,27 @@
 import { BLACKS, REDS } from '../client/src/common/utils';
 import { Winner, ClientData, Bet } from '../client/src/common/types';
 
-export const isIdUnique = (array: Winner[] | ClientData[], id: string) => {
-	return array.map(
-		(item) => JSON.stringify(item.playerId) !== JSON.stringify(id),
-	);
+export const isIdUnique = (array: { playerId: string }[], id: string) => {
+	return array.every((item) => item.playerId !== id);
 };
 
 export const isUserDataUnique = (
 	uniqueData: ClientData[],
 	usersData: ClientData[],
 ) => {
-	const reverse = usersData.reverse();
-	for (let i = 0; i < reverse.length; i++) {
-		if (
-			uniqueData.length === 0 ||
-			!isIdUnique(uniqueData, reverse[i].playerId).includes(false)
-		) {
-			uniqueData.push(reverse[i]);
+	// Use a copy to avoid in-place reverse bug
+	const reversedData = [...usersData].reverse();
+	for (const data of reversedData) {
+		if (isIdUnique(uniqueData, data.playerId)) {
+			uniqueData.push(data);
 		}
 	}
 };
 
-export const resetBoard = (winners: Winner[], uniqueData: ClientData[]) => {
-	winners.map((winner) => (winner.win = 0));
-	uniqueData.splice(0, uniqueData.length);
+export const resetBoard = (winners: Winner[], uniqueData: ClientData[], usersData: ClientData[]) => {
+	winners.forEach((winner) => (winner.win = 0));
+	uniqueData.length = 0;
+	usersData.length = 0;
 };
 
 export const getRandomNumber = (min: number, max: number) => {
