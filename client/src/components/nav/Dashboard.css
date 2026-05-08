@@ -6,6 +6,20 @@
   margin: 0 auto;
   gap: 20px;
   padding: 20px 0;
+  grid-template-rows: auto 1fr;
+}
+
+.status-bar {
+  grid-column: 1 / span 2;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--neon-yellow);
+  font-weight: bold;
+  font-size: 1.2rem;
+  border: 1px solid var(--neon-yellow);
+  border-radius: 10px;
 }
 
 .babylon-container {

@@ -8,6 +8,13 @@
     font-weight: bold;
 }
 
+.item:hover {
+    filter: brightness(1.5);
+    outline: 2px solid var(--neon-yellow);
+    z-index: 5;
+}
+
+
 .red {
     background: red;
 }

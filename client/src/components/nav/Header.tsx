@@ -4,6 +4,7 @@ import { GameContext } from '../../store/gameStore';
 import { Button } from '../../UI/Button';
 import { Audio } from './Audio';
 import { assetsURL } from '../../utils/utils';
+// @ts-ignore: CSS module import without type declarations
 import './Header.css';
 
 interface HeaderProps {

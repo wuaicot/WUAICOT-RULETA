@@ -21,37 +21,35 @@ class GameStore {
 	betLocation = { x: 0, y: 0 };
 	bets: Bet[] = [];
 	msg: GameData | null;
+	balance = 1000;
+	lastResult = 0;
 
 	//actions
 
 	setPlayerId(id: string) {
 		this.playerId = id;
 	}
-	setBoardItemOccupied(newBoardItem: string) {
-		this.boardItemOccupied = newBoardItem;
-	}
-
+	
 	setChipsTaken(newChips: number) {
 		this.chipsTaken = newChips;
 	}
 
-	setBetLocation(location: { x: number; y: number }) {
-		this.betLocation = location;
-	}
-
 	placeBet(betAmount: number, betSpot: string, location: { x: number; y: number }) {
-		this.chipsTaken = betAmount;
-		this.boardItemOccupied = betSpot;
-		this.betLocation = location;
-		
-		const newBetItem: Bet = {
-			betAmount: betAmount,
-			betSpot: betSpot,
-			betChips: chipsToSpawn(betAmount),
-			betLocation: location,
-			id: Math.random().toString(36).substr(2, 9)
-		};
-		this.bets.push(newBetItem);
+		if (this.balance >= betAmount) {
+			this.chipsTaken = betAmount;
+			this.boardItemOccupied = betSpot;
+			this.betLocation = location;
+			this.balance -= betAmount;
+			
+			const newBetItem: Bet = {
+				betAmount: betAmount,
+				betSpot: betSpot,
+				betChips: chipsToSpawn(betAmount),
+				betLocation: location,
+				id: Math.random().toString(36).substr(2, 9)
+			};
+			this.bets.push(newBetItem);
+		}
 	}
 
 	setBoardClear() {
@@ -60,9 +58,17 @@ class GameStore {
 
 	setMsg(newMessage: GameData | null) {
 		this.msg = newMessage;
+		if (newMessage && newMessage.winners) {
+			const myWin = newMessage.winners.find(w => w.playerId === this.playerId)?.win || 0;
+			this.lastResult = myWin;
+			this.balance += myWin;
+		}
 	}
 
-	// computed and tracking function
+	get totalBet() {
+		return this.bets.reduce((sum, bet) => sum + bet.betAmount, 0);
+	}
+
 	get newBet() {
 		return {
 			betAmount: this.chipsTaken,
@@ -104,14 +110,15 @@ class GameStore {
 			chipsTaken: observable,
 			bets: observable,
 			msg: observable,
+			balance: observable,
+			lastResult: observable,
 			setPlayerId: action.bound,
-			setBoardItemOccupied: action.bound,
 			setChipsTaken: action.bound,
-			setBetLocation: action.bound,
 			placeBet: action.bound,
 			setMsg: action.bound,
 			setBoardClear: action.bound,
 			newBet: computed,
+			totalBet: computed,
 			gameData: computed,
 			winSpin: computed,
 		});

@@ -34,6 +34,10 @@ export const BoardItem = observer((props: BoardItemProps) => {
     <div
       className={getClassName()}
       id={id.toString()}
+      style={{
+        transition: 'all 0.2s ease',
+        cursor: 'pointer'
+      }}
     >
       {tableItem}
     </div>
