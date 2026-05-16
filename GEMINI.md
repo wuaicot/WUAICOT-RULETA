@@ -18,7 +18,7 @@ Debido a la naturaleza inmersiva del juego:
 - **Mobile L:** 481px – 767px
 - **Tablet:** 768px – 1024px
 - **Laptop:** 1025px – 1440px
-- **Desktop:** 1441px+
+- **Desktop:** 1625px+
 
 ### Directrices de Implementación
 1. **Layout raíz:** `index.css` debe permitir scroll en móvil (`overflow-y: auto`) y restringir en desktop (`overflow: hidden`).

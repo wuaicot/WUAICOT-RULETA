@@ -3,8 +3,13 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 30px;
-  background: transparent;
+  background: none;
+  height: 14px;
+  margin-left: auto; /* empuja el header hacia la derecha */
+  margin-top: 6px;
+  float: right;
 }
+
 
 @media (max-width: 767px) {
   .header {
@@ -12,24 +17,7 @@
   }
 }
 
-.logo {
-  font-family: 'Yellowtail', cursive;
-  font-size: 24px !important;
-  color: var(--neon-yellow) !important;
-  text-shadow: var(--text-shadow);
-  border: 1px solid var(--neon-yellow) !important;
-  border-radius: 10px !important;
-  box-shadow: var(--border-glow);
-  background: var(--panel-bg) !important;
-  padding: 5px 20px !important;
-}
 
-@media (max-width: 767px) {
-  .logo {
-    font-size: clamp(14px, 4vw, 18px) !important;
-    padding: 4px 10px !important;
-  }
-}
 
 .audio-login-container {
   display: flex;
@@ -50,6 +38,9 @@
   border-radius: 8px !important;
   box-shadow: 0 0 10px rgba(255, 173, 0, 0.5);
   transition: all 0.3s ease;
+  max-height: 2.1rem;
+  padding: 8px 11px;
+  
 }
 
 .login-button:hover, .logout-button:hover {

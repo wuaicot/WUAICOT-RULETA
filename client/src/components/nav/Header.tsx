@@ -33,23 +33,17 @@ export const Header = (props: HeaderProps) => {
 
 	return (
 		<nav className='header'>
-			<a
-				href='https://www.roulettesites.org/rules/'
-				rel='noreferrer'
-				target='blank'
-			>
-				<Button className='logo  '>Wuaicot- Ruleta</Button>
-			</a>
+			
 			<div className='audio-login-container'>
 				<FinancialToggle />
 				{!loggedIn && (
 					<Button className='login-button' onClick={logInHandler}>
-						Log In
+						ENTRAR
 					</Button>
 				)}
 				{loggedIn && (
 					<Button className='logout-button' onClick={logOutHandler}>
-						Log Out
+						sALIR
 					</Button>
 				)}
 				<Audio url={assetsURL.soundtrack} loop={true} />

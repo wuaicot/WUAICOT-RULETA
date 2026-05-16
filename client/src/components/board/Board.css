@@ -1,17 +1,23 @@
 .board-container {
   display: flex;
+  
   flex-direction: column;
   align-items: center;
   width: 100%;
   margin-top: 20px;
 }
 
-.board-scroll-wrapper {
-  width: 90vw;
-  margin: 0 auto;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+
+
+.board-scroll-wrapper {  
+  overflow-x: none;  
 }
+@media (min-width: 1625px) {
+  .board-scroll-wrapper {
+    overflow-x: none;    
+  }
+}
+
 
 .board-grid {
   display: grid;
@@ -25,17 +31,19 @@
   box-shadow: var(--border-glow);
   position: relative;
   min-width: 520px;
+  left: 62px;
+  
 }
+@media (min-width: 1625px){  
+    .board-grid {
+      margin-left: 104px;
+      margin-top: 62px;
+      overflow-x: hidden;
+      border-style: groove;
+    }             
+  }
 
-@media (min-width: 1025px) {
-  .board-scroll-wrapper {
-    overflow-x: visible;
-    width: auto;
-  }
-  .board-grid {
-    margin-bottom: 100px;
-  }
-}
+
 
 .board-grid > img {
   position: absolute;

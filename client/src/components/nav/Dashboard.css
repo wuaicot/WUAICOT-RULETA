@@ -20,23 +20,23 @@
 
 .babylon-container {
   width: 100%;
-  min-height: 280px;
+  min-height: 290px;
   border: 1px solid var(--neon-yellow);
   box-shadow: var(--border-glow);
   border-radius: 15px;
   overflow: hidden;
-  background: black;
+ 
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 1625px) {
   .babylon-container {
-    height: 100%;
+    min-height: 50vh;
   }
 }
 
 .table-container {
   width: 100%;
-  min-height: 200px;
+  min-height: 190px;
   background: var(--panel-bg);
   border: 1px solid var(--neon-yellow);
   box-shadow: var(--border-glow);
@@ -44,10 +44,12 @@
   padding: 15px;
   box-sizing: border-box;
   overflow-y: auto;
+  margin-top: -10px;
 }
 
 @media (min-width: 1025px) {
   .table-container {
-    height: 100%;
+    height: 95%;
+    margin-top: 4px;    
   }
 }
