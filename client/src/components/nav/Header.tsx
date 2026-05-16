@@ -38,12 +38,12 @@ export const Header = (props: HeaderProps) => {
 				<FinancialToggle />
 				{!loggedIn && (
 					<Button className='login-button' onClick={logInHandler}>
-						ENTRAR
+						Entrar
 					</Button>
 				)}
 				{loggedIn && (
 					<Button className='logout-button' onClick={logOutHandler}>
-						sALIR
+						Salir
 					</Button>
 				)}
 				<Audio url={assetsURL.soundtrack} loop={true} />

@@ -7,24 +7,22 @@
   height: 14px;
   margin-left: auto; /* empuja el header hacia la derecha */
   margin-top: 6px;
-  float: right;
+  float: right;  
+  
 }
-
-
 @media (max-width: 767px) {
   .header {
     padding: 8px 12px;
   }
 }
 
-
-
 .audio-login-container {
   display: flex;
   align-items: center;
   gap: 20px;
+  position: relative;
+  z-index: 2000;
 }
-
 @media (max-width: 767px) {
   .audio-login-container {
     gap: 10px;

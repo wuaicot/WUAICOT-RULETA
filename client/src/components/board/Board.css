@@ -31,12 +31,12 @@
   box-shadow: var(--border-glow);
   position: relative;
   min-width: 520px;
-  left: 62px;
-  
+  left: 61px;
+  top:35px;  
 }
 @media (min-width: 1625px){  
     .board-grid {
-      margin-left: 104px;
+      margin-left: 33px;
       margin-top: 62px;
       overflow-x: hidden;
       border-style: groove;

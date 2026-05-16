@@ -7,7 +7,7 @@ export const FinancialToggle = observer(() => {
     const [isVisible, setIsVisible] = useState(false);
 
     const handleToggle = () => {
-        setIsVisible(true);
+        setIsVisible(!isVisible);
     };
 
     useEffect(() => {

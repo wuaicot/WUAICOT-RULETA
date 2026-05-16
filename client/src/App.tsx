@@ -25,18 +25,16 @@ const App = observer(() => {
 
 	return (
 		<DndProvider backend={HTML5Backend}>
-			<div className={setPointerEvents()}>
-				<GameContext.Provider value={gameStore}>
-					
-					{error && <Error error={error} />}
-					<Header connect={connect} disconnect={disconnect} />
+			<GameContext.Provider value={gameStore}>
+				{error && <Error error={error} />}
+				<Header connect={connect} disconnect={disconnect} />
+				<div className={setPointerEvents()}>
 					<Dashboard />
 					<Board />
 					<Chips />
-				</GameContext.Provider>
-			</div>
+				</div>
+			</GameContext.Provider>
 		</DndProvider>
-	);
-});
+	);});
 
 export default App;
