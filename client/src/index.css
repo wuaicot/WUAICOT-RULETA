@@ -15,14 +15,27 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--dark-bg);
   color: white;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@media (min-width: 1025px) {
+  body {
+    overflow: hidden;
+  }
 }
 
 .App {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-image: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+}
+
+@media (min-width: 1025px) {
+  .App {
+    height: 100vh;
+  }
 }
 
 .App.no-pointers {

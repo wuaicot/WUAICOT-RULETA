@@ -6,6 +6,13 @@
   margin-top: 20px;
 }
 
+.board-scroll-wrapper {
+  width: 90vw;
+  margin: 0 auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .board-grid {
   display: grid;
   grid-template-columns: repeat(14, 1fr);
@@ -17,6 +24,17 @@
   height: 35vh;
   box-shadow: var(--border-glow);
   position: relative;
+  min-width: 520px;
+}
+
+@media (min-width: 1025px) {
+  .board-scroll-wrapper {
+    overflow-x: visible;
+    width: auto;
+  }
+  .board-grid {
+    margin-bottom: 100px;
+  }
 }
 
 .board-grid > img {

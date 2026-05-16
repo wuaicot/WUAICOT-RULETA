@@ -6,6 +6,12 @@
   background: transparent;
 }
 
+@media (max-width: 767px) {
+  .header {
+    padding: 8px 12px;
+  }
+}
+
 .logo {
   font-family: 'Yellowtail', cursive;
   font-size: 24px !important;
@@ -18,10 +24,23 @@
   padding: 5px 20px !important;
 }
 
+@media (max-width: 767px) {
+  .logo {
+    font-size: clamp(14px, 4vw, 18px) !important;
+    padding: 4px 10px !important;
+  }
+}
+
 .audio-login-container {
   display: flex;
   align-items: center;
   gap: 20px;
+}
+
+@media (max-width: 767px) {
+  .audio-login-container {
+    gap: 10px;
+  }
 }
 
 .login-button, .logout-button {

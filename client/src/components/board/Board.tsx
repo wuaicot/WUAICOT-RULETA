@@ -48,31 +48,33 @@ export const Board = observer(() => {
 	}, []);
 
 	return (
-		<div 
-			ref={setRefs} 
-			className='board-grid'
-		>
-			{matrix.map((row) =>
-				row.map((tableItem) => (
-					<BoardItem
-						tableItem={trimItem(tableItem)}
-						key={tableItem}
-						id={tableItem}
-					></BoardItem>
-				)),
-			)}
-			{gameStore.bets.map((bet: Bet) => (
-				<Chip
-					id={bet.betChips[0].id}
-					alt={bet.betChips[0].alt}
-					url={bet.betChips[0].url}
-					key={bet.id}
-					style={{
-						top: bet.betLocation.y,
-						left: bet.betLocation.x,
-					}}
-				/>
-			))}
+		<div className="board-scroll-wrapper">
+			<div 
+				ref={setRefs} 
+				className='board-grid'
+			>
+				{matrix.map((row) =>
+					row.map((tableItem) => (
+						<BoardItem
+							tableItem={trimItem(tableItem)}
+							key={tableItem}
+							id={tableItem}
+						></BoardItem>
+					)),
+				)}
+				{gameStore.bets.map((bet: Bet) => (
+					<Chip
+						id={bet.betChips[0].id}
+						alt={bet.betChips[0].alt}
+						url={bet.betChips[0].url}
+						key={bet.id}
+						style={{
+							top: bet.betLocation.y,
+							left: bet.betLocation.x,
+						}}
+					/>
+				))}
+			</div>
 		</div>
 	);
 });

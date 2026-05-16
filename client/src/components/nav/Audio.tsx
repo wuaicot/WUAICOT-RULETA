@@ -30,7 +30,7 @@ export const Audio = (props: AudioProps) => {
 				onClick={soundToggle}
 			>
 				<audio src={url} loop={loop} ref={audioRef}></audio>
-				<img src={assetsURL.soundIcon} alt='audio' />
+				<img src={assetsURL.soundIcon} alt='audio' className="audio-icon" />
 			</button>
 		</>
 	);

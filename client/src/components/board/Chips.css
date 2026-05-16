@@ -12,12 +12,46 @@
   box-shadow: var(--border-glow);
 }
 
+@media (max-width: 767px) {
+  .chips-container {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    margin: 16px auto;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 30px;
+    width: fit-content;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .chips-container {
+    bottom: 16px;
+  }
+}
+
 .chip-item {
   width: 50px;
   height: 50px;
   cursor: pointer;
   transition: all 0.3s ease;
   filter: drop-shadow(0 0 5px rgba(255, 173, 0, 0.3));
+}
+
+@media (max-width: 767px) {
+  .chip-item {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .chip-item {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 .chip-item:hover {

@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { GameContext } from '../../store/gameStore';
 import { Button } from '../../UI/Button';
 import { Audio } from './Audio';
+import { FinancialToggle } from './FinancialToggle';
 import { assetsURL } from '../../utils/utils';
 // @ts-ignore: CSS module import without type declarations
 import './Header.css';
@@ -40,6 +41,7 @@ export const Header = (props: HeaderProps) => {
 				<Button className='logo  '>Wuaicot- Ruleta</Button>
 			</a>
 			<div className='audio-login-container'>
+				<FinancialToggle />
 				{!loggedIn && (
 					<Button className='login-button' onClick={logInHandler}>
 						Log In
