@@ -10,12 +10,13 @@
     background: #528f76;
     color: black;
     border: hidden;
-    padding: 8px 16px;
+    padding: 0px 16px;
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
     box-shadow: var(--border-glow);
     white-space: nowrap;
+    max-height: 1.5rem;
 }
 
 .financial-info {

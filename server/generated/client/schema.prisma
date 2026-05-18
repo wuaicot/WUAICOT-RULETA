@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String              @id @default(uuid())
+  email           String              @unique
+  password        String
+  role            String              @default("USER") // USER, ADMIN
+  wallet          Wallet?
+  depositRequests DepositRequest[]
+  withdrawals     WithdrawalRequest[]
+  ledgerEntries   LedgerEntry[]
+  createdAt       DateTime            @default(now())
+}
+
+model Wallet {
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  user                User     @relation(fields: [userId], references: [id])
+  balanceTotal        Decimal  @default(0) @db.Decimal(19, 4)
+  balancePlayable     Decimal  @default(0) @db.Decimal(19, 4)
+  balanceWithdrawable Decimal  @default(0) @db.Decimal(19, 4)
+  updatedAt           DateTime @updatedAt
+}
+
+model LedgerEntry {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  type        String // DEPOSIT, WITHDRAWAL, BET, WIN, ADJUSTMENT
+  amount      Decimal  @db.Decimal(19, 4)
+  referenceId String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+}
+
+model DepositRequest {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  amount    Decimal  @db.Decimal(19, 4)
+  status    String // PENDING, REVIEW, APPROVED, REJECTED
+  proofUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model WithdrawalRequest {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  amount      Decimal  @db.Decimal(19, 4)
+  bankDetails Json
+  status      String // PENDING, APPROVED, REJECTED, PAID
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

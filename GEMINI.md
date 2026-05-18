@@ -5,6 +5,10 @@ Este repositorio sigue una arquitectura de cliente/servidor (React + Python/Node
 - **Core de Animación (SAGRADO):** La lógica de renderizado 3D (BabylonJS) es inmutable. No tocar `MainScene.tsx`, `RouletteAnimate.tsx`, `RouletteMesh.tsx`, `Barrier.tsx`, `BallMesh.tsx`, `Ground.tsx`, `gameStore.tsx`, `utils.tsx` ni el `backend/`.
 - **Estilos:** Se utiliza CSS puro con variables globales en `index.css`.
 
+## Componentes y Flujo Financiero
+- **Header:** El `Header` es independiente del ciclo de juego principal. Cualquier cambio en su UI o lógica NO debe sincronizarse ni restringirse por los estados de fase (`PLACE_BET`, `SPIN_WHEEL`, etc.) del `GameStage`.
+- **FinancialToggle:** El botón "$" y su panel de información deben ser siempre accesibles. El panel debe aparecer en la parte superior derecha de la pantalla (fijo) con un margen de 12px, ser semi-translúcido y desvanecerse tras 3 segundos o al cerrar manualmente.
+
 ## Responsividad y Diseño
 El juego debe ser 100% responsivo manteniendo la integridad del motor 3D.
 
@@ -16,8 +20,8 @@ Debido a la naturaleza inmersiva del juego:
 ### Breakpoints
 - **Mobile S:** ≤ 480px
 - **Mobile L:** 481px – 767px
-- **Tablet:** 768px – 1024px
-- **Laptop:** 1025px – 1440px
+- **Tablet:** 768px – 984px
+- **Laptop:** 985px – 1624px
 - **Desktop:** 1625px+
 
 ### Directrices de Implementación
@@ -26,6 +30,7 @@ Debido a la naturaleza inmersiva del juego:
 3. **Tablero:** Implementar `.board-scroll-wrapper` para permitir scroll horizontal en pantallas pequeñas, asegurando legibilidad (min-width 520px).
 4. **Audio:** Corregir el selector global `img` en `Audio.css` por clases específicas (`.audio-icon`).
 5. **Chips Bar:** Pasar de `fixed` a `relative` en móvil para evitar superposición con el tablero.
+6. **Bloqueo de Puntero:** El contenedor del juego (`.App`) gestiona la lógica de `pointer-events: none` basada en el ciclo de juego. El `Header` debe permanecer SIEMPRE fuera de cualquier contenedor que aplique esta restricción.
 
 ## Flujo de Trabajo
 - Siempre verificar antes de editar.

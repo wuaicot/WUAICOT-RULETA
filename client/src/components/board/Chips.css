@@ -10,11 +10,16 @@
   border-radius: 50px;
   border: 1px solid var(--neon-yellow);
   box-shadow: var(--border-glow);
-  max-height: 25px;
+  max-height: 61px;
 
 }
-
-@media (max-width: 767px) {
+@media (min-width: 768px)  {
+  .chips-container {
+    bottom: 16px;
+   
+  }
+}
+@media (max-width: 984px) {
   .chips-container {
     position: relative;
     bottom: auto;
@@ -25,13 +30,6 @@
     padding: 10px 16px;
     border-radius: 30px;
     width: fit-content;
-  }
-}
-  
-@media (min-width: 768px)  {
-  .chips-container {
-    bottom: 16px;
-   
   }
 }
 @media (min-width: 1625px) {

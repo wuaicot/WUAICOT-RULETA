@@ -7,6 +7,7 @@ import { Header } from './components/nav/Header';
 import { Dashboard } from './components/nav/Dashboard';
 import { Board } from './components/board/Board';
 import { Chips } from './components/board/Chips';
+import { OperatorDashboard } from './components/admin/OperatorDashboard';
 import { useServer } from './hooks/useServer';
 import { GameLoop } from './common/types';
 import './App.css';
@@ -14,6 +15,7 @@ import { useCallback } from 'react';
 
 const App = observer(() => {
 	const { error, connect, disconnect } = useServer();
+	const isAdmin = window.location.pathname === '/admin';
 
 	const setPointerEvents = useCallback(() => {
 		const message = gameStore.msg;
@@ -22,6 +24,10 @@ const App = observer(() => {
 			? 'App'
 			: 'App no-pointers';
 	}, []);
+
+	if (isAdmin) {
+		return <OperatorDashboard />;
+	}
 
 	return (
 		<DndProvider backend={HTML5Backend}>

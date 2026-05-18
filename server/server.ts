@@ -1,6 +1,10 @@
+import 'dotenv/config'; // Asegura que las variables estén cargadas antes de nada
+import express from "express";
+import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { Timer } from "easytimer.js";
+import path from "path";
 import { GameLoop, GameData, Winner, ClientData } from "../client/src/common/types";
 import {
     isIdUnique,
@@ -9,10 +13,27 @@ import {
     resetBoard,
     calculateWinners,
 } from "./utils";
+import { WalletController } from "./src/controllers/WalletController";
+import { AdminController } from "./src/controllers/AdminController";
+import { upload } from "./src/middleware/upload";
 
 //initialising http server and socket.io
 const PORT = 8888;
-const httpServer = createServer();
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+const walletController = new WalletController();
+const adminController = new AdminController();
+
+// Routes
+// Note: Middleware for auth should be added later to these routes
+app.post('/api/wallet/deposit', upload.single('proof'), walletController.requestDeposit);
+app.post('/api/admin/approve-deposit', adminController.approveDeposit);
+app.get('/api/admin/pending-deposits', adminController.getPendingDeposits);
+
+const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
         origin: "*",
@@ -21,6 +42,7 @@ const io = new Server(httpServer, {
 
 //initialising timer
 const timer = new Timer();
+
 
 let gameStage: GameLoop = GameLoop.PLACE_BET;
 let winningNumber: number;

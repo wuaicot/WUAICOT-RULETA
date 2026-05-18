@@ -4,6 +4,7 @@ import { GameContext } from '../../store/gameStore';
 import { Button } from '../../UI/Button';
 import { Audio } from './Audio';
 import { FinancialToggle } from './FinancialToggle';
+import { WalletDashboard } from '../wallet/WalletDashboard';
 import { assetsURL } from '../../utils/utils';
 // @ts-ignore: CSS module import without type declarations
 import './Header.css';
@@ -16,6 +17,7 @@ interface HeaderProps {
 export const Header = (props: HeaderProps) => {
 	const { connect, disconnect } = props;
 	const [loggedIn, setLoggedIn] = useState(false);
+	const [showWallet, setShowWallet] = useState(false);
 	const { setPlayerId } = useContext(GameContext);
 
 	const logInHandler = useCallback(() => {
@@ -32,22 +34,32 @@ export const Header = (props: HeaderProps) => {
 	}, [disconnect, setPlayerId]);
 
 	return (
-		<nav className='header'>
-			
-			<div className='audio-login-container'>
-				<FinancialToggle />
-				{!loggedIn && (
-					<Button className='login-button' onClick={logInHandler}>
-						Entrar
+		<>
+			<nav className='header'>
+				<div className='audio-login-container'>
+					<FinancialToggle />
+					{/* Forzado para visualización */}
+					<Button className='login-button' onClick={() => setShowWallet(!showWallet)}>
+						Wallet
 					</Button>
-				)}
-				{loggedIn && (
-					<Button className='logout-button' onClick={logOutHandler}>
-						Salir
-					</Button>
-				)}
-				<Audio url={assetsURL.soundtrack} loop={true} />
-			</div>
-		</nav>
+					{!loggedIn && (
+						<Button className='login-button' onClick={logInHandler}>
+							Entrar
+						</Button>
+					)}
+					{loggedIn && (
+						<Button className='logout-button' onClick={logOutHandler}>
+							Salir
+						</Button>
+					)}
+					<Audio url={assetsURL.soundtrack} loop={true} />
+				</div>
+			</nav>
+			{showWallet && (
+				<div className="absolute top-20 right-10 z-[5000]">
+					<WalletDashboard />
+				</div>
+			)}
+		</>
 	);
 };

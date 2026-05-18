@@ -1,10 +1,9 @@
 .board-container {
-  display: flex;
-  
+  display: flex;  
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  margin-top: 20px;
+  width: 100%; 
+  
 }
 
 
@@ -32,7 +31,7 @@
   position: relative;
   min-width: 520px;
   left: 61px;
-  top:35px;  
+  top: 75px;
 }
 @media (min-width: 1625px){  
     .board-grid {
