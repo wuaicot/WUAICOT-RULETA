@@ -18,6 +18,8 @@ build/
 client/node_modules/
 client/build/
 server/node_modules/
+server/generated/client/
+server/uploads/receipts/
 
 # IDEs
 .vscode/
