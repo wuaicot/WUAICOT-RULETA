@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { gameStore } from '../../store/gameStore';
 
@@ -7,20 +7,39 @@ export const WalletDashboard = observer(() => {
   const [amount, setAmount] = useState('');
   const [file, setFile] = useState<File | null>(null);
 
+  const [history, setHistory] = useState<any[]>([]);
+
+  const fetchHistory = async () => {
+    try {
+      const res = await fetch('http://localhost:8888/api/wallet/history?userId=temp-user-id'); // Ajustar según auth real
+      const data = await res.json();
+      setHistory(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchHistory();
+  }, [activeTab]);
+
   const handleDeposit = async () => {
     if (!amount || !file) return alert('Completa todos los campos');
     
     const formData = new FormData();
     formData.append('amount', amount);
+    formData.append('userId', 'temp-user-id'); // Harcoded temporal
     formData.append('proof', file);
 
     try {
-      // Apuntamos explícitamente al puerto del backend
       const response = await fetch('http://localhost:8888/api/wallet/deposit', {
         method: 'POST',
         body: formData,
       });
-      if (response.ok) alert('Solicitud enviada con éxito');
+      if (response.ok) {
+        alert('Solicitud enviada con éxito');
+        fetchHistory();
+      }
       else {
         const err = await response.json();
         alert('Error: ' + (err.error || 'No se pudo procesar'));
@@ -56,6 +75,13 @@ export const WalletDashboard = observer(() => {
             <span>Saldo Jugable</span>
             <span className="font-bold text-xl">${gameStore.balance}</span>
           </div>
+          <h3 className="text-yellow-500 font-bold">Historial de Depósitos</h3>
+          {history.map((h: any) => (
+            <div key={h.id} className="bg-gray-800 p-3 rounded border border-gray-700 text-sm">
+                <p>Monto: ${h.amount} - <span className={h.status === 'REJECTED' ? 'text-red-500' : 'text-green-500'}>{h.status}</span></p>
+                {h.rejectionReason && <p className="text-gray-400 italic">Razón: {h.rejectionReason}</p>}
+            </div>
+          ))}
         </div>
       ) : (
         <div className="space-y-4">

@@ -20,4 +20,11 @@ export class AdminService {
       return { success: true };
     });
   }
+
+  async rejectDeposit(depositId: string, reason: string) {
+    return await prisma.depositRequest.update({
+      where: { id: depositId },
+      data: { status: 'REJECTED', rejectionReason: reason },
+    });
+  }
 }

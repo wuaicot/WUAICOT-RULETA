@@ -30,7 +30,9 @@ const adminController = new AdminController();
 // Routes
 // Note: Middleware for auth should be added later to these routes
 app.post('/api/wallet/deposit', upload.single('proof'), walletController.requestDeposit);
+app.get('/api/wallet/history', walletController.getDepositHistory);
 app.post('/api/admin/approve-deposit', adminController.approveDeposit);
+app.post('/api/admin/reject-deposit', adminController.rejectDeposit);
 app.get('/api/admin/pending-deposits', adminController.getPendingDeposits);
 
 const httpServer = createServer(app);
