@@ -8,12 +8,13 @@ const walletService = new WalletService();
 export class WalletController {
   async requestDeposit(req: Request, res: Response) {
     try {
-      const { amount, userId } = req.body;
+      const { amount } = req.body;
+      const userId = (req as any).user.userId; // Extraer desde JWT
       const file = req.file;
       
       if (!file) return res.status(400).json({ error: 'Proof of payment is required' });
 
-      const deposit = await walletService.createDepositRequest(userId || 'temp-user-id', Number(amount), file.path);
+      const deposit = await walletService.createDepositRequest(userId, Number(amount), file.path);
       res.status(201).json(deposit);
     } catch (error) {
       console.error("Deposit error:", error);
@@ -23,14 +24,24 @@ export class WalletController {
 
   async getDepositHistory(req: Request, res: Response) {
     try {
-      const { userId } = req.query;
+      const userId = (req as any).user.userId; // Extraer desde JWT
       const history = await prisma.depositRequest.findMany({
-        where: { userId: userId as string },
+        where: { userId },
         orderBy: { createdAt: 'desc' }
       });
       res.status(200).json(history);
     } catch (error) {
       res.status(500).json({ error: 'Error fetching history' });
+    }
+  }
+
+  async getBalance(req: Request, res: Response) {
+    try {
+      const userId = (req as any).user.userId;
+      const wallet = await prisma.wallet.findUnique({ where: { userId } });
+      res.status(200).json({ balance: wallet?.balancePlayable || 0 });
+    } catch (error) {
+      res.status(500).json({ error: 'Error fetching balance' });
     }
   }
 }

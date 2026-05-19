@@ -34,6 +34,10 @@ class GameStore {
 		this.chipsTaken = newChips;
 	}
 
+	setBalance(newBalance: number) {
+		this.balance = newBalance;
+	}
+
 	placeBet(betAmount: number, betSpot: string, location: { x: number; y: number }) {
 		if (this.balance >= betAmount) {
 			this.chipsTaken = betAmount;

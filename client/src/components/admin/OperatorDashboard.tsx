@@ -52,7 +52,7 @@ export const OperatorDashboard = observer(() => {
         {requests.map(req => (
           <div key={req.id} className="bg-gray-900 p-4 rounded border border-gray-700 flex justify-between items-center">
             <div>
-              <p>Usuario: {req.userId}</p>
+              <p>Usuario: {req.user.nickname}</p>
               <p>Monto: ${req.amount}</p>
               <a href={`http://localhost:8888/${req.proofUrl.replace(/\\/g, '/')}`} target="_blank" rel="noreferrer" className="text-blue-400 underline">Ver Comprobante</a>
             </div>

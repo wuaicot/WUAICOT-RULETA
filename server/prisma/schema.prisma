@@ -13,8 +13,9 @@ datasource db {
 
 model User {
   id              String             @id @default(uuid())
-  email           String             @unique
-  password        String
+  nickname        String             @unique
+  age             Int
+  pinHash         String
   role            String             @default("USER") // USER, ADMIN
   wallet          Wallet?
   depositRequests DepositRequest[]

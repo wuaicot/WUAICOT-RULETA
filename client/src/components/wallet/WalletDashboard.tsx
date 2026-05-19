@@ -2,24 +2,40 @@ import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { gameStore } from '../../store/gameStore';
 
-export const WalletDashboard = observer(() => {
+export const WalletDashboard = observer(({ token }: { token: string }) => {
   const [activeTab, setActiveTab] = useState<'balance' | 'deposit'>('balance');
   const [amount, setAmount] = useState('');
   const [file, setFile] = useState<File | null>(null);
 
   const [history, setHistory] = useState<any[]>([]);
 
-  const fetchHistory = async () => {
+  const fetchBalance = async () => {
     try {
-      const res = await fetch('http://localhost:8888/api/wallet/history?userId=temp-user-id'); // Ajustar según auth real
+      const res = await fetch('http://localhost:8888/api/wallet/balance', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       const data = await res.json();
-      setHistory(data);
+      gameStore.setBalance(Number(data.balance));
     } catch (e) {
       console.error(e);
     }
   };
 
+  const fetchHistory = async () => {
+    try {
+      const res = await fetch('http://localhost:8888/api/wallet/history', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      setHistory(Array.isArray(data) ? data : []);
+    } catch (e) {
+      console.error(e);
+      setHistory([]);
+    }
+  };
+
   useEffect(() => {
+    fetchBalance();
     fetchHistory();
   }, [activeTab]);
 
@@ -28,12 +44,12 @@ export const WalletDashboard = observer(() => {
     
     const formData = new FormData();
     formData.append('amount', amount);
-    formData.append('userId', 'temp-user-id'); // Harcoded temporal
     formData.append('proof', file);
 
     try {
       const response = await fetch('http://localhost:8888/api/wallet/deposit', {
         method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
         body: formData,
       });
       if (response.ok) {
@@ -45,7 +61,7 @@ export const WalletDashboard = observer(() => {
         alert('Error: ' + (err.error || 'No se pudo procesar'));
       }
     } catch (e) {
-      alert('Error de conexión: Verifica que el servidor esté activo');
+      alert('Error de conexión');
     }
   };
 

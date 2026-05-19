@@ -1,10 +1,9 @@
-import { useState, useContext, useCallback } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { GameContext } from '../../store/gameStore';
+import { useState, useCallback } from 'react';
 import { Button } from '../../UI/Button';
 import { Audio } from './Audio';
 import { FinancialToggle } from './FinancialToggle';
 import { WalletDashboard } from '../wallet/WalletDashboard';
+import { AuthModal } from './AuthModal';
 import { assetsURL } from '../../utils/utils';
 // @ts-ignore: CSS module import without type declarations
 import './Header.css';
@@ -16,49 +15,49 @@ interface HeaderProps {
 
 export const Header = (props: HeaderProps) => {
 	const { connect, disconnect } = props;
-	const [loggedIn, setLoggedIn] = useState(false);
+	const [user, setUser] = useState<{token: string, nickname: string} | null>(null);
 	const [showWallet, setShowWallet] = useState(false);
-	const { setPlayerId } = useContext(GameContext);
+	const [showAuth, setShowAuth] = useState(false);
 
-	const logInHandler = useCallback(() => {
-		setLoggedIn(true);
-		const id = uuidv4();
-		setPlayerId(id);
+	const handleLogin = (data: { token: string, user: any }) => {
+		setUser({ token: data.token, nickname: data.user.nickname });
 		connect();
-	}, [connect, setPlayerId]);
+	};
 
-	const logOutHandler = useCallback(() => {
-		setLoggedIn(false);
-		setPlayerId('');
+	const handleLogout = () => {
+		setUser(null);
 		disconnect();
-	}, [disconnect, setPlayerId]);
+	};
 
 	return (
 		<>
 			<nav className='header'>
 				<div className='audio-login-container'>
 					<FinancialToggle />
-					{/* Forzado para visualización */}
-					<Button className='login-button' onClick={() => setShowWallet(!showWallet)}>
-						Wallet
-					</Button>
-					{!loggedIn && (
-						<Button className='login-button' onClick={logInHandler}>
-							Entrar
+					{user && (
+						<Button className='login-button' onClick={() => setShowWallet(!showWallet)}>
+							Wallet
 						</Button>
 					)}
-					{loggedIn && (
-						<Button className='logout-button' onClick={logOutHandler}>
-							Salir
+					{!user ? (
+						<Button className='login-button' onClick={() => setShowAuth(true)}>
+							Entrar
+						</Button>
+					) : (
+						<Button className='logout-button' onClick={handleLogout}>
+							Salir ({user.nickname})
 						</Button>
 					)}
 					<Audio url={assetsURL.soundtrack} loop={true} />
 				</div>
 			</nav>
-			{showWallet && (
+			{showWallet && user && (
 				<div className="absolute top-20 right-10 z-[5000]">
-					<WalletDashboard />
+					<WalletDashboard token={user.token} />
 				</div>
+			)}
+			{showAuth && (
+				<AuthModal onClose={() => setShowAuth(false)} onLogin={handleLogin} />
 			)}
 		</>
 	);
