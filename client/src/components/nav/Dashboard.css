@@ -38,8 +38,7 @@
 }
 
 .table-container {
-  width: 100%;
-  min-height: 190px;
+  width: 100%;  
   background: var(--panel-bg);
   border: 1px solid var(--neon-yellow);
   box-shadow: var(--border-glow);
@@ -51,9 +50,9 @@
 }
 @media (min-width: 984px) {
   .table-container {
-    height: 95%;
+    height: 90%;
     width: 95%;
-    margin-top: 14px;      
+    margin-top: 29px;      
   }
 }
 
