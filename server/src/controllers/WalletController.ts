@@ -35,6 +35,24 @@ export class WalletController {
     }
   }
 
+  async updateBalance(req: Request, res: Response) {
+    try {
+      const userId = (req as any).user.userId;
+      const { delta } = req.body;
+      
+      // Incrementamos (o decrementamos) el saldo usando la diferencia (delta) de la jugada
+      // Esto evita sobreescribir los depósitos aprobados por el administrador
+      const wallet = await prisma.wallet.update({
+        where: { userId },
+        data: { balancePlayable: { increment: delta } }
+      });
+      
+      res.status(200).json({ balance: wallet.balancePlayable });
+    } catch (error) {
+      res.status(500).json({ error: 'Error updating balance' });
+    }
+  }
+
   async getBalance(req: Request, res: Response) {
     try {
       const userId = (req as any).user.userId;

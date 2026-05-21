@@ -21,11 +21,13 @@ export const Header = (props: HeaderProps) => {
 
 	const handleLogin = (data: { token: string, user: any }) => {
 		setUser({ token: data.token, nickname: data.user.nickname });
+		localStorage.setItem('token', data.token);
 		connect();
 	};
 
 	const handleLogout = () => {
 		setUser(null);
+		localStorage.removeItem('token');
 		disconnect();
 	};
 
@@ -53,7 +55,7 @@ export const Header = (props: HeaderProps) => {
 			</nav>
 			{showWallet && user && (
 				<div className="absolute top-20 right-10 z-[5000]">
-					<WalletDashboard token={user.token} />
+					<WalletDashboard token={user.token} onClose={() => setShowWallet(false)} />
 				</div>
 			)}
 			{showAuth && (

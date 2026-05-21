@@ -25,9 +25,9 @@ export const FinancialToggle = observer(() => {
                 $
             </button>
             <div className={`financial-info ${isVisible ? 'show' : ''}`}>
-                <span>Saldo: ${gameStore.balance}</span>
-                <span>Apuesta: ${gameStore.totalBet}</span>
-                <span>Resultado: {gameStore.lastResult}</span>
+                <span>Saldo: $0</span>
+                <span>Apuesta: $0</span>
+                <span>Resultado: $0</span>
             </div>
         </div>
     );

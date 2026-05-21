@@ -1,25 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react';
+import { RefreshCw, X } from 'lucide-react';
 import { gameStore } from '../../store/gameStore';
 
-export const WalletDashboard = observer(({ token }: { token: string }) => {
+export const WalletDashboard = observer(({ token, onClose }: { token: string, onClose?: () => void }) => {
   const [activeTab, setActiveTab] = useState<'balance' | 'deposit'>('balance');
   const [amount, setAmount] = useState('');
   const [file, setFile] = useState<File | null>(null);
 
   const [history, setHistory] = useState<any[]>([]);
-
-  const fetchBalance = async () => {
-    try {
-      const res = await fetch('http://localhost:8888/api/wallet/balance', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await res.json();
-      gameStore.setBalance(Number(data.balance));
-    } catch (e) {
-      console.error(e);
-    }
-  };
 
   const fetchHistory = async () => {
     try {
@@ -35,9 +24,8 @@ export const WalletDashboard = observer(({ token }: { token: string }) => {
   };
 
   useEffect(() => {
-    fetchBalance();
     fetchHistory();
-  }, [activeTab]);
+  }, []);
 
   const handleDeposit = async () => {
     if (!amount || !file) return alert('Completa todos los campos');
@@ -65,11 +53,40 @@ export const WalletDashboard = observer(({ token }: { token: string }) => {
     }
   };
 
+  const fetchBalanceAndHistory = async () => {
+    try {
+      const res = await fetch('http://localhost:8888/api/wallet/balance', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      gameStore.setBalance(Number(data.balance));
+      await fetchHistory();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+
   return (
     <div className="bg-gray-900 p-6 rounded-lg shadow-xl text-white max-w-lg mx-auto mt-10 border border-yellow-500/20">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-yellow-500">Mi Wallet</h2>
-        <button className="text-sm underline" onClick={() => setActiveTab('balance')}>Cerrar</button>
+        <div className="flex gap-3">
+            <button 
+                title="Actualizar Saldo" 
+                className="bg-gray-700 p-2 rounded hover:bg-gray-600 transition-colors" 
+                onClick={fetchBalanceAndHistory}
+            >
+                <RefreshCw size={18} className="text-yellow-500" />
+            </button>
+            <button 
+                title="Cerrar" 
+                className="bg-gray-700 p-2 rounded hover:bg-red-600 transition-colors group" 
+                onClick={onClose}
+            >
+                <X size={18} className="text-gray-300 group-hover:text-white" />
+            </button>
+        </div>
       </div>
 
       <div className="flex gap-4 mb-6">

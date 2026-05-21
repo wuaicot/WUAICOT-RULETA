@@ -1,5 +1,9 @@
 # GEMINI.md - WUAICOT-RULETA
 
+## Novedades y Ajustes Recientes
+- **Flujo Financiero (Wallet):** Se ha corregido la desincronización del saldo en el componente de apuestas. `gameStore.setBalance` ahora calcula el balance jugable restando el total de apuestas pendientes, asegurando que la apertura de la ventana de "Mi Wallet" no contamine el estado de la sesión actual del juego.
+- **Solicitud de Créditos:** Estandarizado el proceso de solicitud de fichas a través del panel de Wallet, garantizando que el `baseBalance` y el `balance` jugable se mantengan sincronizados con las actualizaciones del servidor tras la aprobación administrativa.
+
 ## Arquitectura y Estándares
 Este repositorio sigue una arquitectura de cliente/servidor (React + Python/Node).
 - **Core de Animación (SAGRADO):** La lógica de renderizado 3D (BabylonJS) es inmutable. No tocar `MainScene.tsx`, `RouletteAnimate.tsx`, `RouletteMesh.tsx`, `Barrier.tsx`, `BallMesh.tsx`, `Ground.tsx`, `gameStore.tsx`, `utils.tsx` ni el `backend/`.
@@ -8,6 +12,7 @@ Este repositorio sigue una arquitectura de cliente/servidor (React + Python/Node
 ## Componentes y Flujo Financiero
 - **Header:** El `Header` es independiente del ciclo de juego principal. Cualquier cambio en su UI o lógica NO debe sincronizarse ni restringirse por los estados de fase (`PLACE_BET`, `SPIN_WHEEL`, etc.) del `GameStage`.
 - **FinancialToggle:** El botón "$" y su panel de información deben ser siempre accesibles. El panel debe aparecer en la parte superior derecha de la pantalla (fijo) con un margen de 12px, ser semi-translúcido y desvanecerse tras 3 segundos o al cerrar manualmente.
+- **Wallet / Saldo Jugable:** El estado del saldo jugable debe reflejar: `SaldoServidor - TotalApuestasActivas`. Cualquier recarga desde el servidor debe respetar esta fórmula.
 
 ## Responsividad y Diseño
 El juego debe ser 100% responsivo manteniendo la integridad del motor 3D.
