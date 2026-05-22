@@ -15,6 +15,17 @@ export class AdminController {
     }
   }
 
+  async rejectDeposit(req: Request, res: Response) {
+    try {
+      const { depositId, reason } = req.body;
+      const adminService = new (require('../services/AdminService')).AdminService();
+      await adminService.rejectDeposit(depositId, reason);
+      res.status(200).json({ message: 'Deposit rejected successfully' });
+    } catch (error) {
+      res.status(400).json({ error: (error as Error).message });
+    }
+  }
+
   async getPendingDeposits(req: Request, res: Response) {
     try {
       const deposits = await prisma.depositRequest.findMany({

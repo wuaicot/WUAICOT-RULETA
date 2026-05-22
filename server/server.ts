@@ -13,8 +13,10 @@ import {
     resetBoard,
     calculateWinners,
 } from "./utils";
+import { AuthController } from "./src/controllers/AuthController";
 import { WalletController } from "./src/controllers/WalletController";
 import { AdminController } from "./src/controllers/AdminController";
+import { authMiddleware } from "./src/middleware/auth";
 import { upload } from "./src/middleware/upload";
 
 //initialising http server and socket.io
@@ -24,17 +26,24 @@ app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+const authController = new AuthController();
 const walletController = new WalletController();
 const adminController = new AdminController();
 
 // Routes
-// Note: Middleware for auth should be added later to these routes
-app.post('/api/wallet/deposit', upload.single('proof'), walletController.requestDeposit);
+app.post('/api/auth/register', authController.register);
+app.post('/api/auth/login', authController.login);
+
+app.post('/api/wallet/deposit', authMiddleware, upload.single('proof'), walletController.requestDeposit);
+app.get('/api/wallet/history', authMiddleware, walletController.getDepositHistory);
+app.get('/api/wallet/balance', authMiddleware, walletController.getBalance);
+app.post('/api/wallet/update-balance', authMiddleware, walletController.updateBalance);
 app.post('/api/admin/approve-deposit', adminController.approveDeposit);
+app.post('/api/admin/reject-deposit', adminController.rejectDeposit);
 app.get('/api/admin/pending-deposits', adminController.getPendingDeposits);
 
 const httpServer = createServer(app);
-const io = new Server(httpServer, {
+export const io = new Server(httpServer, {
     cors: {
         origin: "*",
     },

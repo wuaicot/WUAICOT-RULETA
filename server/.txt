@@ -1,5 +1,16 @@
-//para iniciar servidor:
-   ts-node server.ts
+TRUNCATE TABLE "DepositRequest" RESTART IDENTITY;
+
+TRUNCATE TABLE "LedgerEntry" RESTART IDENTITY;
+
+TRUNCATE TABLE "User" RESTART IDENTITY;
+
+TRUNCATE TABLE "User" RESTART IDENTITY;
+
+TRUNCATE TABLE "Wallet" RESTART IDENTITY;
+
+TRUNCATE TABLE "WithdrawalRequest" RESTART IDENTITY;
 
 
-   .
+TRUNCATE TABLE "DepositRequest", "LedgerEntry", "User", "Wallet", "WithdrawalRequest" RESTART IDENTITY CASCADE;
+
+

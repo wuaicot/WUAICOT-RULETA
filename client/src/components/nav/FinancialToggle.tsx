@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { gameStore } from '../../store/gameStore';
 import "./FinancialToggle.css";
 
 export const FinancialToggle = observer(() => {
@@ -25,9 +24,9 @@ export const FinancialToggle = observer(() => {
                 $
             </button>
             <div className={`financial-info ${isVisible ? 'show' : ''}`}>
-                <span>Saldo: ${gameStore.balance}</span>
-                <span>Apuesta: ${gameStore.totalBet}</span>
-                <span>Resultado: {gameStore.lastResult}</span>
+                <span>Saldo: $0</span>
+                <span>Apuesta: $0</span>
+                <span>Resultado: $0</span>
             </div>
         </div>
     );

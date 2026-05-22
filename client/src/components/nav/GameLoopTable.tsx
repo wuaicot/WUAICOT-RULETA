@@ -21,6 +21,7 @@ export const GameLoopTable = observer(() => {
         }
     }, [message]);
 
+
     const getContent = useCallback((message: GameData) => {
         let content;
         if (message) {

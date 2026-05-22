@@ -40,6 +40,11 @@ export const useServer = () => {
 			}
 		});
 
+		socket.on('BALANCE_UPDATED', (data: { userId: string, balance: number }) => {
+			console.log('Balance updated from server:', data);
+			gameStore.setBalance(Number(data.balance));
+		});
+
 		socket.on('disconnect', () => {
 			console.log('Disconnected from server');
 		});
