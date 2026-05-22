@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { gameStore } from '../../store/gameStore';
 import "./FinancialToggle.css";
 
 export const FinancialToggle = observer(() => {

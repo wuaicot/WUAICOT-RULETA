@@ -70,7 +70,7 @@ class GameStore {
 	}
 	setBalance(newBalance: number) {
 		this.baseBalance = newBalance;
-		this.balance = newBalance - this.totalBet;
+		this.balance = newBalance;
 	}
 
 	placeBet(betAmount: number, betSpot: string, location: { x: number; y: number }) {
@@ -165,7 +165,7 @@ class GameStore {
 			boardItemOccupied: observable,
 			chipsTaken: observable,
 			bets: observable,
-			msg: observable,
+			msg: observable.ref,
 			balance: observable,
 			lastResult: observable,
 			hasProcessedWin: observable,

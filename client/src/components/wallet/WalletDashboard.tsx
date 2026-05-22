@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { RefreshCw, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { gameStore } from '../../store/gameStore';
 
 export const WalletDashboard = observer(({ token, onClose }: { token: string, onClose?: () => void }) => {
   const [activeTab, setActiveTab] = useState<'balance' | 'deposit'>('balance');
   const [amount, setAmount] = useState('');
   const [file, setFile] = useState<File | null>(null);
-
   const [history, setHistory] = useState<any[]>([]);
 
-  const fetchHistory = async () => {
+  const fetchHistory = React.useCallback(async () => {
     try {
       const res = await fetch('http://localhost:8888/api/wallet/history', {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -21,11 +20,23 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
       console.error(e);
       setHistory([]);
     }
-  };
+  }, [token]);
+
+  const fetchBalance = React.useCallback(async () => {
+    try {
+      const res = await fetch('http://localhost:8888/api/wallet/balance', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      gameStore.setBalance(Number(data.balance));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [token]);
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [fetchHistory]);
 
   const handleDeposit = async () => {
     if (!amount || !file) return alert('Completa todos los campos');
@@ -41,7 +52,9 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
         body: formData,
       });
       if (response.ok) {
-        alert('Solicitud enviada con éxito');
+        alert('Solicitud enviada con éxito. Por favor espera a que el operador la procese.');
+        setAmount('');
+        setFile(null);
         fetchHistory();
       }
       else {
@@ -53,40 +66,17 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
     }
   };
 
-  const fetchBalanceAndHistory = async () => {
-    try {
-      const res = await fetch('http://localhost:8888/api/wallet/balance', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await res.json();
-      gameStore.setBalance(Number(data.balance));
-      await fetchHistory();
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-
   return (
     <div className="bg-gray-900 p-6 rounded-lg shadow-xl text-white max-w-lg mx-auto mt-10 border border-yellow-500/20">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-yellow-500">Mi Wallet</h2>
-        <div className="flex gap-3">
-            <button 
-                title="Actualizar Saldo" 
-                className="bg-gray-700 p-2 rounded hover:bg-gray-600 transition-colors" 
-                onClick={fetchBalanceAndHistory}
-            >
-                <RefreshCw size={18} className="text-yellow-500" />
-            </button>
-            <button 
-                title="Cerrar" 
-                className="bg-gray-700 p-2 rounded hover:bg-red-600 transition-colors group" 
-                onClick={onClose}
-            >
-                <X size={18} className="text-gray-300 group-hover:text-white" />
-            </button>
-        </div>
+        <button 
+            title="Cerrar" 
+            className="bg-gray-700 p-2 rounded hover:bg-red-600 transition-colors group" 
+            onClick={onClose}
+        >
+            <X size={18} className="text-gray-300 group-hover:text-white" />
+        </button>
       </div>
 
       <div className="flex gap-4 mb-6">
@@ -108,6 +98,7 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
             <span>Saldo Jugable</span>
             <span className="font-bold text-xl">${gameStore.balance}</span>
           </div>
+          <p className="text-xs text-gray-400 text-center">El saldo se actualiza automáticamente.</p>
           <h3 className="text-yellow-500 font-bold">Historial de Depósitos</h3>
           {history.map((h: any) => (
             <div key={h.id} className="bg-gray-800 p-3 rounded border border-gray-700 text-sm">

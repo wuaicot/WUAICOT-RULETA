@@ -43,7 +43,7 @@ app.post('/api/admin/reject-deposit', adminController.rejectDeposit);
 app.get('/api/admin/pending-deposits', adminController.getPendingDeposits);
 
 const httpServer = createServer(app);
-const io = new Server(httpServer, {
+export const io = new Server(httpServer, {
     cors: {
         origin: "*",
     },
