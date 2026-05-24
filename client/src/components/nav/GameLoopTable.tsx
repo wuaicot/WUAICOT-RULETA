@@ -1,9 +1,28 @@
-import { useContext, useEffect, useState, useCallback } from "react";
+import { useContext, useEffect, useState, useCallback, memo } from "react";
 import ProgressTimer from "react-progress-bar-timer";
 import { observer } from "mobx-react";
 import { GameContext, gameStore } from "../../store/gameStore";
 import { GameLoop, GameData, Winner } from "../../common/types";
 import "./GameLoopTable.css";
+
+const WinnersList = memo(({ message }: { message: GameData }) => {
+    const isWinnerItemMine = (winner: string, playerId: string) => {
+        return winner === playerId ? "winner-item-mine" : "winner-item";
+    };
+
+    return (
+        <ul className="winners-list">
+            {message.winners.map((winner: Winner, index: number) => (
+                <li className="winner-item-wrapper" key={index}>
+                    <div className={isWinnerItemMine(winner.playerId, gameStore.playerId)}>
+                        <p className="user-id">User id: {winner.playerId}</p>
+                        <p className="win">Win: {winner.win}</p>
+                    </div>
+                </li>
+            ))}
+        </ul>
+    );
+});
 
 export const GameLoopTable = observer(() => {
     const { setBoardClear, msg: message } = useContext(GameContext);
@@ -21,62 +40,17 @@ export const GameLoopTable = observer(() => {
         }
     }, [message]);
 
-
     const getContent = useCallback((message: GameData) => {
-        let content;
         if (message) {
-            if (
-                message.gameStage === GameLoop.PLACE_BET ||
-                message.gameStage === GameLoop.NO_MORE_BETS
-            ) {
-                content = message.gameStage;
-            } else if (
-                message.winningNumber &&
-                message.gameStage === GameLoop.SPIN_WHEEL
-            ) {
-                content = `Get ready for some magic`;
-            } else if (
-                message.winningNumber &&
-                message.gameStage === GameLoop.WINNER
-            ) {
-                content = `Winnig number is: ${message.winningNumber}`;
-            } else if (
-                message.winningNumber &&
-                message.gameStage === GameLoop.EMPTY_BOARD
-            ) {
+            if (message.gameStage === GameLoop.PLACE_BET || message.gameStage === GameLoop.NO_MORE_BETS) return message.gameStage;
+            if (message.winningNumber && message.gameStage === GameLoop.SPIN_WHEEL) return `Get ready for some magic`;
+            if (message.winningNumber && message.gameStage === GameLoop.WINNER) return `Winnig number is: ${message.winningNumber}`;
+            if (message.winningNumber && message.gameStage === GameLoop.EMPTY_BOARD) {
                 setBoardClear();
-                content = "Get ready for next round";
+                return "Get ready for next round";
             }
-            return content;
         }
     }, [setBoardClear]);
-
-    const isWinnerItemMine = useCallback((winner: string, playerId: string) => {
-        return winner === playerId ? "winner-item-mine" : "winner-item";
-    }, []);
-
-    const getWinners = useCallback((message: GameData) => {
-        const content: React.ReactNode[] = [];
-        // eslint-disable-next-line
-        if (message) {
-            message.winners.map((winner: Winner) => {
-                return content.push(
-                    <div
-                        className={isWinnerItemMine(
-                            winner.playerId,
-                            gameStore.playerId,
-                        )}
-                        key={winner.playerId}
-                    >
-                        <p className="user-id">User id: {winner.playerId}</p>
-                        <p className="win">Win: {winner.win}</p>
-                    </div>,
-                );
-            });
-        }
-        return content;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isWinnerItemMine]);
 
     return (
         <div className="table-container">
@@ -94,16 +68,7 @@ export const GameLoopTable = observer(() => {
                             direction="left"
                         />
                     </div>
-                    <ul className="winners-list">
-                        {getWinners(message).map((cont: React.ReactNode, index: number) => (
-                            <li
-                                className="winner-item-wrapper"
-                                key={index}
-                            >
-                                {cont}
-                            </li>
-                        ))}
-                    </ul>
+                    <WinnersList message={message} />
                 </>
             )}
         </div>

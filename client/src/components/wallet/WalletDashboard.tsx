@@ -22,18 +22,7 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
     }
   }, [token]);
 
-  const fetchBalance = React.useCallback(async () => {
-    try {
-      const res = await fetch('http://localhost:8888/api/wallet/balance', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await res.json();
-      gameStore.setBalance(Number(data.balance));
-    } catch (e) {
-      console.error(e);
-    }
-  }, [token]);
-
+  // Solo se ejecuta una vez al montar, sin dependencias circulares.
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory]);
@@ -98,7 +87,6 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
             <span>Saldo Jugable</span>
             <span className="font-bold text-xl">${gameStore.balance}</span>
           </div>
-          <p className="text-xs text-gray-400 text-center">El saldo se actualiza automáticamente.</p>
           <h3 className="text-yellow-500 font-bold">Historial de Depósitos</h3>
           {history.map((h: any) => (
             <div key={h.id} className="bg-gray-800 p-3 rounded border border-gray-700 text-sm">
@@ -130,9 +118,6 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
             className="w-full bg-green-600 py-2 rounded font-bold hover:bg-green-700">
             Enviar Comprobante
           </button>
-          <a href="https://wa.me/56900000000" target="_blank" rel="noreferrer" className="block text-center text-green-400 mt-2 hover:underline">
-            Enviar por WhatsApp
-          </a>
         </div>
       )}
     </div>

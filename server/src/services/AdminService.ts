@@ -21,10 +21,6 @@ export class AdminService {
 
       const wallet = await walletService.addBalance(deposit.userId, Number(deposit.amount), 'DEPOSIT', deposit.id);
       
-      // Emitir evento al usuario específico a través de su ID
-      // Como no tenemos un mapeo directo de userId -> socket.id, 
-      // usaremos 'io.emit' global o un filtro, pero lo ideal es emitir al usuario.
-      // Para este MVP usaremos un evento global filtrado por el cliente.
       io.emit('BALANCE_UPDATED', { userId: deposit.userId, balance: wallet.balancePlayable });
       
       return { success: true };

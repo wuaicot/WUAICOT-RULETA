@@ -5,6 +5,7 @@ import { FinancialToggle } from './FinancialToggle';
 import { WalletDashboard } from '../wallet/WalletDashboard';
 import { AuthModal } from './AuthModal';
 import { assetsURL } from '../../utils/utils';
+import { gameStore } from '../../store/gameStore';
 // @ts-ignore: CSS module import without type declarations
 import './Header.css';
 
@@ -21,6 +22,8 @@ export const Header = (props: HeaderProps) => {
 
 	const handleLogin = (data: { token: string, user: any }) => {
 		setUser({ token: data.token, nickname: data.user.nickname });
+		gameStore.setNickname(data.user.nickname);
+		gameStore.setPlayerId(data.user.id);
 		localStorage.setItem('token', data.token);
 		connect();
 	};

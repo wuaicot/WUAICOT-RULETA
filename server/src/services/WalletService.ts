@@ -1,6 +1,7 @@
 import { PrismaClient, Prisma } from '../../generated/client';
 import { LedgerService } from './LedgerService';
 import dotenv from 'dotenv';
+import { io } from '../../server'; 
 
 dotenv.config();
 
@@ -33,7 +34,7 @@ export class WalletService {
   }
 
   async createDepositRequest(userId: string, amount: number, proofUrl: string) {
-    return await prisma.depositRequest.create({
+    const deposit = await prisma.depositRequest.create({
       data: {
         userId,
         amount,
@@ -41,5 +42,10 @@ export class WalletService {
         proofUrl,
       },
     });
+
+    // Emitir evento a los administradores
+    io.emit('NEW_DEPOSIT_REQUEST', deposit);
+    
+    return deposit;
   }
 }

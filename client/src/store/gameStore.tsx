@@ -16,6 +16,7 @@ export function calculateWinSpin(winningNumber: number) {
 class GameStore {
 	//observables
 	playerId = '';
+	nickname = '';
 	boardItemOccupied = '';
 	chipsTaken = 0;
 	betLocation = { x: 0, y: 0 };
@@ -30,6 +31,10 @@ class GameStore {
 
 	setPlayerId(id: string) {
 		this.playerId = id;
+	}
+
+	setNickname(name: string) {
+		this.nickname = name;
 	}
 	
 	setChipsTaken(newChips: number) {
@@ -69,6 +74,7 @@ class GameStore {
 		}
 	}
 	setBalance(newBalance: number) {
+		console.log(`[CLIENTE] Actualizando balance de ${this.playerId} a ${newBalance}`);
 		this.baseBalance = newBalance;
 		this.balance = newBalance;
 	}
@@ -137,6 +143,7 @@ class GameStore {
 	get gameData() {
 		return {
 			playerId: this.playerId,
+			nickname: this.nickname,
 			bets: this.bets,
 		};
 	}
@@ -150,18 +157,21 @@ class GameStore {
 
 	constructor(
 		initialId: string,
+		initialNickname: string,
 		initialBoard: string,
 		initialChips: number,
 		initialLocation: { x: number; y: number },
 		initialMessage: null,
 	) {
 		this.playerId = initialId;
+		this.nickname = initialNickname;
 		this.boardItemOccupied = initialBoard;
 		this.chipsTaken = initialChips;
 		this.betLocation = initialLocation;
 		this.msg = initialMessage;
 		makeObservable(this, {
 			playerId: observable,
+			nickname: observable,
 			boardItemOccupied: observable,
 			chipsTaken: observable,
 			bets: observable,
@@ -170,6 +180,7 @@ class GameStore {
 			lastResult: observable,
 			hasProcessedWin: observable,
 			setPlayerId: action.bound,
+			setNickname: action.bound,
 			setChipsTaken: action.bound,
 			placeBet: action.bound,
 			setMsg: action.bound,
@@ -184,5 +195,5 @@ class GameStore {
 		});
 	}
 }
-export const gameStore = new GameStore('', '', 0, { x: 0, y: 0 }, null);
+export const gameStore = new GameStore('', '', '', 0, { x: 0, y: 0 }, null);
 export const GameContext = createContext<GameStore>(gameStore);
