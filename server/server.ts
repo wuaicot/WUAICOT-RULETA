@@ -5,6 +5,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import { Timer } from "easytimer.js";
 import path from "path";
+import { PrismaClient } from "./generated/client";
 import { GameLoop, GameData, Winner, ClientData } from "../client/src/common/types";
 import {
     isIdUnique,
@@ -29,10 +30,17 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const authController = new AuthController();
 const walletController = new WalletController();
 const adminController = new AdminController();
+const prisma = new PrismaClient();
 
 // Routes
 app.post('/api/auth/register', authController.register);
 app.post('/api/auth/login', authController.login);
+app.get('/api/auth/me', authMiddleware, async (req, res) => {
+    const userId = (req as any).user.userId;
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json({ user: { id: user.id, nickname: user.nickname } });
+});
 
 app.post('/api/wallet/deposit', authMiddleware, upload.single('proof'), walletController.requestDeposit);
 app.get('/api/wallet/history', authMiddleware, walletController.getDepositHistory);

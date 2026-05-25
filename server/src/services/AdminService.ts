@@ -21,6 +21,8 @@ export class AdminService {
 
       const wallet = await walletService.addBalance(deposit.userId, Number(deposit.amount), 'DEPOSIT', deposit.id);
       
+      // Notificar al usuario que su depósito fue aprobado
+      io.emit('DEPOSIT_STATUS_CHANGED', { userId: deposit.userId });
       io.emit('BALANCE_UPDATED', { userId: deposit.userId, balance: wallet.balancePlayable });
       
       return { success: true };
@@ -28,9 +30,14 @@ export class AdminService {
   }
 
   async rejectDeposit(depositId: string, reason: string) {
-    return await prisma.depositRequest.update({
+    const deposit = await prisma.depositRequest.update({
       where: { id: depositId },
       data: { status: 'REJECTED', rejectionReason: reason },
     });
+    
+    // Notificar al usuario que su depósito fue rechazado
+    io.emit('DEPOSIT_STATUS_CHANGED', { userId: deposit.userId });
+    
+    return deposit;
   }
 }

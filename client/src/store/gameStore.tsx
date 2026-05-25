@@ -24,6 +24,8 @@ class GameStore {
 	msg: GameData | null;
 	baseBalance = 0; // Saldo oficial del servidor
 	balance = 0;     // Saldo visible/jugable en la sesión
+	balanceVersion = 0; // Incrementador para notificar cambios
+	historyVersion = 0; // Incrementador para notificar cambios de historial
 	lastResult = 0;
 	hasProcessedWin = false;
 
@@ -41,12 +43,16 @@ class GameStore {
 		this.chipsTaken = newChips;
 	}
 
+    incrementHistoryVersion() {
+		this.historyVersion += 1;
+	}
+
 	async syncBalance(token: string) {
 		try {
-			// Calculamos la diferencia neta de esta jugada (Ganancias - Lo apostado)
-			const delta = this.lastResult - this.totalBet;
+			// Solo reportamos lo ganado en esta jugada. Las apuestas fueron descontadas al apostar.
+			// Si `lastResult` es 0 (perdió), el delta enviado debe ser 0.
+			const delta = this.lastResult; 
 			
-			// Si no hubo apuesta en esta ronda, no hacemos nada para no enviar peticiones innecesarias
 			if (delta === 0 && this.totalBet === 0) return;
 
 			const res = await fetch('http://localhost:8888/api/wallet/update-balance', {
@@ -58,7 +64,6 @@ class GameStore {
 				body: JSON.stringify({ delta: delta })
 			});
 			const data = await res.json();
-			// El servidor nos devuelve la verdad absoluta sumando nuestro delta a la base de datos real
 			const finalBalance = Number(data.balance);
 			this.baseBalance = finalBalance;
 			this.balance = finalBalance;
@@ -77,14 +82,23 @@ class GameStore {
 		console.log(`[CLIENTE] Actualizando balance de ${this.playerId} a ${newBalance}`);
 		this.baseBalance = newBalance;
 		this.balance = newBalance;
+		this.balanceVersion += 1;
 	}
 
-	placeBet(betAmount: number, betSpot: string, location: { x: number; y: number }) {
+	async placeBet(betAmount: number, betSpot: string, location: { x: number; y: number }) {
 		if (this.balance >= betAmount) {
 			this.chipsTaken = betAmount;
 			this.boardItemOccupied = betSpot;
 			this.betLocation = location;
 			this.balance -= betAmount;
+            
+            // Protección extra: si el balance se vuelve negativo, forzamos 0 y eliminamos la apuesta inválida
+            if (this.balance < 0) {
+                console.error("[SEGURIDAD] Intento de saldo negativo detectado, reseteando.");
+                this.balance = 0;
+                this.bets.length = 0; // Cancelar todas las apuestas inválidas
+                return;
+            }
 			
 			const newBetItem: Bet = {
 				betAmount: betAmount,
@@ -94,8 +108,35 @@ class GameStore {
 				id: Math.random().toString(36).substr(2, 9)
 			};
 			this.bets.push(newBetItem);
+
+            // Sincronizar inmediatamente con el servidor
+            const token = localStorage.getItem('token');
+            if (token) {
+                // Pasamos el negativo de la apuesta para que el servidor la descuente de inmediato
+                await this.syncBalanceDirectly(token, -betAmount);
+            }
 		}
 	}
+
+    // Nuevo método para sincronización inmediata
+    async syncBalanceDirectly(token: string, delta: number) {
+        try {
+			const res = await fetch('http://localhost:8888/api/wallet/update-balance', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
+				},
+				body: JSON.stringify({ delta: delta })
+			});
+			const data = await res.json();
+			const finalBalance = Number(data.balance);
+			this.baseBalance = finalBalance;
+			this.balance = finalBalance;
+        } catch (e) {
+            console.error('Error syncing balance:', e);
+        }
+    }
 
 	setBoardClear() {
 		this.bets.length = 0;
@@ -177,11 +218,14 @@ class GameStore {
 			bets: observable,
 			msg: observable.ref,
 			balance: observable,
+			balanceVersion: observable,
+			historyVersion: observable,
 			lastResult: observable,
 			hasProcessedWin: observable,
 			setPlayerId: action.bound,
 			setNickname: action.bound,
 			setChipsTaken: action.bound,
+			incrementHistoryVersion: action.bound,
 			placeBet: action.bound,
 			setMsg: action.bound,
 			setBoardClear: action.bound,

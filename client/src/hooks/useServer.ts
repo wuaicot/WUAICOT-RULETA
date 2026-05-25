@@ -47,6 +47,13 @@ export const useServer = () => {
 			}
 		});
 
+		socket.on('DEPOSIT_STATUS_CHANGED', (data: { userId: string }) => {
+			if (data.userId === gameStore.playerId) {
+				console.log('Deposit status changed, refreshing history...');
+				gameStore.incrementHistoryVersion();
+			}
+		});
+
 		socket.on('disconnect', () => {
 			console.log('Disconnected from server');
 		});
