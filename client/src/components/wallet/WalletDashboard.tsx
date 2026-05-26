@@ -8,6 +8,7 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
   const [amount, setAmount] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [history, setHistory] = useState<any[]>([]);
+  const [statusMsg, setStatusMsg] = useState<{ text: string, type: 'success' | 'error' } | null>(null);
 
   const fetchHistory = React.useCallback(async () => {
     try {
@@ -22,24 +23,28 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
     }
   }, [token]);
 
-  const fetchBalance = React.useCallback(async () => {
-    try {
-      const res = await fetch('http://localhost:8888/api/wallet/balance', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await res.json();
-      gameStore.setBalance(Number(data.balance));
-    } catch (e) {
-      console.error(e);
+  // Auto-limpiar mensaje de estado
+  useEffect(() => {
+    if (statusMsg) {
+        const timer = setTimeout(() => setStatusMsg(null), 3000);
+        return () => clearTimeout(timer);
     }
-  }, [token]);
+  }, [statusMsg]);
 
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory]);
 
+  // Refrescar historial cuando el servidor notifica una actualización de depósito
+  useEffect(() => {
+    fetchHistory();
+  }, [gameStore.historyVersion, fetchHistory]);
+
   const handleDeposit = async () => {
-    if (!amount || !file) return alert('Completa todos los campos');
+    if (!amount || !file) {
+        setStatusMsg({ text: 'Completa todos los campos', type: 'error' });
+        return;
+    }
     
     const formData = new FormData();
     formData.append('amount', amount);
@@ -52,17 +57,17 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
         body: formData,
       });
       if (response.ok) {
-        alert('Solicitud enviada con éxito. Por favor espera a que el operador la procese.');
+        setStatusMsg({ text: 'Solicitud enviada con éxito.', type: 'success' });
         setAmount('');
         setFile(null);
         fetchHistory();
       }
       else {
         const err = await response.json();
-        alert('Error: ' + (err.error || 'No se pudo procesar'));
+        setStatusMsg({ text: 'Error: ' + (err.error || 'No se pudo procesar'), type: 'error' });
       }
     } catch (e) {
-      alert('Error de conexión');
+        setStatusMsg({ text: 'Error de conexión', type: 'error' });
     }
   };
 
@@ -78,6 +83,12 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
             <X size={18} className="text-gray-300 group-hover:text-white" />
         </button>
       </div>
+
+      {statusMsg && (
+        <div className={`p-3 mb-4 rounded text-center font-bold ${statusMsg.type === 'success' ? 'bg-green-600' : 'bg-red-600'}`}>
+            {statusMsg.text}
+        </div>
+      )}
 
       <div className="flex gap-4 mb-6">
         <button 
@@ -98,7 +109,6 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
             <span>Saldo Jugable</span>
             <span className="font-bold text-xl">${gameStore.balance}</span>
           </div>
-          <p className="text-xs text-gray-400 text-center">El saldo se actualiza automáticamente.</p>
           <h3 className="text-yellow-500 font-bold">Historial de Depósitos</h3>
           {history.map((h: any) => (
             <div key={h.id} className="bg-gray-800 p-3 rounded border border-gray-700 text-sm">
@@ -116,23 +126,23 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
           <input 
             type="number" 
             placeholder="Monto" 
+            aria-label="Monto a depositar"
             className="w-full p-2 bg-gray-800 rounded border border-gray-600"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
           <input 
             type="file" 
+            aria-label="Seleccionar comprobante de pago"
             onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
             className="w-full"
           />
           <button 
             onClick={handleDeposit}
+            aria-label="Enviar comprobante de depósito"
             className="w-full bg-green-600 py-2 rounded font-bold hover:bg-green-700">
             Enviar Comprobante
           </button>
-          <a href="https://wa.me/56900000000" target="_blank" rel="noreferrer" className="block text-center text-green-400 mt-2 hover:underline">
-            Enviar por WhatsApp
-          </a>
         </div>
       )}
     </div>

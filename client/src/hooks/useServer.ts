@@ -41,8 +41,17 @@ export const useServer = () => {
 		});
 
 		socket.on('BALANCE_UPDATED', (data: { userId: string, balance: number }) => {
-			console.log('Balance updated from server:', data);
-			gameStore.setBalance(Number(data.balance));
+			console.log('Balance updated from server:', data, 'Current PlayerId:', gameStore.playerId);
+			if (data.userId === gameStore.playerId) {
+				gameStore.setBalance(Number(data.balance));
+			}
+		});
+
+		socket.on('DEPOSIT_STATUS_CHANGED', (data: { userId: string }) => {
+			if (data.userId === gameStore.playerId) {
+				console.log('Deposit status changed, refreshing history...');
+				gameStore.incrementHistoryVersion();
+			}
 		});
 
 		socket.on('disconnect', () => {

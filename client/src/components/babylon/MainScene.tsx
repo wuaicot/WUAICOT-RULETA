@@ -28,7 +28,7 @@ export const MainScene = observer(() => {
             	setPos((prevValue) => [
 					prevValue[0] + 0.40,
 					prevValue[1],
-					prevValue[2] - .16,
+					prevValue[2] - 0.16,
 				]);
 		}, 500);
 
@@ -43,7 +43,7 @@ export const MainScene = observer(() => {
 			setPos((prevValue) => [
 				prevValue[0] - 0.26,
 				prevValue[1],
-				prevValue[2] + .10,
+				prevValue[2] + 0.10,
 			]);
 		}, 550);
 
@@ -53,11 +53,13 @@ export const MainScene = observer(() => {
 			clearInterval(rpmDecInterval);
 		}, 5000);
 	}, []);
+	
 
 	useEffect(() => {
 		if (message) {
 			if (message.gameStage === GameLoop.EMPTY_BOARD) {
 				setPos(initialBallPos);
+				setRpm(1);		
 			}
 			if (message.gameStage === GameLoop.NO_MORE_BETS) {
 				setTimeout(() => {

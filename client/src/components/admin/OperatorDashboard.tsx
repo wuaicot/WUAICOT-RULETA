@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react';
+import io from 'socket.io-client';
+import { SOCKET_URL } from '../../config/default';
 
 export const OperatorDashboard = observer(() => {
   const [requests, setRequests] = useState<any[]>([]);
@@ -16,6 +18,18 @@ export const OperatorDashboard = observer(() => {
 
   useEffect(() => {
     fetchDeposits();
+
+    const socket = io(SOCKET_URL);
+    socket.on('NEW_DEPOSIT_REQUEST', (newDeposit: any) => {
+      // Necesitamos obtener la info del usuario. Como el evento solo trae el objeto deposit,
+      // quizás debamos re-fetchar o añadirlo con la info que tengamos.
+      // Simplificado: forzamos re-fetch para asegurar consistencia con la DB (incluyendo user info)
+      fetchDeposits();
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   const handleApprove = async (id: string) => {
@@ -44,6 +58,7 @@ export const OperatorDashboard = observer(() => {
         fetchDeposits();
     }
   };
+// ... rest of the component
 
   return (
     <div className="p-10 bg-gray-950 text-white min-h-screen">

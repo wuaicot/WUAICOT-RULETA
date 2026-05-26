@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '../../UI/Button';
 import { Audio } from './Audio';
 import { FinancialToggle } from './FinancialToggle';
 import { WalletDashboard } from '../wallet/WalletDashboard';
 import { AuthModal } from './AuthModal';
 import { assetsURL } from '../../utils/utils';
+import { gameStore } from '../../store/gameStore';
 // @ts-ignore: CSS module import without type declarations
 import './Header.css';
 
@@ -19,13 +20,54 @@ export const Header = (props: HeaderProps) => {
 	const [showWallet, setShowWallet] = useState(false);
 	const [showAuth, setShowAuth] = useState(false);
 
+	// Restaurar sesión al cargar
+	useEffect(() => {
+		const token = localStorage.getItem('token');
+		if (token) {
+			fetch('http://localhost:8888/api/auth/me', {
+				headers: { 'Authorization': `Bearer ${token}` }
+			})
+			.then(res => res.json())
+			.then(data => {
+				if (data.user) {
+					setUser({ token, nickname: data.user.nickname });
+					gameStore.setNickname(data.user.nickname);
+					gameStore.setPlayerId(data.user.id);
+					
+					// Cargar saldo inicial
+					fetch('http://localhost:8888/api/wallet/balance', {
+						headers: { 'Authorization': `Bearer ${token}` }
+					})
+					.then(res => res.json())
+					.then(bal => gameStore.setBalance(Number(bal.balance)));
+					
+					connect();
+				}
+			});
+		}
+	}, [connect]);
+
 	const handleLogin = (data: { token: string, user: any }) => {
 		setUser({ token: data.token, nickname: data.user.nickname });
+		gameStore.setNickname(data.user.nickname);
+		gameStore.setPlayerId(data.user.id);
 		localStorage.setItem('token', data.token);
+
+		// Cargar saldo inicial
+		fetch('http://localhost:8888/api/wallet/balance', {
+			headers: { 'Authorization': `Bearer ${data.token}` }
+		})
+		.then(res => res.json())
+		.then(bal => gameStore.setBalance(Number(bal.balance)));
+
 		connect();
 	};
 
-	const handleLogout = () => {
+	const handleLogout = async () => {
+		const token = localStorage.getItem('token');
+		if (token) {
+			await gameStore.syncBalance(token);
+		}
 		setUser(null);
 		localStorage.removeItem('token');
 		disconnect();
