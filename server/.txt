@@ -13,4 +13,5 @@ TRUNCATE TABLE "WithdrawalRequest" RESTART IDENTITY;
 
 TRUNCATE TABLE "DepositRequest", "LedgerEntry", "User", "Wallet", "WithdrawalRequest" RESTART IDENTITY CASCADE;
 
-
+git fetch
+git reset --hard origin/pre-main
