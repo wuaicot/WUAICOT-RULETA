@@ -53,6 +53,7 @@ export const MainScene = observer(() => {
 			clearInterval(rpmDecInterval);
 		}, 5000);
 	}, []);
+	
 
 	useEffect(() => {
 		if (message) {

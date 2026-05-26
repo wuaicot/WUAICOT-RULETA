@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../../UI/Button';
+import { apiFetch } from '../../utils/api';
 
 interface AuthModalProps {
   onClose: () => void;
@@ -13,22 +14,18 @@ export const AuthModal = ({ onClose, onLogin }: AuthModalProps) => {
   const [pin, setPin] = useState('');
 
   const handleSubmit = async () => {
-    const endpoint = isRegister ? 'register' : 'login';
+    const endpoint = `/api/auth/${isRegister ? 'register' : 'login'}`;
     const body = isRegister ? { nickname, age, pin } : { nickname, pin };
 
-    const res = await fetch(`http://localhost:8888/api/auth/${endpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-
-    if (res.ok) {
-      const data = await res.json();
+    try {
+      const data = await apiFetch(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
       onLogin(data);
       onClose();
-    } else {
-      const err = await res.json();
-      alert(err.error);
+    } catch (err: any) {
+      alert(err.message || 'Error al conectar con el servidor');
     }
   };
 
