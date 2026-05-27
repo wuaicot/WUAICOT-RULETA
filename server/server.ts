@@ -6,7 +6,7 @@ import { Server } from "socket.io";
 import { Timer } from "easytimer.js";
 import path from "path";
 import { PrismaClient } from "./generated/client";
-import { GameLoop, GameData, Winner, ClientData } from "../client/src/common/types";
+import { GameLoop, GameData, Winner, ClientData } from "./src/shared/types";
 import {
     isIdUnique,
     isUserDataUnique,
@@ -21,7 +21,7 @@ import { authMiddleware } from "./src/middleware/auth";
 import { upload } from "./src/middleware/upload";
 
 //initialising http server and socket.io
-const PORT = 8888;
+const PORT = process.env.PORT || 8888;
 const app = express();
 app.use(cors());
 app.use(express.json());
