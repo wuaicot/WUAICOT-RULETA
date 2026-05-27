@@ -9,11 +9,12 @@ export class WalletController {
   async requestDeposit(req: Request, res: Response) {
     try {
       const { amount } = req.body;
-      const userId = (req as any).user.userId; // Extraer desde JWT
-      const file = req.file;
+      const userId = (req as any).user.userId;
+      const file = req.file as any;
       
       if (!file) return res.status(400).json({ error: 'Proof of payment is required' });
 
+      // Cloudinary devuelve la URL en la propiedad 'path'
       const deposit = await walletService.createDepositRequest(userId, Number(amount), file.path);
       res.status(201).json(deposit);
     } catch (error) {
