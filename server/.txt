@@ -15,3 +15,5 @@ TRUNCATE TABLE "DepositRequest", "LedgerEntry", "User", "Wallet", "WithdrawalReq
 
 git fetch
 git reset --hard origin/pre-main
+
+jhhk
