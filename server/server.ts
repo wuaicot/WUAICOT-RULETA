@@ -19,6 +19,7 @@ import { WalletController } from "./src/controllers/WalletController";
 import { AdminController } from "./src/controllers/AdminController";
 import { authMiddleware } from "./src/middleware/auth";
 import { upload } from "./src/middleware/upload";
+import { setIoInstance } from "./src/services/WalletService";
 
 //initialising http server and socket.io
 const PORT = process.env.PORT || 8888;
@@ -56,6 +57,8 @@ export const io = new Server(httpServer, {
         origin: "*",
     },
 });
+
+setIoInstance(io);
 
 //initialising timer
 const timer = new Timer();

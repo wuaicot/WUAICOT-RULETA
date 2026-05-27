@@ -1,12 +1,18 @@
 import { PrismaClient, Prisma } from '../../generated/client';
 import { LedgerService } from './LedgerService';
 import dotenv from 'dotenv';
-import { io } from '../../server'; 
+import { Server } from 'socket.io';
 
 dotenv.config();
 
 const prisma = new PrismaClient();
 const ledgerService = new LedgerService();
+
+let ioInstance: Server | null = null;
+
+export const setIoInstance = (io: Server) => {
+  ioInstance = io;
+};
 
 export class WalletService {
   async addBalance(userId: string, amount: number, type: 'DEPOSIT' | 'WIN' | 'ADJUSTMENT', referenceId?: string) {
@@ -44,7 +50,9 @@ export class WalletService {
     });
 
     // Emitir evento a los administradores
-    io.emit('NEW_DEPOSIT_REQUEST', deposit);
+    if (ioInstance) {
+      ioInstance.emit('NEW_DEPOSIT_REQUEST', deposit);
+    }
     
     return deposit;
   }
