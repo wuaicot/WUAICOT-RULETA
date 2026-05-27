@@ -14,6 +14,8 @@ interface HeaderProps {
 	disconnect: () => void;
 }
 
+const API_URL = process.env.REACT_APP_API_BASE || 'http://localhost:8888';
+
 export const Header = (props: HeaderProps) => {
 	const { connect, disconnect } = props;
 	const [user, setUser] = useState<{token: string, nickname: string} | null>(null);
@@ -24,7 +26,7 @@ export const Header = (props: HeaderProps) => {
 	useEffect(() => {
 		const token = localStorage.getItem('token');
 		if (token) {
-			fetch('http://localhost:8888/api/auth/me', {
+			fetch(`${API_URL}/api/auth/me`, {
 				headers: { 'Authorization': `Bearer ${token}` }
 			})
 			.then(res => res.json())
@@ -35,7 +37,7 @@ export const Header = (props: HeaderProps) => {
 					gameStore.setPlayerId(data.user.id);
 					
 					// Cargar saldo inicial
-					fetch('http://localhost:8888/api/wallet/balance', {
+					fetch(`${API_URL}/api/wallet/balance`, {
 						headers: { 'Authorization': `Bearer ${token}` }
 					})
 					.then(res => res.json())
@@ -54,7 +56,7 @@ export const Header = (props: HeaderProps) => {
 		localStorage.setItem('token', data.token);
 
 		// Cargar saldo inicial
-		fetch('http://localhost:8888/api/wallet/balance', {
+		fetch(`${API_URL}/api/wallet/balance`, {
 			headers: { 'Authorization': `Bearer ${data.token}` }
 		})
 		.then(res => res.json())
