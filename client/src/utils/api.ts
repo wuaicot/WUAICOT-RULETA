@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8888';
+const API_BASE = process.env.REACT_APP_API_BASE ||'http://localhost:8888';
 const TIMEOUT_MS = 8000;
 const MAX_RETRIES = 3;
 

@@ -38,7 +38,7 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
   // Refrescar historial cuando el servidor notifica una actualización de depósito
   useEffect(() => {
     fetchHistory();
-  }, [gameStore.historyVersion, fetchHistory]);
+  }, [fetchHistory]);
 
   const handleDeposit = async () => {
     if (!amount || !file) {
