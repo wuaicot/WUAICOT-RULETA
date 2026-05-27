@@ -1,5 +1,5 @@
-import { BLACKS, REDS } from '../client/src/common/utils';
-import { Winner, ClientData, Bet } from '../client/src/common/types';
+import { BLACKS, REDS } from './src/shared/utils';
+import { Winner, ClientData, Bet } from './src/shared/types';
 
 export const isIdUnique = (array: { playerId: string }[], id: string) => {
 	return array.every((item) => item.playerId !== id);
