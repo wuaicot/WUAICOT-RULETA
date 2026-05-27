@@ -1,7 +1,5 @@
 import { PrismaClient } from '../../generated/client';
-import { WalletService } from './WalletService';
-// Importamos el servidor global desde server.ts
-import { io } from '../../server'; 
+import { WalletService, ioInstance } from './WalletService';
 
 const prisma = new PrismaClient();
 const walletService = new WalletService();
@@ -21,9 +19,11 @@ export class AdminService {
 
       const wallet = await walletService.addBalance(deposit.userId, Number(deposit.amount), 'DEPOSIT', deposit.id);
       
-      // Notificar al usuario que su depósito fue aprobado
-      io.emit('DEPOSIT_STATUS_CHANGED', { userId: deposit.userId });
-      io.emit('BALANCE_UPDATED', { userId: deposit.userId, balance: wallet.balancePlayable });
+      // Notificar al usuario que su depósito fue aprobado usando la instancia global
+      if (ioInstance) {
+        ioInstance.emit('DEPOSIT_STATUS_CHANGED', { userId: deposit.userId });
+        ioInstance.emit('BALANCE_UPDATED', { userId: deposit.userId, balance: wallet.balancePlayable });
+      }
       
       return { success: true };
     });
@@ -36,7 +36,9 @@ export class AdminService {
     });
     
     // Notificar al usuario que su depósito fue rechazado
-    io.emit('DEPOSIT_STATUS_CHANGED', { userId: deposit.userId });
+    if (ioInstance) {
+      ioInstance.emit('DEPOSIT_STATUS_CHANGED', { userId: deposit.userId });
+    }
     
     return deposit;
   }

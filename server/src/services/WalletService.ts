@@ -10,6 +10,8 @@ const ledgerService = new LedgerService();
 
 let ioInstance: Server | null = null;
 
+export { ioInstance };
+
 export const setIoInstance = (io: Server) => {
   ioInstance = io;
 };
