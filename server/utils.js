@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EVENTS = exports.calculateWin = exports.calculateLineNumbers = exports.calculateWinners = exports.getRandomNumber = exports.resetBoard = exports.isUserDataUnique = exports.isIdUnique = void 0;
-const utils_1 = require("../client/src/common/utils");
+const utils_1 = require("./src/shared/utils");
 const isIdUnique = (array, id) => {
     return array.every((item) => item.playerId !== id);
 };
