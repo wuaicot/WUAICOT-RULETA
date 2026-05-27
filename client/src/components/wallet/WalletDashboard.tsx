@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { X } from 'lucide-react';
 import { gameStore } from '../../store/gameStore';
+import { apiFetch } from '../../utils/api';
 
 export const WalletDashboard = observer(({ token, onClose }: { token: string, onClose?: () => void }) => {
   const [activeTab, setActiveTab] = useState<'balance' | 'deposit'>('balance');
@@ -12,10 +13,9 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
 
   const fetchHistory = React.useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:8888/api/wallet/history', {
+      const data = await apiFetch('/api/wallet/history', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      const data = await res.json();
       setHistory(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error(e);
@@ -51,7 +51,7 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
     formData.append('proof', file);
 
     try {
-      const response = await fetch('http://localhost:8888/api/wallet/deposit', {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE || 'http://localhost:8888'}/api/wallet/deposit`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData,
