@@ -3,12 +3,14 @@ import { observer } from 'mobx-react';
 import io from 'socket.io-client';
 import { SOCKET_URL } from '../../config/default';
 
+const API_URL = process.env.REACT_APP_API_BASE || 'http://localhost:8888';
+
 export const OperatorDashboard = observer(() => {
   const [requests, setRequests] = useState<any[]>([]);
 
   const fetchDeposits = async () => {
     try {
-      const res = await fetch('http://localhost:8888/api/admin/pending-deposits');
+      const res = await fetch(`${API_URL}/api/admin/pending-deposits`);
       const data = await res.json();
       setRequests(data);
     } catch (e) {
@@ -21,9 +23,6 @@ export const OperatorDashboard = observer(() => {
 
     const socket = io(SOCKET_URL);
     socket.on('NEW_DEPOSIT_REQUEST', (newDeposit: any) => {
-      // Necesitamos obtener la info del usuario. Como el evento solo trae el objeto deposit,
-      // quizás debamos re-fetchar o añadirlo con la info que tengamos.
-      // Simplificado: forzamos re-fetch para asegurar consistencia con la DB (incluyendo user info)
       fetchDeposits();
     });
 
@@ -33,7 +32,7 @@ export const OperatorDashboard = observer(() => {
   }, []);
 
   const handleApprove = async (id: string) => {
-    const res = await fetch('http://localhost:8888/api/admin/approve-deposit', {
+    const res = await fetch(`${API_URL}/api/admin/approve-deposit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ depositId: id })
@@ -48,7 +47,7 @@ export const OperatorDashboard = observer(() => {
     const reason = prompt("Razón del rechazo:");
     if (!reason) return;
 
-    const res = await fetch('http://localhost:8888/api/admin/reject-deposit', {
+    const res = await fetch(`${API_URL}/api/admin/reject-deposit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ depositId: id, reason })
@@ -69,7 +68,7 @@ export const OperatorDashboard = observer(() => {
             <div>
               <p>Usuario: {req.user.nickname}</p>
               <p>Monto: ${req.amount}</p>
-              <a href={`http://localhost:8888/${req.proofUrl.replace(/\\/g, '/')}`} target="_blank" rel="noreferrer" className="text-blue-400 underline">Ver Comprobante</a>
+              <a href={`${API_URL}/${req.proofUrl.replace(/\\/g, '/')}`} target="_blank" rel="noreferrer" className="text-blue-400 underline">Ver Comprobante</a>
             </div>
             <div className="flex gap-2">
               <button 
