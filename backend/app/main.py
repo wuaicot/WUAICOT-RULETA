@@ -20,7 +20,7 @@ app = FastAPI(title="Wuaicot Ruleta API", lifespan=lifespan)
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Permitir acceso desde el frontend local
+    allow_origins=["http://localhost:3000", "https://wuaicot-ruleta-n2qj-theta.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
