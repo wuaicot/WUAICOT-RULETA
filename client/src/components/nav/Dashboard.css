@@ -1,5 +1,4 @@
-.dashboard {
-  
+.dashboard {  
   display: grid;
   grid-template-columns: 1fr;
   width: 90vw;
@@ -7,14 +6,20 @@
   margin: 0 auto;
   gap: 16px;
   padding: 20px 0;
-  position: relative;
-  
+  position: relative;  
 }
-
-@media (min-width: 1025px) {
+@media (min-width: 768px) and (max-width: 984px) { 
   .dashboard {
     grid-template-columns: 70% 30%;
     height: 40vh;
+    grid-template-rows: auto 1fr;
+    
+  }
+}
+@media (min-width: 1025px) {
+  .dashboard {
+    grid-template-columns: 70% 30%;
+    height: 50vh;
     grid-template-rows: auto 1fr;
     gap: 20px;
   }
@@ -28,9 +33,21 @@
   border-radius: 15px;
   overflow: hidden;
   margin-left:12px;
-  margin-top: 4px;
+  margin-top: 4px;  
+}         /*vista Tablet*/
+@media (min-width: 768px) and (max-width: 984px) {
+  .babylon-container {
+    width: 130%;
+    height: 30vh;    
+    border: 1px solid var(--neon-yellow);
+    box-shadow: var(--border-glow);
+    border-radius: 15px;
+    overflow: hidden;
+    margin-left:65px;
+    margin-top: 39px;
+    
+  }
 }
-
 @media (min-width: 1625px) {
   .babylon-container {
     min-height: 50vh;
@@ -47,15 +64,16 @@
   box-sizing: border-box;
   overflow-y: auto;
   position: relative; 
-}
-@media (min-width: 984px) {
+}     /*table-containet vista Tablet*/
+@media (min-width: 768px) and (max-width: 984px) {
   .table-container {
-    height: 90%;
-    width: 95%;
-    margin-top: 29px;      
+    min-height: 40%;
+    width: 80%;
+    margin-top: 960px;      
+    margin-left: 115px;
+    position: absolute;    
   }
 }
-
 @media (min-width: 1625px) {
   .table-container {
     height: 95%;

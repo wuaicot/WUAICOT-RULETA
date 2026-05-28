@@ -19,15 +19,13 @@
    
   }
 }
-@media (max-width: 984px) {
+@media (min-width: 768px) and (max-width: 984px) {
   .chips-container {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    transform: none;
-    margin: 16px auto;
-    gap: 8px;
-    padding: 10px 16px;
+    position: absolute;
+    bottom: 250px;
+    left: 232px;
+    transform: none;       
+    gap: 22px;   
     border-radius: 30px;
     width: fit-content;
   }
