@@ -24,7 +24,10 @@ import { setIoInstance } from "./src/services/WalletService";
 //initialising http server and socket.io
 const PORT = process.env.PORT || 8888;
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: ["http://localhost:3000", "https://tu-dominio-produccion.com"], // Reemplazar con el dominio real en producción
+    credentials: true,
+}));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

@@ -3,6 +3,8 @@ import { observer } from 'mobx-react';
 import { X } from 'lucide-react';
 import { gameStore } from '../../store/gameStore';
 import { apiFetch } from '../../utils/api';
+import { io } from 'socket.io-client';
+import { SOCKET_URL } from '../../config/default';
 
 export const WalletDashboard = observer(({ token, onClose }: { token: string, onClose?: () => void }) => {
   const [activeTab, setActiveTab] = useState<'balance' | 'deposit'>('balance');
@@ -35,9 +37,16 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
     fetchHistory();
   }, [fetchHistory]);
 
-  // Refrescar historial cuando el servidor notifica una actualización de depósito
   useEffect(() => {
-    fetchHistory();
+    // Escuchar cambios de estado desde el servidor para refrescar el historial
+    const socket = io(SOCKET_URL);
+    socket.on('DEPOSIT_STATUS_CHANGED', () => {
+      fetchHistory();
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, [fetchHistory]);
 
   const handleDeposit = async () => {
