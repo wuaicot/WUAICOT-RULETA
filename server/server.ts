@@ -25,7 +25,7 @@ import { setIoInstance } from "./src/services/WalletService";
 const PORT = process.env.PORT || 8888;
 const app = express();
 app.use(cors({
-    origin: ["http://localhost:3000", "https://tu-dominio-produccion.com"], // Reemplazar con el dominio real en producción
+    origin: ["http://localhost:3000", "https://wuaicot-ruleta-n2qj-theta.vercel.app"],
     credentials: true,
 }));
 app.use(express.json());
