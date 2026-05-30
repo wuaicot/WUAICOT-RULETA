@@ -41,3 +41,6 @@ Debido a la naturaleza inmersiva del juego:
 - Siempre verificar antes de editar.
 - Validar cambios con build/lint si corresponde.
 - No alterar lógica de negocio ni dependencias.
+
+## Reglas de Oro
+- **Prohibición de Exposición Prematura:** Ningún elemento, función, componente o dato debe exponer el número ganador antes de que la animación oficial de la ruleta haya finalizado y el estado del juego sea explícitamente `WINNER`. La integridad del juego depende de que el usuario descubra el resultado únicamente a través de la animación oficial del motor.

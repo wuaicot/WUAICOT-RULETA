@@ -23,14 +23,18 @@
 
 .winners-list {
     list-style: none;
-    font-size: 1.5em;
     padding-top: 0.5em;
+    font-size: 1em;
 }
 
-.winner-item {
-    font-size: 0.7em;
+.winner-item, .winner-item-mine {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.2em 0;
+    border-bottom: 1px solid rgba(255, 173, 0, 0.3);
 }
 
 .winner-item-mine {
     color: red;
+    font-weight: bold;
 }

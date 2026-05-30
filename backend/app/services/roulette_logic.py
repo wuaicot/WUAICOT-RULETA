@@ -35,7 +35,7 @@ class RouletteLogic:
         amount = bet.betAmount
 
         if bet_type == 'number' and str(winning_number) == bet.betSpot:
-            return amount * 36
+            return amount * 24
         elif bet_type == 'numbers_1_12' and 1 <= winning_number <= 12:
             return amount * 3
         elif bet_type == 'numbers_2_12' and 13 <= winning_number <= 24:
