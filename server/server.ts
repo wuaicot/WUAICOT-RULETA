@@ -118,6 +118,7 @@ io.on("connection", (socket) => {
     const handleClientData = (data: string) => {
         try {
             const clientData: ClientData = JSON.parse(data);
+            console.log("Client data received:", clientData); // <--- Debug
             // Store the player ID on the socket for easy access on disconnect
             (socket as any).playerId = clientData.playerId;
             usersData.push(clientData);

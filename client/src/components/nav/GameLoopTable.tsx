@@ -15,8 +15,8 @@ const WinnersList = memo(({ message }: { message: GameData }) => {
             {message.winners.map((winner: Winner, index: number) => (
                 <li className="winner-item-wrapper" key={index}>
                     <div className={isWinnerItemMine(winner.playerId, gameStore.playerId)}>
-                        <p className="user-id">User id: {winner.playerId}</p>
-                        <p className="win">Win: {winner.win}</p>
+                        <span className="user-id">User: {winner.playerId.slice(-12)}</span>
+                        <span className="win">Win: {winner.win}</span>
                     </div>
                 </li>
             ))}

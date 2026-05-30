@@ -7,6 +7,7 @@ import { Header } from './components/nav/Header';
 import { Dashboard } from './components/nav/Dashboard';
 import { Board } from './components/board/Board';
 import { Chips } from './components/board/Chips';
+import { Top10 } from './components/nav/Top10';
 import { OperatorDashboard } from './components/admin/OperatorDashboard';
 import { useServer } from './hooks/useServer';
 import { GameLoop } from './common/types';
@@ -34,6 +35,7 @@ const App = observer(() => {
 			<GameContext.Provider value={gameStore}>
 				{error && <Error error={error} />}
 				<Header connect={connect} disconnect={disconnect} />
+				<Top10 />
 				<div className={setPointerEvents()}>
 					<Dashboard />
 					<Board />
