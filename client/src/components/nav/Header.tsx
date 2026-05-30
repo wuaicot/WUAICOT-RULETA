@@ -21,6 +21,7 @@ export const Header = (props: HeaderProps) => {
 	const [user, setUser] = useState<{token: string, nickname: string} | null>(null);
 	const [showWallet, setShowWallet] = useState(false);
 	const [showAuth, setShowAuth] = useState(false);
+	const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
 	// Restaurar sesión al cargar
 	useEffect(() => {
@@ -65,19 +66,30 @@ export const Header = (props: HeaderProps) => {
 		connect();
 	};
 
-	const handleLogout = async () => {
+	const performLogout = async () => {
 		const token = localStorage.getItem('token');
 		if (token) {
 			await gameStore.syncBalance(token);
 		}
+		
+		// Limpiar estado del juego al salir
+		gameStore.setMsg(null);
+		gameStore.setBoardClear();
+		
 		setUser(null);
 		localStorage.removeItem('token');
 		disconnect();
+		setShowLogoutConfirm(false);
+	};
+
+	const handleLogout = async () => {
+		setShowLogoutConfirm(true);
 	};
 
 	return (
 		<>
 			<nav className='header'>
+				{/* ... (resto del nav permanece igual) */}
 				<div className='audio-login-container'>
 					<FinancialToggle />
 					{user && (
@@ -97,6 +109,19 @@ export const Header = (props: HeaderProps) => {
 					<Audio url={assetsURL.soundtrack} loop={true} />
 				</div>
 			</nav>
+            {/* Modal de confirmación */}
+            {showLogoutConfirm && (
+                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[9999]">
+                    <div className="bg-gray-900 p-6 rounded-lg border border-yellow-500 w-80">
+                        <h2 className="text-xl text-yellow-500 mb-4">Cerrar Sesión</h2>
+                        <p className="text-white mb-6">¿Estás seguro de que deseas salir?</p>
+                        <div className="flex justify-end gap-2">
+                            <Button className="bg-gray-700" onClick={() => setShowLogoutConfirm(false)}>Cancelar</Button>
+                            <Button className="bg-red-700" onClick={performLogout}>Salir</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
 			{showWallet && user && (
 				<div className="absolute top-20 right-10 z-[5000]">
 					<WalletDashboard token={user.token} onClose={() => setShowWallet(false)} />
