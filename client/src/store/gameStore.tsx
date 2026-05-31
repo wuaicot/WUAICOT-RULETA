@@ -13,6 +13,8 @@ export function calculateWinSpin(winningNumber: number) {
 	return +(winningNumberIndex * indexSpin).toFixed(2);
 }
 
+const API_URL = process.env.REACT_APP_API_BASE || 'http://localhost:8888';
+
 class GameStore {
 	//observables
 	playerId = '';
@@ -55,7 +57,7 @@ class GameStore {
 			
 			if (delta === 0 && this.totalBet === 0) return;
 
-			const res = await fetch('http://localhost:8888/api/wallet/update-balance', {
+			const res = await fetch(`${API_URL}/api/wallet/update-balance`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -121,7 +123,7 @@ class GameStore {
     // Nuevo método para sincronización inmediata
     async syncBalanceDirectly(token: string, delta: number) {
         try {
-			const res = await fetch('http://localhost:8888/api/wallet/update-balance', {
+			const res = await fetch(`${API_URL}/api/wallet/update-balance`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
