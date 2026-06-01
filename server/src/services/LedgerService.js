@@ -24,7 +24,7 @@ class LedgerService {
                 data: {
                     userId,
                     type,
-                    amount,
+                    amount: new client_1.Prisma.Decimal(amount),
                     referenceId,
                     metadata,
                 },

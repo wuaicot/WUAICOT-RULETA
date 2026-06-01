@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../generated/client';
+import { PrismaClient, Prisma } from '../../generated/client';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -17,7 +17,7 @@ export class LedgerService {
       data: {
         userId,
         type,
-        amount,
+        amount: new Prisma.Decimal(amount),
         referenceId,
         metadata,
       },

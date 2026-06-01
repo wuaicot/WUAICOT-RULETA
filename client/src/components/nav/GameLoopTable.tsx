@@ -27,16 +27,10 @@ const WinnersList = memo(({ message }: { message: GameData }) => {
 export const GameLoopTable = observer(() => {
     const { setBoardClear, msg: message } = useContext(GameContext);
     const [started, setStarted] = useState(false);
-    const [gameTime, setGameTime] = useState(25);
 
     useEffect(() => {
         if (message) {
-            if (message.gameTimer <= 25) {
-                setStarted(true);
-                setGameTime(25 - message.gameTimer);
-            } else {
-                setStarted(false);
-            }
+            setStarted(message.gameTimer <= 25);
         }
     }, [message]);
 
@@ -47,7 +41,7 @@ export const GameLoopTable = observer(() => {
             if (message.winningNumber && message.gameStage === GameLoop.WINNER) return `Winnig number is: ${message.winningNumber}`;
             if (message.winningNumber && message.gameStage === GameLoop.EMPTY_BOARD) {
                 setBoardClear();
-                return "Get ready for next round";
+                return "ATENTOS...";
             }
         }
     }, [setBoardClear]);
@@ -61,7 +55,7 @@ export const GameLoopTable = observer(() => {
                         <ProgressTimer
                             started={started}
                             label=""
-                            duration={gameTime}
+                            duration={message.gameTimer <= 25 ? 25 - message.gameTimer : 25}
                             barRounded={false}
                             color={"rgb(255, 173, 0)"}
                             variant="empty"

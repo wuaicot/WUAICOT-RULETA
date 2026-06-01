@@ -28,6 +28,10 @@ app.use(cors({
     origin: ["http://localhost:3000", "https://wuaicot-ruleta-n2qj-theta.vercel.app"],
     credentials: true,
 }));
+app.use((req, res, next) => {
+    console.log(`[GLOBAL] Received ${req.method} ${req.url}`);
+    next();
+});
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -50,9 +54,14 @@ app.post('/api/wallet/deposit', authMiddleware, upload.single('proof'), walletCo
 app.get('/api/wallet/history', authMiddleware, walletController.getDepositHistory);
 app.get('/api/wallet/balance', authMiddleware, walletController.getBalance);
 app.post('/api/wallet/update-balance', authMiddleware, walletController.updateBalance);
+app.post('/api/wallet/withdraw', authMiddleware, walletController.requestWithdrawal);
+app.get('/api/wallet/withdrawal-history', authMiddleware, walletController.getWithdrawalHistory);
 app.post('/api/admin/approve-deposit', adminController.approveDeposit);
 app.post('/api/admin/reject-deposit', adminController.rejectDeposit);
 app.get('/api/admin/pending-deposits', adminController.getPendingDeposits);
+app.post('/api/admin/approve-withdrawal', adminController.approveWithdrawal);
+app.post('/api/admin/reject-withdrawal', adminController.rejectWithdrawal);
+app.get('/api/admin/pending-withdrawals', adminController.getPendingWithdrawals);
 
 const httpServer = createServer(app);
 export const io = new Server(httpServer, {
@@ -118,7 +127,7 @@ io.on("connection", (socket) => {
     const handleClientData = (data: string) => {
         try {
             const clientData: ClientData = JSON.parse(data);
-            console.log("Client data received:", clientData); // <--- Debug
+            // console.log("Client data received:", clientData); // <--- Debug
             // Store the player ID on the socket for easy access on disconnect
             (socket as any).playerId = clientData.playerId;
             usersData.push(clientData);

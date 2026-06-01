@@ -45,7 +45,7 @@ export class WalletService {
     const deposit = await prisma.depositRequest.create({
       data: {
         userId,
-        amount,
+        amount: new Prisma.Decimal(amount),
         status: 'PENDING',
         proofUrl,
       },

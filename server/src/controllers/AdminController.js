@@ -53,5 +53,45 @@ class AdminController {
             }
         });
     }
+    approveWithdrawal(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { withdrawalId } = req.body;
+                const adminService = new (require('../services/AdminService')).AdminService();
+                yield adminService.approveWithdrawal(withdrawalId);
+                res.status(200).json({ message: 'Withdrawal approved successfully' });
+            }
+            catch (error) {
+                res.status(400).json({ error: error.message });
+            }
+        });
+    }
+    rejectWithdrawal(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { withdrawalId } = req.body;
+                const adminService = new (require('../services/AdminService')).AdminService();
+                yield adminService.rejectWithdrawal(withdrawalId);
+                res.status(200).json({ message: 'Withdrawal rejected successfully' });
+            }
+            catch (error) {
+                res.status(400).json({ error: error.message });
+            }
+        });
+    }
+    getPendingWithdrawals(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const withdrawals = yield prisma.withdrawalRequest.findMany({
+                    where: { status: 'PENDING' },
+                    include: { user: true }
+                });
+                res.status(200).json(withdrawals);
+            }
+            catch (error) {
+                res.status(500).json({ error: 'Error fetching withdrawals' });
+            }
+        });
+    }
 }
 exports.AdminController = AdminController;
