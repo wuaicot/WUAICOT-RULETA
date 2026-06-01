@@ -37,4 +37,38 @@ export class AdminController {
       res.status(500).json({ error: 'Error fetching deposits' });
     }
   }
+
+  async approveWithdrawal(req: Request, res: Response) {
+    try {
+      const { withdrawalId } = req.body;
+      const adminService = new (require('../services/AdminService')).AdminService();
+      await adminService.approveWithdrawal(withdrawalId);
+      res.status(200).json({ message: 'Withdrawal approved successfully' });
+    } catch (error) {
+      res.status(400).json({ error: (error as Error).message });
+    }
+  }
+
+  async rejectWithdrawal(req: Request, res: Response) {
+    try {
+      const { withdrawalId } = req.body;
+      const adminService = new (require('../services/AdminService')).AdminService();
+      await adminService.rejectWithdrawal(withdrawalId);
+      res.status(200).json({ message: 'Withdrawal rejected successfully' });
+    } catch (error) {
+      res.status(400).json({ error: (error as Error).message });
+    }
+  }
+
+  async getPendingWithdrawals(req: Request, res: Response) {
+    try {
+      const withdrawals = await prisma.withdrawalRequest.findMany({
+        where: { status: 'PENDING' },
+        include: { user: true }
+      });
+      res.status(200).json(withdrawals);
+    } catch (error) {
+      res.status(500).json({ error: 'Error fetching withdrawals' });
+    }
+  }
 }

@@ -49,6 +49,20 @@ class GameStore {
 		this.historyVersion += 1;
 	}
 
+	async fetchBalance(token: string) {
+		try {
+			const res = await fetch(`${API_URL}/api/wallet/balance`, {
+				headers: { 'Authorization': `Bearer ${token}` }
+			});
+			const data = await res.json();
+			const finalBalance = Number(data.balance);
+			this.baseBalance = finalBalance;
+			this.balance = finalBalance;
+		} catch (e) {
+			console.error('Error fetching balance:', e);
+		}
+	}
+
 	async syncBalance(token: string) {
 		try {
 			// Solo reportamos lo ganado en esta jugada. Las apuestas fueron descontadas al apostar.

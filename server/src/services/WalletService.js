@@ -12,14 +12,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.WalletService = void 0;
+exports.WalletService = exports.setIoInstance = exports.ioInstance = void 0;
 const client_1 = require("../../generated/client");
 const LedgerService_1 = require("./LedgerService");
 const dotenv_1 = __importDefault(require("dotenv"));
-const server_1 = require("../../server");
 dotenv_1.default.config();
 const prisma = new client_1.PrismaClient();
 const ledgerService = new LedgerService_1.LedgerService();
+let ioInstance = null;
+exports.ioInstance = ioInstance;
+const setIoInstance = (io) => {
+    exports.ioInstance = ioInstance = io;
+};
+exports.setIoInstance = setIoInstance;
 class WalletService {
     addBalance(userId, amount, type, referenceId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -50,13 +55,15 @@ class WalletService {
             const deposit = yield prisma.depositRequest.create({
                 data: {
                     userId,
-                    amount,
+                    amount: new client_1.Prisma.Decimal(amount),
                     status: 'PENDING',
                     proofUrl,
                 },
             });
             // Emitir evento a los administradores
-            server_1.io.emit('NEW_DEPOSIT_REQUEST', deposit);
+            if (ioInstance) {
+                ioInstance.emit('NEW_DEPOSIT_REQUEST', deposit);
+            }
             return deposit;
         });
     }

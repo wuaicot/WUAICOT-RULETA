@@ -1,8 +1,10 @@
-import { PrismaClient } from '../../generated/client';
+import { PrismaClient, Prisma } from '../../generated/client';
 import { WalletService, ioInstance } from './WalletService';
+import { LedgerService } from './LedgerService';
 
 const prisma = new PrismaClient();
 const walletService = new WalletService();
+const ledgerService = new LedgerService();
 
 export class AdminService {
   async approveDeposit(depositId: string) {
@@ -42,4 +44,70 @@ export class AdminService {
     
     return deposit;
   }
+
+  async approveWithdrawal(withdrawalId: string) {
+    return await prisma.$transaction(async (tx) => {
+      const withdrawal = await tx.withdrawalRequest.findUnique({ where: { id: withdrawalId } });
+      
+      if (!withdrawal) throw new Error('Retiro no encontrado');
+      if (withdrawal.status !== 'PENDING') throw new Error(`El estado del retiro es ${withdrawal.status}, no PENDING`);
+
+      await tx.withdrawalRequest.update({
+        where: { id: withdrawalId },
+        data: { status: 'APPROVED' },
+      });
+
+      // Obtener saldo actualizado
+      const wallet = await tx.wallet.findUnique({ where: { userId: withdrawal.userId } });
+
+      if (ioInstance && wallet) {
+        ioInstance.emit('WITHDRAWAL_STATUS_CHANGED', { userId: withdrawal.userId });
+        ioInstance.emit('BALANCE_UPDATED', { userId: withdrawal.userId, balance: wallet.balancePlayable });
+      }
+
+      return { success: true };
+    });
+  }
+
+  async rejectWithdrawal(withdrawalId: string) {
+    return await prisma.$transaction(async (tx) => {
+      const withdrawal = await tx.withdrawalRequest.findUnique({ where: { id: withdrawalId } });
+      
+      if (!withdrawal) throw new Error('Retiro no encontrado');
+      if (withdrawal.status !== 'PENDING') throw new Error(`El estado del retiro es ${withdrawal.status}, no PENDING`);
+
+      // 1. Cambiar estado a REJECTED
+      await tx.withdrawalRequest.update({
+        where: { id: withdrawalId },
+        data: { status: 'REJECTED' },
+      });
+
+      // 2. Reembolsar saldo
+      const wallet = await tx.wallet.update({
+        where: { userId: withdrawal.userId },
+        data: {
+          balanceTotal: { increment: withdrawal.amount },
+          balancePlayable: { increment: withdrawal.amount },
+        },
+      });
+
+      // 3. Registrar en Ledger
+      await ledgerService.recordEntry(
+        withdrawal.userId,
+        'ADJUSTMENT',
+        Number(withdrawal.amount),
+        withdrawal.id,
+        { type: 'WITHDRAWAL_REJECT_REFUND' }
+      );
+
+      // 4. Notificar cambios de saldo y estado
+      if (ioInstance) {
+        ioInstance.emit('WITHDRAWAL_STATUS_CHANGED', { userId: withdrawal.userId });
+        ioInstance.emit('BALANCE_UPDATED', { userId: withdrawal.userId, balance: wallet.balancePlayable });
+      }
+
+      return { success: true };
+    });
+  }
 }
+

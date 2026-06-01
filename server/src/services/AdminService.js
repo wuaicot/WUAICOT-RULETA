@@ -12,10 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminService = void 0;
 const client_1 = require("../../generated/client");
 const WalletService_1 = require("./WalletService");
-// Importamos el servidor global desde server.ts
-const server_1 = require("../../server");
+const LedgerService_1 = require("./LedgerService");
 const prisma = new client_1.PrismaClient();
 const walletService = new WalletService_1.WalletService();
+const ledgerService = new LedgerService_1.LedgerService();
 class AdminService {
     approveDeposit(depositId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -30,9 +30,11 @@ class AdminService {
                     data: { status: 'APPROVED' },
                 });
                 const wallet = yield walletService.addBalance(deposit.userId, Number(deposit.amount), 'DEPOSIT', deposit.id);
-                // Notificar al usuario que su depósito fue aprobado
-                server_1.io.emit('DEPOSIT_STATUS_CHANGED', { userId: deposit.userId });
-                server_1.io.emit('BALANCE_UPDATED', { userId: deposit.userId, balance: wallet.balancePlayable });
+                // Notificar al usuario que su depósito fue aprobado usando la instancia global
+                if (WalletService_1.ioInstance) {
+                    WalletService_1.ioInstance.emit('DEPOSIT_STATUS_CHANGED', { userId: deposit.userId });
+                    WalletService_1.ioInstance.emit('BALANCE_UPDATED', { userId: deposit.userId, balance: wallet.balancePlayable });
+                }
                 return { success: true };
             }));
         });
@@ -44,8 +46,61 @@ class AdminService {
                 data: { status: 'REJECTED', rejectionReason: reason },
             });
             // Notificar al usuario que su depósito fue rechazado
-            server_1.io.emit('DEPOSIT_STATUS_CHANGED', { userId: deposit.userId });
+            if (WalletService_1.ioInstance) {
+                WalletService_1.ioInstance.emit('DEPOSIT_STATUS_CHANGED', { userId: deposit.userId });
+            }
             return deposit;
+        });
+    }
+    approveWithdrawal(withdrawalId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
+                const withdrawal = yield tx.withdrawalRequest.findUnique({ where: { id: withdrawalId } });
+                if (!withdrawal)
+                    throw new Error('Retiro no encontrado');
+                if (withdrawal.status !== 'PENDING')
+                    throw new Error(`El estado del retiro es ${withdrawal.status}, no PENDING`);
+                yield tx.withdrawalRequest.update({
+                    where: { id: withdrawalId },
+                    data: { status: 'APPROVED' },
+                });
+                if (WalletService_1.ioInstance) {
+                    WalletService_1.ioInstance.emit('WITHDRAWAL_STATUS_CHANGED', { userId: withdrawal.userId });
+                }
+                return { success: true };
+            }));
+        });
+    }
+    rejectWithdrawal(withdrawalId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
+                const withdrawal = yield tx.withdrawalRequest.findUnique({ where: { id: withdrawalId } });
+                if (!withdrawal)
+                    throw new Error('Retiro no encontrado');
+                if (withdrawal.status !== 'PENDING')
+                    throw new Error(`El estado del retiro es ${withdrawal.status}, no PENDING`);
+                // 1. Cambiar estado a REJECTED
+                yield tx.withdrawalRequest.update({
+                    where: { id: withdrawalId },
+                    data: { status: 'REJECTED' },
+                });
+                // 2. Reembolsar saldo
+                const wallet = yield tx.wallet.update({
+                    where: { userId: withdrawal.userId },
+                    data: {
+                        balanceTotal: { increment: withdrawal.amount },
+                        balancePlayable: { increment: withdrawal.amount },
+                    },
+                });
+                // 3. Registrar en Ledger
+                yield ledgerService.recordEntry(withdrawal.userId, 'ADJUSTMENT', Number(withdrawal.amount), withdrawal.id, { type: 'WITHDRAWAL_REJECT_REFUND' });
+                // 4. Notificar cambios de saldo y estado
+                if (WalletService_1.ioInstance) {
+                    WalletService_1.ioInstance.emit('WITHDRAWAL_STATUS_CHANGED', { userId: withdrawal.userId });
+                    WalletService_1.ioInstance.emit('BALANCE_UPDATED', { userId: withdrawal.userId, balance: wallet.balancePlayable });
+                }
+                return { success: true };
+            }));
         });
     }
 }
