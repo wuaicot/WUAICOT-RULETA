@@ -43,7 +43,7 @@
     box-shadow: var(--border-glow);
     border-radius: 15px;
     overflow: hidden;
-    margin-left:65px;
+    margin-left:21px;
     margin-top: 39px;
     
   }
@@ -69,9 +69,10 @@
   .table-container {
     min-height: 40%;
     width: 80%;
-    margin-top: 960px;      
-    margin-left: 115px;
-    position: absolute;    
+    margin-top: 890px;      
+    margin-left: 60px;
+    position: absolute; 
+      
   }
 }
 @media (min-width: 1625px) {

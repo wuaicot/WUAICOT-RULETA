@@ -11,6 +11,13 @@
 .board-scroll-wrapper {  
   overflow-x: none;  
 }
+@media (min-width: 768px) and (max-width: 984px){
+  .board-scroll-wrapper {  
+    overflow-x: none; 
+    overflow-y: hidden;
+    margin-top:10px; 
+  }
+}
 @media (min-width: 1625px) {
   .board-scroll-wrapper {
     overflow-x: none;    
@@ -37,11 +44,13 @@
 /*tablero en modo tablet*/
 @media (min-width: 768px) and (max-width: 984px) {
   .board-grid {    
-    margin-top: 394px;   
+    margin-top: 404px;   
     overflow-x: hidden;
     border-style: groove;
     position: absolute;    
     transform: translate(-3%, 4%);
+    max-height:27vh;
+    margin-left:-24px;
   }  
 }
 @media (min-width: 1625px){  
@@ -62,3 +71,4 @@
   pointer-events: none;
   filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
 }
+
