@@ -46,6 +46,7 @@
   .board-grid {    
     margin-top: 404px;   
     overflow-x: hidden;
+    overflow-y:scroll;
     border-style: groove;
     position: absolute;    
     transform: translate(-3%, 4%);
@@ -53,6 +54,13 @@
     margin-left:-24px;
   }  
 }
+@media (min-width: 768px) and (max-width: 984px) and (orientation: landscape) {
+     .board-grid {
+       /* Aquí solo pones lo que necesites CAMBIAR respecto a la regla superior */
+       /* Ejemplo: tal vez necesites menos margen superior en horizontal */
+       margin-top: 335px; 
+     }
+   }
 @media (min-width: 1625px){  
     .board-grid {
       margin-left: 33px;
