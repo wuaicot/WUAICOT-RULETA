@@ -1,30 +1,5 @@
-.board-container {
-  display: flex;  
-  flex-direction: column;
-  align-items: center;
-  width: 100%; 
-  
-}
 
-
-
-.board-scroll-wrapper {  
-  overflow-x: none;  
-}
-@media (min-width: 768px) and (max-width: 984px){
-  .board-scroll-wrapper {  
-    overflow-x: none; 
-    overflow-y: hidden;
-    margin-top:10px; 
-  }
-}
-@media (min-width: 1625px) {
-  .board-scroll-wrapper {
-    overflow-x: none;    
-  }
-}
-
-
+/*  Base mínima (Lo que SIEMPRE es igual) */
 .board-grid {
   display: grid;
   grid-template-columns: repeat(14, 1fr);
@@ -32,51 +7,43 @@
   border: 2px solid var(--neon-yellow);
   border-radius: 13px;
   background: var(--panel-bg);
-  width: 90vw;
-  height: 35vh;
   box-shadow: var(--border-glow);
-  position: relative;
   min-width: 520px;
-  left: 61px;
-  top: 15px;
- 
+  max-height: 70vh;
+  width: 90vw;
+  position: relative;
 }
-/*tablero en modo tablet*/
-@media (min-width: 768px) and (max-width: 984px) {
-  .board-grid {    
-    margin-top: 404px;   
-    overflow-x: hidden;
-    overflow-y:scroll;
-    border-style: groove;
-    position: absolute;    
-    transform: translate(-3%, 4%);
-    max-height:27vh;
-    margin-left:-24px;
-  }  
-}
-@media (min-width: 768px) and (max-width: 984px) and (orientation: landscape) {
-     .board-grid {
-       /* Aquí solo pones lo que necesites CAMBIAR respecto a la regla superior */
-       /* Ejemplo: tal vez necesites menos margen superior en horizontal */
-       margin-top: 335px; 
-     }
-   }
-@media (min-width: 1625px){  
-    .board-grid {
-      margin-left: 33px;
-      margin-top: 22px;
-      overflow-x: hidden;
-      border-style: groove;
-    }             
-  }
 
+/* Fichas posicionadas en el tablero: tamaño fijo y absoluto */
 .board-grid > img {
   position: absolute;
-  width: 30px;
-  height: 30px;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-  pointer-events: none;
-  filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+  width: 40px !important; /* Tamaño fijo para fichas en tablero */
+  height: 40px !important;
+  pointer-events: none; /* Evita que la ficha intercepte eventos de drag/drop */
 }
+@media (orientation: portrait) {
+  .board-grid{
+    min-height: 24vh;
+    margin-top:10px;
+    }
+  }    
+  
+ @media (min-width: 1631px) {
+     .board-grid {
+       position: relative;  /* CORRECCIÓN: Aseguramos que NO sea absolute */
+       transform: none;     /* CORRECCIÓN: Reseteamos */
+       margin-top: 46px;
+       min-height: 33vh;
+       margin-left: 40px;
+       margin-right: auto;
+       
+       
+     }
+   }
+
+
+
+
+
+
 

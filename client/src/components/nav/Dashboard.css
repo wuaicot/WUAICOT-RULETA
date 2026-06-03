@@ -60,7 +60,8 @@
   border: 1px solid var(--neon-yellow);
   box-shadow: var(--border-glow);
   border-radius: 15px;
-  padding: 15px;
+  padding: 15px
+  ;
   box-sizing: border-box;
   overflow-y: auto;
   position: relative; 
@@ -74,6 +75,15 @@
     position: absolute; 
       
   }
+}
+@media (min-width: 984px){
+  .table-container{
+    height: 85%;
+    width: 100%;
+    margin-left: 20px;
+    margin-top: 40px;
+  }
+  
 }
 @media (min-width: 1625px) {
   .table-container {

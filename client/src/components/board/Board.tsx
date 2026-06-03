@@ -20,8 +20,9 @@ export const Board = observer(() => {
 			
 			if (boardElement && clientOffset) {
 				const boardRect = boardElement.getBoundingClientRect();
-				const x = clientOffset.x - boardRect.left;
-				const y = clientOffset.y - boardRect.top;
+				// Ajustar para centrar la ficha en el cursor (tamaño ficha = 40px)
+				const x = clientOffset.x - boardRect.left - 20;
+				const y = clientOffset.y - boardRect.top - 20;
 
 				// Identify the specific cell or item dropped on
 				const elem = document.elementFromPoint(clientOffset.x, clientOffset.y);
