@@ -9,4 +9,4 @@ or transmitted in any form or by any means, including photocopying, recording,
 or other electronic or mechanical methods, without the prior written permission 
 of the copyright owner.
 
-Unauthorized copying of this file, via any medium, is strictly prohibited.
+Unauthorized copying of this file, via any medium, is strictly prohibited
