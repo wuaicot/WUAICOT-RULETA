@@ -2,3 +2,175 @@
    https://github.com/k-stopczynska/roulette?form=MG0AV3 
          
          .cioi
+
+         
+/*  Base mínima (Lo que SIEMPRE es igual) */
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(14, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      border: 2px solid var(--neon-yellow);
+      border-radius: 13px;
+      background: var(--panel-bg);
+      box-shadow: var(--border-glow);
+      min-width: 520px;
+      width: 90vw;
+    }
+   
+    /* 2. Mobile (Por defecto, < 480px) */
+    .board-grid {
+      position: relative; /* Reseteo */
+      margin: 32px auto;  /* Centrado */
+      height: 40vh;
+      max-height: 30vh;
+    }
+   
+    /* 3. Mobile L (481px - 767px) */
+    @media (min-width: 481px) and (max-width: 767px) {
+      .board-grid {
+        position: absolute; /* Aquí SÍ quieres absolute */
+        margin-top: 80px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+   
+    /* 4. Tablet (768px - 984px) */
+    @media (min-width: 768px) and (max-width: 984px) {
+      .board-grid {
+        position: relative;  /* CORRECCIÓN: Reseteamos el absolute de mobile */
+        transform: none;     /* CORRECCIÓN: Reseteamos la traslación */
+        margin-top: 20px;
+        max-height: 27vh;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+   
+    /* 5. Laptop (985px - 1624px) */
+    @media (min-width: 985px) and (max-width: 1624px) {
+      .board-grid {
+        position: relative;  /* CORRECCIÓN: Aseguramos que NO sea absolute */
+        transform: none;     /* CORRECCIÓN: Reseteamos */
+        margin-top: 20px;
+        max-height: 35vh;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   .board-container {
+  display: flex;  
+  flex-direction: column;
+  align-items: center;
+  width: 100%; 
+  
+}
+
+
+
+.board-scroll-wrapper {  
+  overflow-x: none;  
+}
+@media (min-width: 768px) and (max-width: 984px){
+  .board-scroll-wrapper {  
+    overflow-x: none; 
+    overflow-y: hidden;
+    margin-top:10px; 
+  }
+}
+@media (min-width: 1625px) {
+  .board-scroll-wrapper {
+    overflow-x: none;    
+  }
+}
+
+
+.board-grid {
+  max-height:30vh;
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  border: 2px solid var(--neon-yellow);
+  border-radius: 13px;
+  background: var(--panel-bg);
+  width: 90vw;
+  height: 40vh;
+  box-shadow: var(--border-glow);
+  position: relative;
+  min-width: 520px;
+  left: 61px;  
+  top:32px;
+}
+@media (min-width: 480px) and (orientation: portrait){
+  .board-grid{
+    margin-top: 10px;
+    background-color: hidden;
+  }
+}
+@media (min-width: 480px) {
+  .board-grid{
+    background-color: aqua;
+}
+}
+@media (min-width: 481px) and (max-width:  767px)  {
+  .board-grid{
+    position: absolute;  
+  margin-top: 80px;  
+  }
+}
+
+@media (min-width: 768px) and (max-width:  984px)   {
+  .board-grid {        
+    overflow-x: hidden;
+    overflow-y:hidden;
+    border-style: groove;
+    position: absolute;    
+    transform: translate(-3%, 128%);/*muebe el tablero en tablet vertical*/
+    max-height:27vh;
+    
+    margin-left:-24px;
+  }  
+}
+
+@media (min-width: 985px) and (min-width: 1624px){  
+    .board-grid {
+      margin-left: 25px;
+      margin-top: 20px;
+      overflow-x: hidden;
+      border-style: groove;
+      max-height:35vh;
+    }             
+  }
+
+.board-grid > img {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  pointer-events: none;
+  filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+}
