@@ -4,10 +4,59 @@
     box-shadow: 0 0 0.5em 0 rgb(255, 173, 0);
     color: var(--color-accent);
     text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.5), 0 0 0.45em rgb(255, 173, 0);
-    padding: 0.7em 1.25em;
-    
-         
+    padding: 0.7em 1.25em;          
 }
+
+.table-container {
+    width: 100%;  
+    background: var(--panel-bg);
+    border: 1px solid var(--neon-yellow);
+    box-shadow: var(--border-glow);
+    border-radius: 15px;
+    padding: 15px
+    ;
+    box-sizing: border-box;
+    overflow-y: auto;
+    
+  }  
+  @media (min-width: 80px) and (max-width: 767px){
+    .table-container{      
+      top: 535px;
+      left: 24px;
+      min-height: 65%;
+      position: absolute;      
+    }
+  }
+    /*vista Tablet*/
+  @media (min-width: 768px) and (max-width: 984px) {
+    .table-container {
+      min-height: 55%;
+      width: 80%;
+      margin-top: 839px;      
+      margin-left: 100px;
+      position: absolute; 
+      flex-wrap: wrap;
+      
+    }
+  }
+  /*notebook*/
+  @media (min-width: 985px) and (max-width: 1624px){
+    .table-container{
+      height: 85%;
+      width: 100%;
+      margin-left: 10px;
+      margin-top: 25px;
+    }
+    
+  }
+  @media (min-width: 1625px) {
+    .table-container {
+      height: 95%;
+      width: 95%;
+      margin-top: 23px;   
+    }
+  }
+
 
 .bar-container {
     height: 1em;
