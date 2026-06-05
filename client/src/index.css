@@ -22,6 +22,11 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
 }
+@media (min-width: 767px) and (max-width: 983px) {
+  body {
+    overflow: hidden;
+  }
+}
 @media (min-width: 984px) {
   body {
     overflow: hidden;

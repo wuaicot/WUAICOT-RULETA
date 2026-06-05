@@ -1,4 +1,3 @@
-
 /*  Base mínima (Lo que SIEMPRE es igual) */
 .board-grid {
   display: grid;
@@ -8,10 +7,45 @@
   border-radius: 13px;
   background: var(--panel-bg);
   box-shadow: var(--border-glow);
-  min-width: 520px;
-  max-height: 70vh;
-  width: 90vw;
-  position: relative;
+  position: relative; /* Asegura el origen de coordenadas absoluto para las fichas en todas las resoluciones */
+}
+
+
+@media (min-width: 80px) and (max-width: 467px) {
+  .board-grid {
+    margin-top: -15px;
+    width: 100vw;
+    height: 20vh;
+  }
+}
+/*Tablet*/
+@media (min-width: 768px) and (max-width: 984px) {
+  .board-grid{      
+    margin-top: -24px;
+    margin-left: 30px;  
+    width: 85vw;
+    height: 22vh;
+  }
+}
+/*notebook*/
+@media (min-width: 985px) and (max-width: 1624px) {
+  .board-grid {
+    margin-left: 60px;
+    width: 90vw;
+    margin-top: -28px;
+    transform: none;
+  }
+}
+@media (min-width: 1625px) {
+  .board-grid {
+    position: relative; /* CORRECCIÓN: Aseguramos que NO sea absolute */
+    transform: none; /* CORRECCIÓN: Reseteamos */
+    margin-top: 42px;
+    min-height: 33vh;
+    min-width: 85vw;
+    margin-left: 48px;
+    margin-right: auto;
+  }
 }
 
 /* Fichas posicionadas en el tablero: tamaño fijo y absoluto */
@@ -21,29 +55,3 @@
   height: 40px !important;
   pointer-events: none; /* Evita que la ficha intercepte eventos de drag/drop */
 }
-@media (orientation: portrait) {
-  .board-grid{
-    min-height: 24vh;
-    margin-top:10px;
-    }
-  }    
-  
- @media (min-width: 1631px) {
-     .board-grid {
-       position: relative;  /* CORRECCIÓN: Aseguramos que NO sea absolute */
-       transform: none;     /* CORRECCIÓN: Reseteamos */
-       margin-top: 46px;
-       min-height: 33vh;
-       margin-left: 40px;
-       margin-right: auto;
-       
-       
-     }
-   }
-
-
-
-
-
-
-
