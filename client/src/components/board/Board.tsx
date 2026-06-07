@@ -35,10 +35,53 @@ export const Board = observer(() => {
 		},
 	}));
 
+	const handleBoardClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+		if (gameStore.chipsTaken <= 0) return;
+
+		const target = e.target as HTMLElement;
+		let boardItem = target.closest('.item');
+
+		// Si se hace clic en una imagen de ficha ya colocada, buscamos el elemento debajo
+		if (!boardItem && target.tagName === 'IMG') {
+			const originalPointerEvents = target.style.pointerEvents;
+			target.style.pointerEvents = 'none';
+			const elem = document.elementFromPoint(e.clientX, e.clientY);
+			target.style.pointerEvents = originalPointerEvents;
+
+			if (elem) {
+				boardItem = elem.closest('.item');
+			}
+		}
+
+		if (!boardItem) return;
+
+		const targetId = boardItem.id;
+		if (!targetId) return;
+
+		const boardElement = boardRef.current;
+		if (boardElement) {
+			const boardRect = boardElement.getBoundingClientRect();
+			
+			// Ubicación del click relativa al contenedor del tablero
+			const x = e.clientX - boardRect.left - 20;
+			const y = e.clientY - boardRect.top - 20;
+
+			placeBet(gameStore.chipsTaken, targetId, { x, y });
+		}
+	}, [placeBet]);
+
+	const isTouchDevice = typeof window !== 'undefined' && (
+		'ontouchstart' in window || 
+		navigator.maxTouchPoints > 0 || 
+		window.innerWidth <= 984
+	);
+
 	const setRefs = useCallback((node: HTMLDivElement | null) => {
 		boardRef.current = node;
-		drop(node);
-	}, [drop]);
+		if (node && !isTouchDevice) {
+			drop(node);
+		}
+	}, [drop, isTouchDevice]);
 
 	const trimItem = useCallback((item: string | number) => {
 		return typeof item === 'string'
@@ -53,6 +96,7 @@ export const Board = observer(() => {
 			<div 
 				ref={setRefs} 
 				className='board-grid'
+				onClick={handleBoardClick}
 			>
 				{matrix.map((row) =>
 					row.map((tableItem) => (

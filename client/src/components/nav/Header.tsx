@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '../../UI/Button';
 import { Audio } from './Audio';
 import { FinancialToggle } from './FinancialToggle';
@@ -22,6 +22,7 @@ export const Header = (props: HeaderProps) => {
 	const [showWallet, setShowWallet] = useState(false);
 	const [showAuth, setShowAuth] = useState(false);
 	const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+	const walletRef = useRef<HTMLDivElement>(null);
 
 	// Restaurar sesión al cargar
 	useEffect(() => {
@@ -49,6 +50,26 @@ export const Header = (props: HeaderProps) => {
 			});
 		}
 	}, [connect]);
+
+	// Cerrar Wallet al hacer clic fuera
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+			if (showWallet && walletRef.current && !walletRef.current.contains(event.target as Node)) {
+				// Pequeño delay para no interferir con el botón que lo abre si se usa el mismo evento
+				setShowWallet(false);
+			}
+		};
+
+		if (showWallet) {
+			document.addEventListener('mousedown', handleClickOutside);
+			document.addEventListener('touchstart', handleClickOutside);
+		}
+
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+			document.removeEventListener('touchstart', handleClickOutside);
+		};
+	}, [showWallet]);
 
 	const handleLogin = (data: { token: string, user: any }) => {
 		setUser({ token: data.token, nickname: data.user.nickname });
@@ -89,7 +110,6 @@ export const Header = (props: HeaderProps) => {
 	return (
 		<>
 			<nav className='header'>
-				{/* ... (resto del nav permanece igual) */}
 				<div className='audio-login-container'>
 					<FinancialToggle />
 					{user && (
@@ -123,7 +143,7 @@ export const Header = (props: HeaderProps) => {
                 </div>
             )}
 			{showWallet && user && (
-				<div className="absolute top-20 right-10 z-[5000]">
+				<div className="wallet-overlay-container" ref={walletRef}>
 					<WalletDashboard token={user.token} onClose={() => setShowWallet(false)} />
 				</div>
 			)}

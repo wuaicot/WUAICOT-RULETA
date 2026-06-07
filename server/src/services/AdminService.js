@@ -64,8 +64,11 @@ class AdminService {
                     where: { id: withdrawalId },
                     data: { status: 'APPROVED' },
                 });
-                if (WalletService_1.ioInstance) {
+                // Obtener saldo actualizado
+                const wallet = yield tx.wallet.findUnique({ where: { userId: withdrawal.userId } });
+                if (WalletService_1.ioInstance && wallet) {
                     WalletService_1.ioInstance.emit('WITHDRAWAL_STATUS_CHANGED', { userId: withdrawal.userId });
+                    WalletService_1.ioInstance.emit('BALANCE_UPDATED', { userId: withdrawal.userId, balance: wallet.balancePlayable });
                 }
                 return { success: true };
             }));

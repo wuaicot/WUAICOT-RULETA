@@ -14,11 +14,11 @@
     display: flex;
     contain: content;
     width: 300px;
-    height: 40px;
+    height: 55px;
     justify-content: center;
     align-items: center;
-    top: 476px;
-    left: 50px;
+    top: 471px;
+    left: 48px;
   }
 }
 
@@ -71,6 +71,12 @@
   filter: drop-shadow(0 0 5px rgba(255, 173, 0, 0.3));
   padding-top: 0;
   margin-top: -12px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 @media (min-width: 80px) and (max-width: 767px) {
   .chip-item {

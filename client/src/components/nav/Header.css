@@ -5,17 +5,32 @@
   padding: 10px 30px;
   background: none;
   height: auto;
-  min-height: 40px;
- 
+  min-height: 40px; 
   float: right;
   z-index: 2000;
   position: relative;
 }
-@media (min-width: 80px) and (max-width: 767px){
+@media (min-width: 80px) and (max-width: 766px){
   .header {
+    top: 10px;      
+  }
+}
+@media (max-height: 500px) and (orientation: landscape){
+  .header{
+    margin-top: 10px;
+  }
+}
+@media (min-width: 985px) and (max-width: 1624px){
+  .header{
     top: 10px;
   }
 }
+@media (min-width: 1625px){
+  .header{
+    top: 8px;    
+  }  
+}
+
 
 .audio-login-container {
   display: flex;
@@ -42,4 +57,39 @@
 .login-button:hover, .logout-button:hover {
   box-shadow: 0 0 20px var(--neon-yellow);
   transform: scale(1.05);
+}
+
+/* Contenedor del Wallet */
+.wallet-overlay-container {
+  position: absolute;
+  top: 80px;
+  right: 40px;
+  z-index: 5000;
+}
+
+/* Mobile Portrait: Debajo de la ruleta, centrado, sin afectar scroll del padre */
+@media (max-width: 767px) and (orientation: portrait) {
+  .wallet-overlay-container {
+    position: fixed;
+    top: 42vh; /* Justo debajo de la ruleta */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95vw;
+    max-height: 55vh; /* Evita que crezca más allá de la pantalla */
+    z-index: 5001;
+    display: flex;
+    justify-content: center;
+    pointer-events: auto;
+  }
+
+  /* Ajuste interno para que el componente sea scrollable si el contenido crece */
+  .wallet-overlay-container > div {
+    width: 100% !important;
+    max-width: 95vw !important;
+    margin: 0 !important;
+    max-height: 55vh;
+    overflow-y: auto; /* Scroll interno habilitado */
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid rgba(255, 173, 0, 0.4);
+  }
 }

@@ -20,7 +20,7 @@ export const Top10 = observer(() => {
 
     return (
         <div className="top10-container">
-            <h3 className="top10-title">Último</h3>
+            <h3 className="top10-title">Últimos</h3>
             <div className="top10-list">
                 {history.map((num, index) => (
                     <div 
