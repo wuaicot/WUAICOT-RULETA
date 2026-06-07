@@ -10,30 +10,40 @@
   position: relative; /* Asegura el origen de coordenadas absoluto para las fichas en todas las resoluciones */
 }
 
-
+   /*Mobil en vertical*/
 @media (min-width: 80px) and (max-width: 467px) {
   .board-grid {
-    margin-top: -15px;
-    width: 100vw;
-    height: 20vh;
+    margin-top: -8px;
+    margin-left: 10px;
+    width: 95vw;
+    height: 18vh;
   }
 }
-/*Tablet*/
-@media (min-width: 768px) and (max-width: 984px) {
+   /*Mobil en horizontal*/
+@media (max-height: 500px) and (orientation: landscape){
+  .board-grid{       
+    margin-top: 60px;    
+  }
+}
+/*Tablet vertical*/
+@media (min-width: 767px) and (max-width: 983px) {
   .board-grid{      
-    margin-top: -24px;
-    margin-left: 30px;  
+   top: -28px;
+    left: 30px;  
     width: 85vw;
     height: 22vh;
+    
   }
-}
+} 
+
+
 /*notebook*/
-@media (min-width: 985px) and (max-width: 1624px) {
+@media (min-width: 985px) and (max-width: 1624px)  {
   .board-grid {
     margin-left: 60px;
     width: 90vw;
-    margin-top: -28px;
-    transform: none;
+    margin-top: -30px;
+    transform: none;    
   }
 }
 @media (min-width: 1625px) {
@@ -54,4 +64,5 @@
   width: 40px !important; /* Tamaño fijo para fichas en tablero */
   height: 40px !important;
   pointer-events: none; /* Evita que la ficha intercepte eventos de drag/drop */
+  
 }

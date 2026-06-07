@@ -19,8 +19,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: black;
   color: white;
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
+}
+@media (min-width: 80px) and (max-width: 766px){
+  body{
+    overflow: hidden;
+  }
 }
 @media (min-width: 767px) and (max-width: 983px) {
   body {
@@ -55,3 +60,38 @@ body {
 .App.no-pointers {
   pointer-events: none;
 }
+
+@media (max-height: 500px) and (orientation: landscape) {
+  header, 
+  .Top10, 
+  .board-scroll-wrapper, 
+  .chips-container,
+  .financial-toggle-container,
+  .Audio-container {
+    display: none !important;
+  }
+
+  body, .App {
+    overflow: hidden !important;
+    height: 100vh !important;
+  }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+
+  /* Ocultar elementos innecesarios */  
+  .header,
+  .top10-container,  
+  .board-scroll-wrapper,  
+  .chips-container,  
+  .financial-toggle-container {  
+  display: none !important;  
+  }  
+
+  
+}
+
+  
+ 
+  
+  

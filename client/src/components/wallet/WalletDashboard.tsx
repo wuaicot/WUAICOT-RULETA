@@ -165,7 +165,7 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
   };
 
   return (
-    <div className="bg-gray-900 p-6 rounded-lg shadow-xl text-white max-w-lg mx-auto mt-10 border border-yellow-500/20 w-[420px]">
+    <div className="bg-gray-900 p-6 rounded-lg shadow-xl text-white max-w-lg mx-auto border border-yellow-500/20 w-full sm:w-[420px]">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-yellow-500">Mi Wallet</h2>
         <button 

@@ -9,10 +9,11 @@ interface ChipProps {
         top: number | string;
         left: number | string;
     };
+    onClick?: () => void;
 }
 
 export const Chip = (props: ChipProps) => {
-    const { url, alt, id, style, className } = props;
+    const { url, alt, id, style, className, onClick } = props;
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "chips",
         item: { id: id },
@@ -21,9 +22,15 @@ export const Chip = (props: ChipProps) => {
         }),
     }));
 
+    const isTouchDevice = typeof window !== 'undefined' && (
+        'ontouchstart' in window || 
+        navigator.maxTouchPoints > 0 || 
+        window.innerWidth <= 984
+    );
+
     return (
         <img
-            ref={drag}
+            ref={isTouchDevice ? null : drag}
             src={url}
             alt={alt}
             id={id}
@@ -32,6 +39,8 @@ export const Chip = (props: ChipProps) => {
                 ...style,
                 opacity: isDragging ? "0.5" : "1",
             }}
+            onClick={onClick}
+            onContextMenu={(e) => e.preventDefault()}
         />
     );
 };

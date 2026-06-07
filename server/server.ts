@@ -24,8 +24,21 @@ import { setIoInstance } from "./src/services/WalletService";
 //initialising http server and socket.io
 const PORT = process.env.PORT || 8888;
 const app = express();
+const allowedOrigins = [
+    "http://localhost:3000",
+    "https://wuaicot-ruleta-n2qj-theta.vercel.app"
+];
+
 app.use(cors({
-    origin: ["http://localhost:3000", "https://wuaicot-ruleta-n2qj-theta.vercel.app"],
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        const isLocalIp = /^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}):\d+$/.test(origin);
+        if (allowedOrigins.indexOf(origin) !== -1 || isLocalIp) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS: ' + origin));
+        }
+    },
     credentials: true,
 }));
 app.use((req, res, next) => {

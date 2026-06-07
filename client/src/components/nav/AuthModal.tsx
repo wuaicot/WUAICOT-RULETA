@@ -55,7 +55,7 @@ export const AuthModal = ({ onClose, onLogin }: AuthModalProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-[9999]">
+    <div className="fixed inset-0 bg-black flex items-center justify-center z-[9999]">
       <div className="bg-gray-900 p-8 rounded-lg border border-yellow-500 w-80">
         <h2 className="text-xl text-yellow-500 mb-4">{isRegister ? 'Registro' : 'Ingresar'}</h2>
         
