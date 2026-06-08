@@ -119,6 +119,16 @@ const App = observer(() => {
 					<Board />
 					<Chips />
 				</div>
+				<footer className="copyright-footer">
+					<a
+						href="https://desarrollos-wuaicot.vercel.app/"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="copyright-link"
+					>
+						© 2026 WUAICOT. All rights reserved.
+					</a>
+				</footer>
 			</GameContext.Provider>
 		</DndProvider>
 	);});

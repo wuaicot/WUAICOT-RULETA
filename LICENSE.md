@@ -1,6 +1,6 @@
 # LICENSE
 
-Copyright © 2026 WUAICOT. All rights reserved.
+Copyright © 2026 WUAICOT. Todos los derechos reservados.
 
 This software and its source code are the proprietary and confidential property  of NAYCOL ROFOLFO LINARES VILLASMIL.
 
