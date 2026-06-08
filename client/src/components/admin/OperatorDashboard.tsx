@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import io from 'socket.io-client';
 import { SOCKET_URL } from '../../config/default';
@@ -9,25 +9,44 @@ export const OperatorDashboard = observer(() => {
   const [requests, setRequests] = useState<any[]>([]);
   const [withdrawals, setWithdrawals] = useState<any[]>([]);
 
-  const fetchDeposits = async () => {
+  const getAuthHeader = useCallback((): Record<string, string> => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        console.warn("[ADMIN-DEBUG] No se encontró token en localStorage");
+        return {};
+    }
+    return { 'Authorization': `Bearer ${token}` };
+  }, []);
+
+  const fetchDeposits = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/api/admin/pending-deposits`);
+      console.log("[ADMIN-DEBUG] Buscando depósitos pendientes...");
+      const headers = getAuthHeader();
+      const res = await fetch(`${API_URL}/api/admin/pending-deposits`, {
+        headers
+      });
       const data = await res.json();
+      console.log("[ADMIN-DEBUG] Depósitos recibidos:", data);
       setRequests(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error("Error fetching deposits", e);
     }
-  };
+  }, [getAuthHeader]);
 
-  const fetchWithdrawals = async () => {
+  const fetchWithdrawals = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/api/admin/pending-withdrawals`);
+      console.log("[ADMIN-DEBUG] Buscando retiros pendientes...");
+      const headers = getAuthHeader();
+      const res = await fetch(`${API_URL}/api/admin/pending-withdrawals`, {
+        headers
+      });
       const data = await res.json();
+      console.log("[ADMIN-DEBUG] Retiros recibidos:", data);
       setWithdrawals(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error("Error fetching withdrawals", e);
     }
-  };
+  }, [getAuthHeader]);
 
   useEffect(() => {
     fetchDeposits();
@@ -35,9 +54,11 @@ export const OperatorDashboard = observer(() => {
 
     const socket = io(SOCKET_URL);
     socket.on('NEW_DEPOSIT_REQUEST', () => {
+      console.log("[ADMIN-DEBUG] Nueva solicitud de depósito detectada vía Socket");
       fetchDeposits();
     });
     socket.on('NEW_WITHDRAWAL_REQUEST', () => {
+      console.log("[ADMIN-DEBUG] Nueva solicitud de retiro detectada vía Socket");
       fetchWithdrawals();
     });
     socket.on('WITHDRAWAL_STATUS_CHANGED', () => {
@@ -47,12 +68,16 @@ export const OperatorDashboard = observer(() => {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [fetchDeposits, fetchWithdrawals]);
 
   const handleApprove = async (id: string) => {
+    const headers = { 
+        'Content-Type': 'application/json',
+        ...getAuthHeader()
+    };
     const res = await fetch(`${API_URL}/api/admin/approve-deposit`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ depositId: id })
     });
     if(res.ok) {
@@ -65,9 +90,13 @@ export const OperatorDashboard = observer(() => {
     const reason = prompt("Razón del rechazo:");
     if (!reason) return;
 
+    const headers = { 
+        'Content-Type': 'application/json',
+        ...getAuthHeader()
+    };
     const res = await fetch(`${API_URL}/api/admin/reject-deposit`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ depositId: id, reason })
     });
     if(res.ok) {
@@ -80,9 +109,13 @@ export const OperatorDashboard = observer(() => {
     const confirmApprove = window.confirm("¿Estás seguro de que deseas APROBAR este retiro? Confirma que ya realizaste la transferencia bancaria.");
     if (!confirmApprove) return;
 
+    const headers = { 
+        'Content-Type': 'application/json',
+        ...getAuthHeader()
+    };
     const res = await fetch(`${API_URL}/api/admin/approve-withdrawal`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ withdrawalId: id })
     });
     if (res.ok) {
@@ -98,9 +131,13 @@ export const OperatorDashboard = observer(() => {
     const confirmReject = window.confirm("¿Estás seguro de que deseas RECHAZAR este retiro? El dinero se le reembolsará automáticamente en la wallet del usuario.");
     if (!confirmReject) return;
 
+    const headers = { 
+        'Content-Type': 'application/json',
+        ...getAuthHeader()
+    };
     const res = await fetch(`${API_URL}/api/admin/reject-withdrawal`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ withdrawalId: id })
     });
     if (res.ok) {

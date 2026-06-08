@@ -24,32 +24,17 @@ export const Header = (props: HeaderProps) => {
 	const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 	const walletRef = useRef<HTMLDivElement>(null);
 
-	// Restaurar sesión al cargar
+	// Actualizar usuario local cuando el store cambie
 	useEffect(() => {
-		const token = localStorage.getItem('token');
-		if (token) {
-			fetch(`${API_URL}/api/auth/me`, {
-				headers: { 'Authorization': `Bearer ${token}` }
-			})
-			.then(res => res.json())
-			.then(data => {
-				if (data.user) {
-					setUser({ token, nickname: data.user.nickname });
-					gameStore.setNickname(data.user.nickname);
-					gameStore.setPlayerId(data.user.id);
-					
-					// Cargar saldo inicial
-					fetch(`${API_URL}/api/wallet/balance`, {
-						headers: { 'Authorization': `Bearer ${token}` }
-					})
-					.then(res => res.json())
-					.then(bal => gameStore.setBalance(Number(bal.balance)));
-					
-					connect();
-				}
-			});
+		if (gameStore.playerId && !user) {
+			const token = localStorage.getItem('token');
+			if (token) {
+				setUser({ token, nickname: gameStore.nickname });
+			}
+		} else if (!gameStore.playerId && user) {
+			setUser(null);
 		}
-	}, [connect]);
+	}, [gameStore.playerId, gameStore.nickname, user]);
 
 	// Cerrar Wallet al hacer clic fuera
 	useEffect(() => {
@@ -72,10 +57,19 @@ export const Header = (props: HeaderProps) => {
 	}, [showWallet]);
 
 	const handleLogin = (data: { token: string, user: any }) => {
+		console.log("[AUTH-DEBUG] Login exitoso, datos recibidos:", data);
 		setUser({ token: data.token, nickname: data.user.nickname });
 		gameStore.setNickname(data.user.nickname);
 		gameStore.setPlayerId(data.user.id);
+		gameStore.setRole(data.user.role || 'USER');
+		console.log("[AUTH-DEBUG] Rol seteado en store:", gameStore.role);
 		localStorage.setItem('token', data.token);
+
+		// Redirigir si es admin
+		if (data.user.role === 'ADMIN') {
+			console.log("[AUTH-DEBUG] Es ADMIN, redirigiendo a /admin...");
+			window.location.href = '/admin';
+		}
 
 		// Cargar saldo inicial
 		fetch(`${API_URL}/api/wallet/balance`, {

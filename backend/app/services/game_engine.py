@@ -13,6 +13,7 @@ class GameEngine:
             winners=[]
         )
         self.players: Dict[str, PlayerData] = {}
+        self.nickname_registry: Dict[str, str] = {} # Almacén persistente de nicknames
         self.is_running = False
 
     async def run_loop(self, broadcast_callback):
@@ -43,8 +44,16 @@ class GameEngine:
             await asyncio.sleep(1)
 
     def update_player_data(self, player_id: str, data: dict):
-        # In the future, this will check for balance before accepting bets
-        self.players[player_id] = PlayerData(**data)
+        new_data = PlayerData(**data)
+        
+        # Registrar nickname en el almacén persistente si existe
+        if new_data.nickname:
+            self.nickname_registry[player_id] = new_data.nickname
+        # Recuperar nickname si el dato actual no lo trae
+        elif player_id in self.nickname_registry:
+            new_data.nickname = self.nickname_registry[player_id]
+        
+        self.players[player_id] = new_data
 
     def calculate_results(self):
         if self.state.winningNumber is None:
@@ -55,7 +64,15 @@ class GameEngine:
             win_amount = RouletteLogic.calculate_player_total_win(
                 self.state.winningNumber, player_data
             )
-            new_winners.append(Winner(playerId=player_id, win=win_amount))
+            
+            # Asegurar que usamos el nickname del registro si el player_data no lo tiene
+            nickname = player_data.nickname or self.nickname_registry.get(player_id, "Jugador")
+            
+            new_winners.append(Winner(
+                playerId=player_id, 
+                nickname=nickname, 
+                win=win_amount
+            ))
         
         self.state.winners = new_winners
 

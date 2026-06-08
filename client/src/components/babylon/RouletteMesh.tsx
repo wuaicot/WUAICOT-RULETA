@@ -3,7 +3,7 @@ import { Vector3, MeshAssetTask } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
 import '@babylonjs/inspector';
 import { useEffect } from 'react';
-import { BabylonMeshProps } from '../../types';
+import { BabylonMeshProps } from '../../common/types';
 import { assetsURL } from '../../utils/utils';
 
 export const RouletteMesh = (props: BabylonMeshProps) => {

@@ -60,6 +60,14 @@ export const useServer = () => {
 
 	}, [setMsg]);
 
+	// Sincronizar datos del cliente cuando cambien (nickname, ID)
+	useEffect(() => {
+		if (socketRef.current?.connected && gameStore.playerId) {
+			console.log('Syncing client data due to store change:', gameStore.nickname);
+			socketRef.current.emit('client_data', JSON.stringify(gameStore.gameData));
+		}
+	}, [gameStore.playerId, gameStore.nickname]);
+
 	const disconnect = useCallback(() => {
 		if (socketRef.current) {
 			socketRef.current.disconnect();
