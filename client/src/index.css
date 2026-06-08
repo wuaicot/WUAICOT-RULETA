@@ -91,7 +91,38 @@ body {
   
 }
 
-  
- 
-  
-  
+/* ── Copyright Footer ── */
+.copyright-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.04em;
+  padding: 5px 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+  pointer-events: none;
+  z-index: 1000;
+  user-select: none;
+}
+
+.copyright-link {
+  pointer-events: auto;
+  color: rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.copyright-link:hover {
+  color: rgba(255, 210, 0, 0.85);
+  text-decoration: underline;
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .copyright-footer {
+    display: none !important;
+  }
+}
