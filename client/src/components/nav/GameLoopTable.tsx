@@ -5,9 +5,9 @@ import { GameContext, gameStore } from "../../store/gameStore";
 import { GameLoop, GameData, Winner } from "../../common/types";
 import "./GameLoopTable.css";
 
-const WinnersList = memo(({ message }: { message: GameData }) => {
-    const isWinnerItemMine = (winner: string, playerId: string) => {
-        return winner === playerId ? "winner-item-mine" : "winner-item";
+const WinnersList = observer(({ message }: { message: GameData }) => {
+    const isWinnerItemMine = (winnerId: string, myId: string) => {
+        return winnerId === myId ? "winner-item-mine" : "winner-item";
     };
 
     return (
@@ -15,8 +15,8 @@ const WinnersList = memo(({ message }: { message: GameData }) => {
             {message.winners.map((winner: Winner, index: number) => (
                 <li className="winner-item-wrapper" key={index}>
                     <div className={isWinnerItemMine(winner.playerId, gameStore.playerId)}>
-                        <span className="user-id">User: {winner.playerId.slice(-12)}</span>
-                        <span className="win">Win: {winner.win}</span>
+                        <span className="user-id">{winner.nickname && winner.nickname.length > 0 ? winner.nickname : "Jugador"}</span>
+                        <span className="win">{winner.win > 0 ? `Ganó: $${winner.win}` : "Win: $0"}</span>
                     </div>
                 </li>
             ))}
@@ -36,9 +36,10 @@ export const GameLoopTable = observer(() => {
 
     const getContent = useCallback((message: GameData) => {
         if (message) {
-            if (message.gameStage === GameLoop.PLACE_BET || message.gameStage === GameLoop.NO_MORE_BETS) return message.gameStage;
-            if (message.winningNumber && message.gameStage === GameLoop.SPIN_WHEEL) return `Get ready for some magic`;
-            if (message.winningNumber && message.gameStage === GameLoop.WINNER) return `Winnig number is: ${message.winningNumber}`;
+            if (message.gameStage === GameLoop.PLACE_BET) return "HAGA SU JUGADA";
+            if (message.gameStage === GameLoop.NO_MORE_BETS) return "NO MÁS JUGADA";
+            if (message.winningNumber && message.gameStage === GameLoop.SPIN_WHEEL) return `RULETA MAGNETICA`;
+            if (message.winningNumber && message.gameStage === GameLoop.WINNER) return `El numero ganador es: ${message.winningNumber}`;
             if (message.winningNumber && message.gameStage === GameLoop.EMPTY_BOARD) {
                 setBoardClear();
                 return "ATENTOS...";

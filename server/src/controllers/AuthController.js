@@ -34,7 +34,7 @@ class AuthController {
                     return user;
                 }));
                 const token = jsonwebtoken_1.default.sign({ userId: result.id }, JWT_SECRET, { expiresIn: '24h' });
-                res.status(201).json({ token, user: { id: result.id, nickname: result.nickname } });
+                res.status(201).json({ token, user: { id: result.id, nickname: result.nickname, role: result.role } });
             }
             catch (error) {
                 res.status(400).json({ error: 'Error al registrar usuario: ' + error.message });
@@ -50,7 +50,7 @@ class AuthController {
                     return res.status(401).json({ error: 'Nickname o PIN incorrecto' });
                 }
                 const token = jsonwebtoken_1.default.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '24h' });
-                res.status(200).json({ token, user: { id: user.id, nickname: user.nickname } });
+                res.status(200).json({ token, user: { id: user.id, nickname: user.nickname, role: user.role } });
             }
             catch (error) {
                 res.status(500).json({ error: 'Error al iniciar sesión' });

@@ -53,6 +53,16 @@ const walletController = new WalletController();
 const adminController = new AdminController();
 const prisma = new PrismaClient();
 
+// Middleware para verificar rol ADMIN
+const adminMiddleware = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const userId = (req as any).user.userId;
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user || user.role !== 'ADMIN') {
+        return res.status(403).json({ error: 'Acceso restringido: se requieren permisos de administrador' });
+    }
+    next();
+};
+
 // Routes
 app.post('/api/auth/register', authController.register);
 app.post('/api/auth/login', authController.login);
@@ -60,7 +70,7 @@ app.get('/api/auth/me', authMiddleware, async (req, res) => {
     const userId = (req as any).user.userId;
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) return res.status(404).json({ error: 'User not found' });
-    res.json({ user: { id: user.id, nickname: user.nickname } });
+    res.json({ user: { id: user.id, nickname: user.nickname, role: user.role } });
 });
 
 app.post('/api/wallet/deposit', authMiddleware, upload.single('proof'), walletController.requestDeposit);
@@ -69,12 +79,14 @@ app.get('/api/wallet/balance', authMiddleware, walletController.getBalance);
 app.post('/api/wallet/update-balance', authMiddleware, walletController.updateBalance);
 app.post('/api/wallet/withdraw', authMiddleware, walletController.requestWithdrawal);
 app.get('/api/wallet/withdrawal-history', authMiddleware, walletController.getWithdrawalHistory);
-app.post('/api/admin/approve-deposit', adminController.approveDeposit);
-app.post('/api/admin/reject-deposit', adminController.rejectDeposit);
-app.get('/api/admin/pending-deposits', adminController.getPendingDeposits);
-app.post('/api/admin/approve-withdrawal', adminController.approveWithdrawal);
-app.post('/api/admin/reject-withdrawal', adminController.rejectWithdrawal);
-app.get('/api/admin/pending-withdrawals', adminController.getPendingWithdrawals);
+
+// Admin Routes (Protegidas)
+app.post('/api/admin/approve-deposit', authMiddleware, adminMiddleware, adminController.approveDeposit);
+app.post('/api/admin/reject-deposit', authMiddleware, adminMiddleware, adminController.rejectDeposit);
+app.get('/api/admin/pending-deposits', authMiddleware, adminMiddleware, adminController.getPendingDeposits);
+app.post('/api/admin/approve-withdrawal', authMiddleware, adminMiddleware, adminController.approveWithdrawal);
+app.post('/api/admin/reject-withdrawal', authMiddleware, adminMiddleware, adminController.rejectWithdrawal);
+app.get('/api/admin/pending-withdrawals', authMiddleware, adminMiddleware, adminController.getPendingWithdrawals);
 
 const httpServer = createServer(app);
 export const io = new Server(httpServer, {

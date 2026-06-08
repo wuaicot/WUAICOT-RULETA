@@ -19,6 +19,8 @@ class GameStore {
 	//observables
 	playerId = '';
 	nickname = '';
+	role = 'USER';
+	isCheckingAuth = true;
 	boardItemOccupied = '';
 	chipsTaken = 0;
 	betLocation = { x: 0, y: 0 };
@@ -30,6 +32,7 @@ class GameStore {
 	historyVersion = 0; // Incrementador para notificar cambios de historial
 	lastResult = 0;
 	hasProcessedWin = false;
+	notification: string | null = null;
 
 	//actions
 
@@ -40,6 +43,14 @@ class GameStore {
 	setNickname(name: string) {
 		this.nickname = name;
 	}
+
+	setRole(role: string) {
+		this.role = role;
+	}
+
+	setIsCheckingAuth(val: boolean) {
+		this.isCheckingAuth = val;
+	}
 	
 	setChipsTaken(newChips: number) {
 		this.chipsTaken = newChips;
@@ -47,6 +58,13 @@ class GameStore {
 
     incrementHistoryVersion() {
 		this.historyVersion += 1;
+	}
+
+	setNotification(msg: string | null) {
+		this.notification = msg;
+		if (msg) {
+			setTimeout(() => { this.notification = null; }, 5000);
+		}
 	}
 
 	async fetchBalance(token: string) {
@@ -131,7 +149,9 @@ class GameStore {
                 // Pasamos el negativo de la apuesta para que el servidor la descuente de inmediato
                 await this.syncBalanceDirectly(token, -betAmount);
             }
-		}
+		} else {
+            this.setNotification("Necesitas fichas para jugar — ve a Wallet → Depósito.");
+        }
 	}
 
     // Nuevo método para sincronización inmediata
@@ -229,6 +249,8 @@ class GameStore {
 		makeObservable(this, {
 			playerId: observable,
 			nickname: observable,
+			role: observable,
+			isCheckingAuth: observable,
 			boardItemOccupied: observable,
 			chipsTaken: observable,
 			bets: observable,
@@ -240,6 +262,8 @@ class GameStore {
 			hasProcessedWin: observable,
 			setPlayerId: action.bound,
 			setNickname: action.bound,
+			setRole: action.bound,
+			setIsCheckingAuth: action.bound,
 			setChipsTaken: action.bound,
 			incrementHistoryVersion: action.bound,
 			placeBet: action.bound,
@@ -248,6 +272,8 @@ class GameStore {
 			setBalance: action.bound,
 			initializeBalance: action.bound,
 			syncBalance: action.bound,
+			notification: observable,
+			setNotification: action.bound,
 			newBet: computed,
 			totalBet: computed,
 			gameData: computed,

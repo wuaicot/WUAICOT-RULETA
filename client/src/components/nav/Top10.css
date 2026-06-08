@@ -54,6 +54,8 @@
     }
     .history-item.plain{
         border: solid 0.1px grey;
+        width: 25px;
+        height: 25px;
     }
 }
    /*Tablet*/

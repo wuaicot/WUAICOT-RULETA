@@ -25,7 +25,7 @@ export class AuthController {
       });
 
       const token = jwt.sign({ userId: result.id }, JWT_SECRET, { expiresIn: '24h' });
-      res.status(201).json({ token, user: { id: result.id, nickname: result.nickname } });
+      res.status(201).json({ token, user: { id: result.id, nickname: result.nickname, role: result.role } });
     } catch (error) {
       res.status(400).json({ error: 'Error al registrar usuario: ' + (error as Error).message });
     }
@@ -36,12 +36,16 @@ export class AuthController {
       const { nickname, pin } = req.body;
       const user = await prisma.user.findUnique({ where: { nickname } });
       
+      console.log(`[AUTH-SERVER] Intento de login: ${nickname}, Usuario encontrado: ${!!user}, Rol: ${user?.role}`);
+
       if (!user || !(await bcrypt.compare(pin, user.pinHash))) {
         return res.status(401).json({ error: 'Nickname o PIN incorrecto' });
       }
 
       const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '24h' });
-      res.status(200).json({ token, user: { id: user.id, nickname: user.nickname } });
+      const responseData = { token, user: { id: user.id, nickname: user.nickname, role: user.role } };
+      console.log(`[AUTH-SERVER] Enviando respuesta exitosa para ${nickname}:`, JSON.stringify(responseData.user));
+      res.status(200).json(responseData);
     } catch (error) {
       res.status(500).json({ error: 'Error al iniciar sesión' });
     }

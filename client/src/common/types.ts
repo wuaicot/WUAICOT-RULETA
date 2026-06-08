@@ -1,3 +1,7 @@
+export interface BabylonMeshProps {
+    spin: number;
+}
+
 export interface GameData {
   gameStage: GameLoop | undefined;
   gameTimer: number;
@@ -15,6 +19,7 @@ export enum GameLoop {
 
 export interface Winner {
   playerId: string;
+  nickname?: string;
   win: number;
 }
 
@@ -28,5 +33,6 @@ export interface Bet {
 
 export interface ClientData {
   playerId: string;
+  nickname?: string;
   bets: Bet[];
 }

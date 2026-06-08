@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/client"
@@ -12,58 +9,58 @@ datasource db {
 }
 
 model User {
-  id              String             @id @default(uuid())
-  nickname        String             @unique
+  id              String              @id @default(uuid())
+  role            String              @default("USER")
+  createdAt       DateTime            @default(now())
   age             Int
+  nickname        String              @unique
   pinHash         String
-  role            String             @default("USER") // USER, ADMIN
-  wallet          Wallet?
   depositRequests DepositRequest[]
-  withdrawals     WithdrawalRequest[]
   ledgerEntries   LedgerEntry[]
-  createdAt       DateTime           @default(now())
+  wallet          Wallet?
+  withdrawals     WithdrawalRequest[]
 }
 
 model Wallet {
-  id              String  @id @default(uuid())
-  userId          String  @unique
-  user            User    @relation(fields: [userId], references: [id])
-  balanceTotal    Decimal @default(0) @db.Decimal(19, 4)
-  balancePlayable Decimal @default(0) @db.Decimal(19, 4)
-  balanceWithdrawable Decimal @default(0) @db.Decimal(19, 4)
-  updatedAt       DateTime @updatedAt
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  balanceTotal        Decimal  @default(0) @db.Decimal(19, 4)
+  balancePlayable     Decimal  @default(0) @db.Decimal(19, 4)
+  balanceWithdrawable Decimal  @default(0) @db.Decimal(19, 4)
+  updatedAt           DateTime @updatedAt
+  user                User     @relation(fields: [userId], references: [id])
 }
 
 model LedgerEntry {
   id          String   @id @default(uuid())
   userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  type        String   // DEPOSIT, WITHDRAWAL, BET, WIN, ADJUSTMENT
+  type        String
   amount      Decimal  @db.Decimal(19, 4)
   referenceId String?
   metadata    Json?
   createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
 }
 
 model DepositRequest {
   id              String   @id @default(uuid())
   userId          String
-  user            User     @relation(fields: [userId], references: [id])
   amount          Decimal  @db.Decimal(19, 4)
-  status          String   // PENDING, REVIEW, APPROVED, REJECTED
-  rejectionReason String?
+  status          String
   proofUrl        String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  rejectionReason String?
+  user            User     @relation(fields: [userId], references: [id])
 }
 
 model WithdrawalRequest {
   id          String   @id @default(uuid())
   userId      String
-  user        User     @relation(fields: [userId], references: [id])
   amount      Decimal  @db.Decimal(19, 4)
   bankDetails Json
-  status      String   // PENDING, APPROVED, REJECTED, PAID
+  status      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
 }

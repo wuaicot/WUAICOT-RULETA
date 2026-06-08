@@ -29,7 +29,12 @@ export class WalletController {
       }
 
       // Handle potential variations in file object properties based on storage
-      const fileUrl = file.path || file.url || (file.filename ? `uploads/receipts/${file.filename}` : undefined);
+      // For local storage, we want the relative path from the server root
+      let fileUrl = file.url; // Cloudinary uses .url
+      if (!fileUrl && file.filename) {
+        fileUrl = `uploads/receipts/${file.filename}`;
+      }
+      
       console.log("Extracted fileUrl:", fileUrl);
       
       if (!fileUrl) {

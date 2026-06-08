@@ -16,10 +16,12 @@ class Bet(BaseModel):
 
 class PlayerData(BaseModel):
     playerId: str
+    nickname: Optional[str] = None
     bets: List[Bet] = []
 
 class Winner(BaseModel):
     playerId: str
+    nickname: Optional[str] = None
     win: float
 
 class GameState(BaseModel):
