@@ -126,7 +126,7 @@ const App = observer(() => {
 						rel="noopener noreferrer"
 						className="copyright-link"
 					>
-						© 2026 WUAICOT. All rights reserved.
+						© 2026 WUAICOT todos los derechos reservados. Versión BETA
 					</a>
 				</footer>
 			</GameContext.Provider>
