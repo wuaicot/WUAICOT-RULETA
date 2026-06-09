@@ -8,7 +8,14 @@ import { SOCKET_URL } from '../../config/default';
 
 export const WalletDashboard = observer(({ token, onClose }: { token: string, onClose?: () => void }) => {
   const [activeTab, setActiveTab] = useState<'balance' | 'deposit' | 'withdraw'>('balance');
+  const [activeBank, setActiveBank] = useState<string | null>(null);
   const [amount, setAmount] = useState('');
+  
+  const banksData: { [key: string]: { titular: string; rut: string; cuenta: string; tipo: string } } = {
+    'Mercado Pago': { titular: 'Naycol Linares', rut: '26091433-2', cuenta: '1080951820', tipo: 'Vista' },
+    'Banco Estado': { titular: 'Naycol Linares', rut: '26091433-2', cuenta: '26091433', tipo: 'Cuenta RUT' }
+  };
+
   const [file, setFile] = useState<File | null>(null);
   const [history, setHistory] = useState<any[]>([]);
   const [statusMsg, setStatusMsg] = useState<{ text: string, type: 'success' | 'error' } | null>(null);
@@ -260,24 +267,80 @@ export const WalletDashboard = observer(({ token, onClose }: { token: string, on
         </div>
       ) : activeTab === 'deposit' ? (
         <div className="space-y-4">
-          <div className="p-4 bg-gray-800 rounded text-sm text-gray-300 border border-gray-700">
-            <p className="mb-1"><strong>Mercado Pago:</strong> Alias: WUAICOT.RULETA</p>
-            <p><strong>Banco Estado:</strong> Cuenta RUT: 12345678</p>
+          <div className="space-y-2">
+            <h3 className="text-yellow-500 font-bold text-sm">Selecciona Banco</h3>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { 
+                  name: 'Mercado Pago', 
+                  color: 'blue',
+                  details: { titular: 'Naycol Linares', rut: '26091433-2', cuenta: '1080951820', tipo: 'Vista' } 
+                },
+                { 
+                  name: 'Banco Estado', 
+                  color: 'emerald',
+                  details: { titular: 'Naycol Linares', rut: '26091433-2', cuenta: '26091433', tipo: 'Cuenta RUT' } 
+                }
+              ].map((bank) => {
+                const isActive = activeBank === bank.name;
+                
+                const bankStyles: any = {
+                    blue: {
+                        active: 'bg-blue-900/50 text-white border-blue-500 shadow-lg shadow-blue-900/20',
+                        inactive: 'bg-gray-800 text-gray-300 border-gray-700 hover:border-blue-500/50 hover:bg-blue-900/20'
+                    },
+                    emerald: {
+                        active: 'bg-emerald-900/50 text-white border-emerald-500 shadow-lg shadow-emerald-900/20',
+                        inactive: 'bg-gray-800 text-gray-300 border-gray-700 hover:border-emerald-500/50 hover:bg-emerald-900/20'
+                    }
+                };
+                
+                const baseClass = "p-3 rounded-lg text-sm font-bold transition-all border-2";
+                const activeClass = bankStyles[bank.color].active;
+                const inactiveClass = bankStyles[bank.color].inactive;
+
+                return (
+                  <button
+                    key={bank.name}
+                    onClick={() => setActiveBank(isActive ? null : bank.name)}
+                    className={`${baseClass} ${isActive ? activeClass : inactiveClass}`}
+                  >
+                    {bank.name}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <input 
-            type="number" 
-            placeholder="Monto" 
-            aria-label="Monto a depositar"
-            className="w-full p-2 bg-gray-800 rounded border border-gray-600 text-sm focus:outline-none focus:border-yellow-500"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
-          <input 
-            type="file" 
-            aria-label="Seleccionar comprobante de pago"
-            onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
-            className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-800 file:text-gray-300 hover:file:bg-gray-700"
-          />
+
+          {activeBank && (
+            <div className="p-4 bg-gray-800 rounded text-sm text-gray-300 border border-yellow-500/50 space-y-1">
+              <p><strong>Titular:</strong> {banksData[activeBank].titular}</p>
+              <p><strong>RUT:</strong> {banksData[activeBank].rut}</p>
+              <p><strong>Cuenta:</strong> {banksData[activeBank].cuenta}</p>
+              <p><strong>Tipo:</strong> {banksData[activeBank].tipo}</p>
+            </div>
+          )}
+          
+          <div className="relative">
+            <span className="absolute left-3 top-2.5 text-yellow-500 font-bold">$</span>
+            <input 
+              type="number" 
+              placeholder="Ingresa el monto a depositar" 
+              aria-label="Monto a depositar"
+              className="w-full pl-8 p-2.5 bg-gray-950 rounded-lg border-2 border-gray-700 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1">
+            
+            <input 
+              type="file" 
+              aria-label="Seleccionar comprobante de pago"
+              onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
+              className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gray-800 file:text-gray-300 hover:file:bg-gray-700 cursor-pointer"
+            />
+          </div>
           <button 
             onClick={handleDeposit}
             aria-label="Enviar comprobante de depósito"

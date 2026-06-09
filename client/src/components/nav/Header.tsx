@@ -23,6 +23,7 @@ export const Header = (props: HeaderProps) => {
 	const [showAuth, setShowAuth] = useState(false);
 	const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 	const walletRef = useRef<HTMLDivElement>(null);
+	const walletButtonRef = useRef<HTMLButtonElement>(null);
 
 	// Actualizar usuario local cuando el store cambie
 	useEffect(() => {
@@ -34,13 +35,18 @@ export const Header = (props: HeaderProps) => {
 		} else if (!gameStore.playerId && user) {
 			setUser(null);
 		}
-	}, [gameStore.playerId, gameStore.nickname, user]);
+	}, [user]); // Removed gameStore.playerId and gameStore.nickname
 
 	// Cerrar Wallet al hacer clic fuera
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-			if (showWallet && walletRef.current && !walletRef.current.contains(event.target as Node)) {
-				// Pequeño delay para no interferir con el botón que lo abre si se usa el mismo evento
+			if (
+				showWallet && 
+				walletRef.current && 
+				!walletRef.current.contains(event.target as Node) &&
+				walletButtonRef.current && 
+				!walletButtonRef.current.contains(event.target as Node)
+			) {
 				setShowWallet(false);
 			}
 		};
@@ -107,7 +113,7 @@ export const Header = (props: HeaderProps) => {
 				<div className='audio-login-container'>
 					<FinancialToggle />
 					{user && (
-						<Button className='login-button' onClick={() => setShowWallet(!showWallet)}>
+						<Button className='login-button' onClick={() => setShowWallet(!showWallet)} ref={walletButtonRef}>
 							Wallet
 						</Button>
 					)}

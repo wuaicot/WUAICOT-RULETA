@@ -1,3 +1,4 @@
+import React, { forwardRef } from "react";
 import "./Button.css";
 
 interface ButtonProps {
@@ -7,10 +8,10 @@ interface ButtonProps {
     disabled?: boolean;
 }
 
-export const Button = ({ className, onClick, children, disabled }: ButtonProps) => {
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ className, onClick, children, disabled }, ref) => {
     return (
-        <button className={`button ${className}`} onClick={onClick} disabled={disabled}>
+        <button ref={ref} className={`button ${className}`} onClick={onClick} disabled={disabled}>
             {children}
         </button>
     );
-};
+});
