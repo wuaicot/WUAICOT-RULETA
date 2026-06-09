@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { observable, action, computed, makeObservable } from 'mobx';
+import { observable, action, computed, makeObservable, runInAction } from 'mobx';
 import { chipsColors, rouletteNumbers } from '../utils/utils';
 import { GameData, Bet, GameLoop } from '../common/types';
 
@@ -63,7 +63,11 @@ class GameStore {
 	setNotification(msg: string | null) {
 		this.notification = msg;
 		if (msg) {
-			setTimeout(() => { this.notification = null; }, 5000);
+			setTimeout(() => { 
+                runInAction(() => {
+                    this.notification = null; 
+                });
+            }, 5000);
 		}
 	}
 

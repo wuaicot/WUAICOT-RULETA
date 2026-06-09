@@ -4,7 +4,7 @@ import { apiFetch } from '../../utils/api';
 
 interface AuthModalProps {
   onClose: () => void;
-  onLogin: (data: { token: string, user: any }) => void;
+  onLogin: (data: { token: string, user: any, isNewUser?: boolean }) => void;
 }
 
 export const AuthModal = ({ onClose, onLogin }: AuthModalProps) => {
@@ -45,7 +45,7 @@ export const AuthModal = ({ onClose, onLogin }: AuthModalProps) => {
         method: 'POST',
         body: JSON.stringify(body),
       });
-      onLogin(data);
+      onLogin({ ...data, isNewUser: isRegister });
       onClose();
     } catch (err: any) {
       setError(err.message || 'Error al conectar con el servidor');
