@@ -9,6 +9,7 @@ backend/app/schemas/__pycache__/
 backend/app/services/__pycache__/
 *.pyc
 .env
+.txt
 
 # Node
 node_modules/
@@ -51,6 +52,6 @@ yarn-error.log*
 
 package-lock.json*
 
-.txt
+
 
 
