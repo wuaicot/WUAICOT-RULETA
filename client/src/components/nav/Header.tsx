@@ -62,7 +62,7 @@ export const Header = (props: HeaderProps) => {
 		};
 	}, [showWallet]);
 
-	const handleLogin = (data: { token: string, user: any }) => {
+	const handleLogin = (data: { token: string, user: any, isNewUser?: boolean }) => {
 		console.log("[AUTH-DEBUG] Login exitoso, datos recibidos:", data);
 		setUser({ token: data.token, nickname: data.user.nickname });
 		gameStore.setNickname(data.user.nickname);
@@ -70,6 +70,10 @@ export const Header = (props: HeaderProps) => {
 		gameStore.setRole(data.user.role || 'USER');
 		console.log("[AUTH-DEBUG] Rol seteado en store:", gameStore.role);
 		localStorage.setItem('token', data.token);
+
+		if (data.isNewUser) {
+			gameStore.setNotification("¡Bienvenido! Has recibido Una Luka de regalo 🎁");
+		}
 
 		// Redirigir si es admin
 		if (data.user.role === 'ADMIN') {
@@ -114,7 +118,7 @@ export const Header = (props: HeaderProps) => {
 					<FinancialToggle />
 					{user && (
 						<Button className='login-button' onClick={() => setShowWallet(!showWallet)} ref={walletButtonRef}>
-							Wallet
+							Billetera
 						</Button>
 					)}
 					{!user ? (

@@ -28,9 +28,26 @@ class AuthController {
                     const user = yield tx.user.create({
                         data: { nickname, age: Number(age), pinHash }
                     });
+                    
+                    // Crear wallet con saldo inicial de 1000 ("Una Luka")
                     yield tx.wallet.create({
-                        data: { userId: user.id }
+                        data: { 
+                            userId: user.id,
+                            balanceTotal: new client_1.Prisma.Decimal(1000),
+                            balancePlayable: new client_1.Prisma.Decimal(1000)
+                        }
                     });
+
+                    // Registrar en el ledger el bono de bienvenida
+                    yield tx.ledgerEntry.create({
+                        data: {
+                            userId: user.id,
+                            type: 'ADJUSTMENT',
+                            amount: new client_1.Prisma.Decimal(1000),
+                            metadata: { reason: 'WELCOME_BONUS' }
+                        }
+                    });
+
                     return user;
                 }));
                 const token = jsonwebtoken_1.default.sign({ userId: result.id }, JWT_SECRET, { expiresIn: '24h' });

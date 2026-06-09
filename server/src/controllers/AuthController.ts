@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '../../generated/client';
+import { PrismaClient, Prisma } from '../../generated/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -17,8 +17,23 @@ export class AuthController {
           data: { nickname, age: Number(age), pinHash }
         });
 
+        // Crear wallet con saldo inicial de 1000 ("Una Luka")
         await tx.wallet.create({
-          data: { userId: user.id }
+          data: { 
+            userId: user.id,
+            balanceTotal: new Prisma.Decimal(1000),
+            balancePlayable: new Prisma.Decimal(1000)
+          }
+        });
+
+        // Registrar en el ledger el bono de bienvenida
+        await tx.ledgerEntry.create({
+          data: {
+            userId: user.id,
+            type: 'ADJUSTMENT',
+            amount: new Prisma.Decimal(1000),
+            metadata: { reason: 'WELCOME_BONUS' }
+          }
         });
 
         return user;
