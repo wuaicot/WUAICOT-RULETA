@@ -72,7 +72,7 @@ export const Header = (props: HeaderProps) => {
 		localStorage.setItem('token', data.token);
 
 		if (data.isNewUser) {
-			gameStore.setNotification("¡Bienvenido! Has recibido Una Luka de regalo 🎁");
+			gameStore.setNotification("¡Bienvenido! recibe Una Luka de regalo 🎁 ver en Billetera");
 		}
 
 		// Redirigir si es admin
