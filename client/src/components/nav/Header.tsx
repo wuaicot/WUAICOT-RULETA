@@ -118,7 +118,7 @@ export const Header = (props: HeaderProps) => {
 					<FinancialToggle />
 					{user && (
 						<Button className='login-button' onClick={() => setShowWallet(!showWallet)} ref={walletButtonRef}>
-							Wallet
+							Billetera
 						</Button>
 					)}
 					{!user ? (
